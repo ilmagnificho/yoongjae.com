@@ -105,16 +105,32 @@ function extractSlug(link: string): string {
   }
 }
 
+async function fetchWithRetry(url: string, retries = 3): Promise<Response> {
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const response = await fetch(url);
+      if (response.ok) return response;
+      console.warn(`Substack RSS returned ${response.status} (attempt ${attempt + 1}/${retries + 1})`);
+    } catch (error) {
+      console.warn(`Substack RSS fetch failed (attempt ${attempt + 1}/${retries + 1}):`, error);
+    }
+    if (attempt < retries) {
+      const delay = 2000 * Math.pow(2, attempt); // 2s, 4s, 8s
+      await new Promise((r) => setTimeout(r, delay));
+    }
+  }
+  throw new Error(`Failed to fetch Substack RSS after ${retries + 1} attempts`);
+}
+
 export async function fetchSubstackPosts(): Promise<Post[]> {
   try {
-    const response = await fetch(SUBSTACK_FEED_URL);
-    if (!response.ok) {
-      console.warn(`Failed to fetch Substack RSS: ${response.status}`);
-      return [];
-    }
-
+    const response = await fetchWithRetry(SUBSTACK_FEED_URL);
     const xml = await response.text();
     const items = parseXML(xml);
+
+    if (items.length === 0) {
+      console.warn('Substack RSS returned 0 items — feed may be empty or parsing failed');
+    }
 
     return items.map((item): Post => {
       const paid = isPaidContent(item);
@@ -139,6 +155,10 @@ export async function fetchSubstackPosts(): Promise<Post[]> {
       };
     });
   } catch (error) {
+    // In CI/build, fail loudly so a broken build doesn't overwrite a good deployment
+    if (process.env.CI || process.env.GITHUB_ACTIONS) {
+      throw new Error(`Substack RSS fetch failed during CI build — aborting to prevent deploying without posts. Original error: ${error}`);
+    }
     console.warn('Failed to fetch Substack feed:', error);
     return [];
   }
