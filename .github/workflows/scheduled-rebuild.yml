@@ -1,0 +1,29 @@
+name: Scheduled Rebuild
+
+on:
+  # 매일 한국시간 오전 9시 (UTC 0시) 자동 재빌드
+  schedule:
+    - cron: '0 0 * * *'
+  # 수동 트리거 (Substack 글 발행 직후 바로 반영하고 싶을 때)
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=yoongjae-com
