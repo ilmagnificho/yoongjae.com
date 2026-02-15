@@ -73,8 +73,11 @@ function categorizeTags(categories: string[]): string[] {
   const tags: string[] = [];
   const joined = categories.join(' ').toLowerCase();
 
-  if (joined.includes('tech') || joined.includes('engineering') || joined.includes('dev')) {
-    tags.push('Engineering');
+  if (joined.includes('pebble') || joined.includes('letter') || joined.includes('memo') || joined.includes('monthly')) {
+    tags.push('Pebble Letter');
+  }
+  if (joined.includes('curated') || joined.includes('reading') || joined.includes('picks')) {
+    tags.push('Curated');
   }
   if (joined.includes('essay')) {
     tags.push('Essay');

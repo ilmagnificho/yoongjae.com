@@ -35,7 +35,8 @@ export function filterPostsByTag(posts: Post[], filter: string): Post[] {
 
   const filterMap: Record<string, string[]> = {
     essays: ['Essay'],
-    engineering: ['Engineering'],
+    'pebble-letter': ['Pebble Letter'],
+    curated: ['Curated'],
     insights: ['Insight'],
   };
 

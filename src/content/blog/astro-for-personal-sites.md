@@ -2,7 +2,7 @@
 title: "Astro로 개인 사이트 만들기"
 date: 2026-02-10
 description: "왜 Astro를 선택했고, 개인 사이트에 어떤 장점이 있는지 정리합니다."
-tags: ["Engineering"]
+tags: ["Insight"]
 isDraft: false
 ---
 

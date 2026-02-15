@@ -10,7 +10,7 @@ interface Props {
 
 const {
   title = 'YoongJae',
-  description = 'Investor at Tetra Corp. Builder at Heart. Curating insights on Tech & Capital.',
+  description = 'CEO at Tetra Corp. GP at 조약돌개인투자조합. Startup studio & early-stage investments.',
 } = Astro.props;
 
 const pageTitle = title === 'YoongJae' ? title : `${title} | YoongJae`;
@@ -28,7 +28,7 @@ const pageTitle = title === 'YoongJae' ? title : `${title} | YoongJae`;
   </head>
   <body class="min-h-screen flex flex-col">
     <Header />
-    <main class="flex-1 w-full max-w-3xl mx-auto px-6 py-12">
+    <main class="flex-1 w-full max-w-3xl mx-auto px-6 py-6">
       <slot />
     </main>
     <Footer />

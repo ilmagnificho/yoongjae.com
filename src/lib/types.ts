@@ -13,4 +13,4 @@ export interface Post {
   substackUrl?: string;
 }
 
-export type TagFilter = 'all' | 'essays' | 'engineering' | 'insights';
+export type TagFilter = 'all' | 'essays' | 'pebble-letter' | 'curated' | 'insights';

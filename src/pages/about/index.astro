@@ -13,10 +13,10 @@ const timeline = [
 ---
 
 <BaseLayout title="About" description="About YoongJae - CEO of Tetra Corp, startup studio builder and investor.">
-  <section class="py-8">
-    <h1 class="font-serif text-4xl font-bold mb-8">About</h1>
+  <section class="py-4">
+    <h1 class="font-serif text-3xl font-bold mb-5">About</h1>
 
-    <div class="space-y-6 text-ink/70 text-base leading-relaxed mb-16">
+    <div class="space-y-4 text-ink/70 text-sm leading-relaxed mb-10">
       <p>
         I'm the CEO of <a href="https://www.tetracorp.co.kr/" target="_blank" rel="noopener noreferrer" class="text-ink font-semibold hover:text-accent-blue transition-colors">Tetra Corporation</a>,
         a startup studio in Seoul. Together with co-founders from legal, PR, and VC backgrounds,
@@ -38,30 +38,30 @@ const timeline = [
     </div>
 
     <!-- Career Timeline -->
-    <h2 class="font-serif text-2xl font-semibold mb-8">Timeline</h2>
-    <div class="space-y-8 mb-16">
+    <h2 class="font-serif text-xl font-semibold mb-5">Timeline</h2>
+    <div class="space-y-5 mb-10">
       {timeline.map((item) => (
-        <div class:list={['flex gap-6', item.nested && 'ml-6 border-l-2 border-ink/10 pl-6']}>
-          <div class="w-36 shrink-0">
-            <span class="text-sm text-ink/40 font-mono">{item.year}</span>
+        <div class:list={['flex gap-4', item.nested && 'ml-5 border-l-2 border-ink/10 pl-4']}>
+          <div class="w-32 shrink-0">
+            <span class="text-xs text-ink/40 font-mono">{item.year}</span>
           </div>
           <div>
-            <h3 class="font-semibold text-ink">
+            <h3 class="text-sm font-semibold text-ink">
               {item.role} <span class="text-ink/40 font-normal">@ {
                 item.url
                   ? <a href={item.url} target="_blank" rel="noopener noreferrer" class="hover:text-accent-blue transition-colors">{item.org}</a>
                   : item.org
               }</span>
             </h3>
-            <p class="text-sm text-ink/50 mt-1">{item.description}</p>
+            <p class="text-xs text-ink/50 mt-0.5">{item.description}</p>
           </div>
         </div>
       ))}
     </div>
 
     <!-- Contact -->
-    <h2 class="font-serif text-2xl font-semibold mb-4">Contact</h2>
-    <p class="text-ink/60">
+    <h2 class="font-serif text-xl font-semibold mb-3">Contact</h2>
+    <p class="text-sm text-ink/60">
       Reach me via
       <a href="https://www.linkedin.com/in/yjcho/" target="_blank" rel="noopener noreferrer" class="text-accent-blue hover:underline">LinkedIn</a>
       or
