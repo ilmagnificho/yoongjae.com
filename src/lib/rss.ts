@@ -39,7 +39,11 @@ function parseXML(xml: string): RSSItem[] {
     const itemXml = match[1];
 
     const getTag = (tag: string): string => {
-      const tagMatch = itemXml.match(new RegExp(`<${tag}><!\\[CDATA\\[([\\s\\S]*?)\\]\\]></${tag}>|<${tag}>([\\s\\S]*?)</${tag}>`));
+      // Handle: attributes on tag, whitespace around CDATA, and plain text content
+      const tagMatch = itemXml.match(new RegExp(
+        `<${tag}[^>]*>\\s*<!\\[CDATA\\[([\\s\\S]*?)\\]\\]>\\s*</${tag}>` +
+        `|<${tag}[^>]*>([\\s\\S]*?)</${tag}>`
+      ));
       return tagMatch ? (tagMatch[1] || tagMatch[2] || '').trim() : '';
     };
 
@@ -135,6 +139,7 @@ export async function fetchSubstackPosts(): Promise<Post[]> {
     return items.map((item): Post => {
       const paid = isPaidContent(item);
       const slug = extractSlug(item.link);
+      const hasContent = !paid && !!item.content && item.content.trim().length > 0;
       const description = item.description
         ? decodeEntities(item.description.replace(/<[^>]*>/g, '')).slice(0, 200)
         : undefined;
@@ -143,14 +148,13 @@ export async function fetchSubstackPosts(): Promise<Post[]> {
         title: item.title,
         date: new Date(item.pubDate),
         description,
-        // Free posts → internal route, Paid posts → Substack link
-        url: paid ? item.link : `/substack/${slug}`,
-        isExternal: paid,
+        // Only route internally if we actually have content to render
+        url: hasContent ? `/substack/${slug}` : item.link,
+        isExternal: !hasContent,
         isPaid: paid,
         tags: categorizeTags(item.categories ?? []),
-        slug: paid ? undefined : slug,
-        // Store full content for free posts
-        content: paid ? undefined : item.content,
+        slug: hasContent ? slug : undefined,
+        content: hasContent ? item.content : undefined,
         substackUrl: item.link,
       };
     });
