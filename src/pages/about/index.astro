@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const timeline = [
+  { year: '2024 - Present', role: 'Investor', org: 'Tetra Corp', description: 'Early-stage tech investments focusing on B2B SaaS and developer tools.' },
+  { year: '2022 - 2024', role: 'Full-stack Engineer', org: 'Building Products', description: 'Shipped multiple products from 0-to-1, specializing in TypeScript and cloud-native architectures.' },
+  { year: '2020 - 2022', role: 'Software Engineer', org: 'Tech Industry', description: 'Backend systems and infrastructure at scale.' },
+];
+---
+
+<BaseLayout title="About" description="About YoongJae - Investor and Builder.">
+  <section class="py-8">
+    <h1 class="font-serif text-4xl font-bold mb-8">About</h1>
+
+    <div class="space-y-6 text-ink/70 text-base leading-relaxed mb-16">
+      <p>
+        I'm an investor at <strong class="text-ink">Tetra Corp</strong> and a builder at heart.
+        I spend my time at the intersection of venture capital and hands-on engineering,
+        believing that the best investors understand what it takes to build.
+      </p>
+      <p>
+        My background spans full-stack engineering and early-stage investing.
+        I write about technology, capital allocation, and the patterns I observe
+        across startups and markets.
+      </p>
+      <p>
+        This site is my digital home &mdash; a place to share essays, engineering notes,
+        and investment insights with the Korean tech ecosystem.
+      </p>
+    </div>
+
+    <!-- Career Timeline -->
+    <h2 class="font-serif text-2xl font-semibold mb-8">Timeline</h2>
+    <div class="space-y-8 mb-16">
+      {timeline.map((item) => (
+        <div class="flex gap-6">
+          <div class="w-32 shrink-0">
+            <span class="text-sm text-ink/40 font-mono">{item.year}</span>
+          </div>
+          <div>
+            <h3 class="font-semibold text-ink">
+              {item.role} <span class="text-ink/40 font-normal">@ {item.org}</span>
+            </h3>
+            <p class="text-sm text-ink/50 mt-1">{item.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Contact -->
+    <h2 class="font-serif text-2xl font-semibold mb-4">Contact</h2>
+    <p class="text-ink/60">
+      Reach me via
+      <a href="https://linkedin.com/in/yoongjae" target="_blank" rel="noopener noreferrer" class="text-accent-blue hover:underline">LinkedIn</a>
+      or
+      <a href="https://threads.net/@yoongjae" target="_blank" rel="noopener noreferrer" class="text-accent-blue hover:underline">Threads</a>.
+    </p>
+  </section>
+</BaseLayout>

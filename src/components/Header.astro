@@ -1,0 +1,33 @@
+---
+const navItems = [
+  { label: 'Home', href: '/' },
+  { label: 'Writing', href: '/writing' },
+  { label: 'Portfolio', href: '/portfolio' },
+  { label: 'About', href: '/about' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="w-full border-b border-ink/10">
+  <nav class="max-w-3xl mx-auto px-6 py-5 flex items-center justify-between">
+    <a href="/" class="font-serif text-xl font-bold text-ink hover:text-ink/70">
+      YoongJae
+    </a>
+    <div class="flex items-center gap-6">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class:list={[
+            'text-sm font-medium transition-colors',
+            currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href))
+              ? 'text-ink'
+              : 'text-ink/50 hover:text-ink',
+          ]}
+        >
+          {item.label}
+        </a>
+      ))}
+    </div>
+  </nav>
+</header>

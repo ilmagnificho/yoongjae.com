@@ -1,0 +1,81 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { getSortedPosts, filterPostsByTag } from '../../lib/posts';
+
+const allPosts = await getSortedPosts();
+
+const filters = [
+  { key: 'all', label: 'All' },
+  { key: 'essays', label: 'Essays' },
+  { key: 'engineering', label: 'Engineering' },
+  { key: 'insights', label: 'Insights' },
+] as const;
+
+// Pre-filter for each tab (client-side switching via JS)
+const postsByFilter = Object.fromEntries(
+  filters.map(f => [f.key, filterPostsByTag(allPosts, f.key)])
+);
+---
+
+<BaseLayout title="Writing" description="Essays, engineering notes, and investment insights.">
+  <section class="py-8">
+    <h1 class="font-serif text-4xl font-bold mb-4">Writing</h1>
+    <p class="text-ink/50 mb-8">Essays, engineering notes, and investment insights.</p>
+
+    <!-- Filter Tabs -->
+    <div class="flex gap-2 mb-8 border-b border-ink/10 pb-4" id="filter-tabs">
+      {filters.map((filter) => (
+        <button
+          class="filter-tab text-sm px-4 py-1.5 rounded-full transition-colors"
+          data-filter={filter.key}
+          data-active={filter.key === 'all' ? 'true' : 'false'}
+        >
+          {filter.label}
+        </button>
+      ))}
+    </div>
+
+    <!-- Post Lists (one per filter, toggle visibility) -->
+    {filters.map((filter) => (
+      <div
+        class="post-list"
+        data-filter={filter.key}
+        style={filter.key === 'all' ? '' : 'display: none;'}
+      >
+        <PostList posts={postsByFilter[filter.key]} />
+      </div>
+    ))}
+  </section>
+</BaseLayout>
+
+<style>
+  .filter-tab[data-active='true'] {
+    @apply bg-ink text-paper;
+  }
+  .filter-tab[data-active='false'] {
+    @apply bg-transparent text-ink/50 hover:text-ink hover:bg-ink/5;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tabs = document.querySelectorAll<HTMLButtonElement>('.filter-tab');
+    const lists = document.querySelectorAll<HTMLDivElement>('.post-list');
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const filter = tab.dataset.filter;
+
+        // Update active state
+        tabs.forEach((t) => (t.dataset.active = 'false'));
+        tab.dataset.active = 'true';
+
+        // Show/hide lists
+        lists.forEach((list) => {
+          list.style.display = list.dataset.filter === filter ? '' : 'none';
+        });
+      });
+    });
+  });
+</script>

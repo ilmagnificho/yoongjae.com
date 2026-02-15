@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostList from '../components/PostList.astro';
+import { getSortedPosts } from '../lib/posts';
+
+const allPosts = await getSortedPosts();
+const recentPosts = allPosts.slice(0, 5);
+---
+
+<BaseLayout>
+  <!-- Hero -->
+  <section class="py-16 md:py-24">
+    <h1 class="font-serif text-4xl md:text-5xl font-bold leading-tight mb-6">
+      Investor. Builder.<br />
+      <span class="text-ink/50">Curating insights on<br />Tech & Capital.</span>
+    </h1>
+    <p class="text-lg text-ink/60 max-w-xl">
+      Investor at Tetra Corp. Builder at Heart.<br />
+      Bridging venture capital and hands-on engineering.
+    </p>
+  </section>
+
+  <!-- Recent Writings -->
+  <section class="pb-16">
+    <div class="flex items-center justify-between mb-8">
+      <h2 class="font-serif text-2xl font-semibold">Recent Writings</h2>
+      <a href="/writing" class="text-sm text-ink/40 hover:text-ink transition-colors">
+        View all &rarr;
+      </a>
+    </div>
+    <PostList posts={recentPosts} />
+  </section>
+</BaseLayout>

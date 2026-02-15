@@ -1,0 +1,49 @@
+---
+const socialLinks = [
+  { label: 'LinkedIn', href: 'https://linkedin.com/in/yoongjae' },
+  { label: 'Threads', href: 'https://threads.net/@yoongjae' },
+  { label: 'Github', href: 'https://github.com/yoongjae' },
+];
+
+const year = new Date().getFullYear();
+---
+
+<footer class="w-full border-t border-ink/10 mt-auto">
+  <div class="max-w-3xl mx-auto px-6 py-12">
+    <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
+      <!-- Newsletter -->
+      <div class="flex-1">
+        <h3 class="font-serif text-lg font-semibold mb-2">Newsletter</h3>
+        <p class="text-sm text-ink/60 mb-4">
+          Subscribe for insights on tech, venture, and building.
+        </p>
+        <iframe
+          src="https://yoongjae.substack.com/embed"
+          width="100%"
+          height="80"
+          style="border:none; background:transparent;"
+          frameborder="0"
+          scrolling="no"
+        ></iframe>
+      </div>
+
+      <!-- Social Links -->
+      <div class="flex flex-col items-start md:items-end gap-2">
+        {socialLinks.map((link) => (
+          <a
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-sm text-ink/50 hover:text-ink transition-colors"
+          >
+            {link.label}
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <div class="mt-8 pt-6 border-t border-ink/5 text-center">
+      <p class="text-xs text-ink/40">&copy; {year} YoongJae. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
