@@ -7,6 +7,10 @@ export interface Post {
   isPaid: boolean;
   tags: string[];
   slug?: string;
+  /** Full HTML content from Substack RSS (free posts only) */
+  content?: string;
+  /** Original Substack URL (kept even for internally-routed free posts) */
+  substackUrl?: string;
 }
 
 export type TagFilter = 'all' | 'essays' | 'engineering' | 'insights';

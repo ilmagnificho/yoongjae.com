@@ -11,6 +11,25 @@ interface RSSItem {
 
 const SUBSTACK_FEED_URL = 'https://yoongjae.substack.com/feed';
 
+const HTML_ENTITIES: Record<string, string> = {
+  '&amp;': '&',
+  '&lt;': '<',
+  '&gt;': '>',
+  '&quot;': '"',
+  '&#39;': "'",
+  '&apos;': "'",
+  '&nbsp;': ' ',
+};
+
+function decodeEntities(text: string): string {
+  // Decode named entities
+  let decoded = text.replace(/&\w+;/g, (entity) => HTML_ENTITIES[entity] ?? entity);
+  // Decode numeric entities (&#12345; or &#x1F512;)
+  decoded = decoded.replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number(code)));
+  decoded = decoded.replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCodePoint(parseInt(hex, 16)));
+  return decoded;
+}
+
 function parseXML(xml: string): RSSItem[] {
   const items: RSSItem[] = [];
   const itemRegex = /<item>([\s\S]*?)<\/item>/g;
@@ -32,7 +51,7 @@ function parseXML(xml: string): RSSItem[] {
     }
 
     items.push({
-      title: getTag('title'),
+      title: decodeEntities(getTag('title')),
       link: getTag('link'),
       pubDate: getTag('pubDate'),
       description: getTag('description'),
@@ -74,6 +93,18 @@ function isPaidContent(item: RSSItem): boolean {
   return false;
 }
 
+/** Extract a URL-safe slug from a Substack post URL */
+function extractSlug(link: string): string {
+  try {
+    const url = new URL(link);
+    // Substack URLs: https://yoongjae.substack.com/p/my-post-title
+    const parts = url.pathname.split('/').filter(Boolean);
+    return parts[parts.length - 1] || 'untitled';
+  } catch {
+    return link.replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+  }
+}
+
 export async function fetchSubstackPosts(): Promise<Post[]> {
   try {
     const response = await fetch(SUBSTACK_FEED_URL);
@@ -85,15 +116,28 @@ export async function fetchSubstackPosts(): Promise<Post[]> {
     const xml = await response.text();
     const items = parseXML(xml);
 
-    return items.map((item): Post => ({
-      title: item.title,
-      date: new Date(item.pubDate),
-      description: item.description?.replace(/<[^>]*>/g, '').slice(0, 200),
-      url: item.link,
-      isExternal: true,
-      isPaid: isPaidContent(item),
-      tags: categorizeTags(item.categories ?? []),
-    }));
+    return items.map((item): Post => {
+      const paid = isPaidContent(item);
+      const slug = extractSlug(item.link);
+      const description = item.description
+        ? decodeEntities(item.description.replace(/<[^>]*>/g, '')).slice(0, 200)
+        : undefined;
+
+      return {
+        title: item.title,
+        date: new Date(item.pubDate),
+        description,
+        // Free posts → internal route, Paid posts → Substack link
+        url: paid ? item.link : `/substack/${slug}`,
+        isExternal: paid,
+        isPaid: paid,
+        tags: categorizeTags(item.categories ?? []),
+        slug: paid ? undefined : slug,
+        // Store full content for free posts
+        content: paid ? undefined : item.content,
+        substackUrl: item.link,
+      };
+    });
   } catch (error) {
     console.warn('Failed to fetch Substack feed:', error);
     return [];

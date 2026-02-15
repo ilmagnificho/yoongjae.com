@@ -31,6 +31,11 @@ const { posts } = Astro.props;
             <span class="text-ink group-hover:text-accent-blue transition-colors font-medium truncate">
               {post.title}
             </span>
+            {post.substackUrl && !post.isExternal && (
+              <span class="text-[10px] text-accent-orange bg-accent-orange/10 px-1.5 py-0.5 rounded shrink-0">
+                Substack
+              </span>
+            )}
             {post.isExternal && (
               <svg
                 class="w-3.5 h-3.5 text-ink/30 shrink-0"
