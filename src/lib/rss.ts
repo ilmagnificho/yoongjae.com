@@ -120,10 +120,22 @@ function extractSlug(link: string): string {
   }
 }
 
-// ─── Strip HTML tags for description ────────────────────────────
+// ─── Strip HTML tags and decode entities for description ────────
+
+function decodeHtmlEntities(text: string): string {
+  const entities: Record<string, string> = {
+    '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"',
+    '&#39;': "'", '&apos;': "'", '&nbsp;': ' ', '&mdash;': '\u2014',
+    '&ndash;': '\u2013', '&hellip;': '\u2026',
+  };
+  let decoded = text.replace(/&\w+;/g, (e) => entities[e] ?? e);
+  decoded = decoded.replace(/&#(\d+);/g, (_, c) => String.fromCodePoint(Number(c)));
+  decoded = decoded.replace(/&#x([0-9a-fA-F]+);/g, (_, h) => String.fromCodePoint(parseInt(h, 16)));
+  return decoded;
+}
 
 function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '').trim();
+  return decodeHtmlEntities(html.replace(/<[^>]*>/g, '')).trim();
 }
 
 // ─── Fetch with retry ───────────────────────────────────────────

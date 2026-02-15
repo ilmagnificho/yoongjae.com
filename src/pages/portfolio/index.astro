@@ -8,24 +8,42 @@ const sortedEntries = portfolioEntries.sort(
 );
 ---
 
-<BaseLayout title="Portfolio" description="Investment portfolio.">
+<BaseLayout title="Portfolio" description="Investment portfolio via 조약돌개인투자조합.">
   <section class="py-8">
     <h1 class="font-serif text-4xl font-bold mb-4">Portfolio</h1>
-    <p class="text-ink/50 mb-12">Investment portfolio via Tetra Corp.</p>
+    <p class="text-ink/50 mb-12">조약돌개인투자조합 investment portfolio.</p>
 
     <h2 class="font-serif text-2xl font-semibold mb-8">Investments</h2>
-    <div class="space-y-4">
-      {sortedEntries.map((entry) => (
-        <div class="flex items-center justify-between py-4 border-b border-ink/5">
-          <div class="flex items-center gap-3">
-            <h3 class="font-semibold text-ink">{entry.data.title}</h3>
-            {entry.data.tags.map((tag: string) => (
-              <span class="text-xs text-ink/30 bg-ink/[0.03] px-2 py-0.5 rounded-full">{tag}</span>
-            ))}
-          </div>
-          <span class="text-sm text-ink/40 font-mono shrink-0">2025 - Present</span>
-        </div>
-      ))}
+    <div class="space-y-0 divide-y divide-ink/5">
+      {sortedEntries.map((entry) => {
+        const Tag = entry.data.url ? 'a' : 'div';
+        const linkProps = entry.data.url
+          ? { href: entry.data.url, target: '_blank', rel: 'noopener noreferrer' }
+          : {};
+        return (
+          <Tag
+            {...linkProps}
+            class:list={[
+              'flex items-center justify-between py-5',
+              entry.data.url && 'group hover:bg-ink/[0.02] -mx-3 px-3 rounded-lg transition-colors'
+            ]}
+          >
+            <div class="flex items-center gap-3">
+              <h3 class:list={['font-semibold text-ink', entry.data.url && 'group-hover:text-accent-blue transition-colors']}>
+                {entry.data.title}
+              </h3>
+              {entry.data.url && (
+                <svg class="w-3.5 h-3.5 text-ink/30 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+              )}
+            </div>
+            <span class="text-sm text-ink/40 font-mono shrink-0">2025 - Present</span>
+          </Tag>
+        );
+      })}
     </div>
 
     {sortedEntries.length === 0 && (

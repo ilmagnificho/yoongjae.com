@@ -2,24 +2,29 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const timeline = [
-  { year: '2024 - Present', role: 'CEO', org: 'Tetra Corp', description: 'Boutique startup consultancy & investment. Founded by legal, PR, and VC experts in Seoul.' },
+  { year: '2024 - Present', role: 'CEO', org: 'Tetra Corp', url: 'https://www.tetracorp.co.kr/', description: 'Startup studio creating, investing in, and growing early-stage ventures with a team of legal, PR, and VC experts.' },
+  { year: '2024 - Present', role: 'GP', org: '조약돌개인투자조합', description: 'General Partner of a private investment fund focused on early-stage startup investments.' },
   { year: '2020 - 2023', role: 'New Business Team Lead', org: 'KRAFTON Inc.', description: 'Corporate development and new business initiatives at the global gaming company (parent of PUBG).' },
   { year: '2021 - 2022', role: 'COO', org: 'thingsflow', description: 'Mobile app startup acquired by KRAFTON in 2021. Led operations as a KRAFTON subsidiary.', nested: true },
   { year: '2018 - 2023', role: 'CEO Staff', org: 'PUBG Corporation', description: 'Corporate development at the publisher of PLAYERUNKNOWN\'S BATTLEGROUNDS. PUBG was a KRAFTON subsidiary, later merged.' },
   { year: '2014 - 2016', role: 'Investment Associate', org: 'BonAngels Venture Partners', description: 'One of the earliest and leading early-stage VC firms in Korea.' },
-  { year: '2010 - 2014', role: 'Analyst → Assistant Manager', org: 'ORIX Corporation', description: 'Private equity and financial services. Started at ORIX PE Korea, then ORIX Japan (Tokyo).' },
+  { year: '2010 - 2014', role: 'Analyst → Assistant Manager', org: 'ORIX Corporation (Tokyo, HQ)', description: 'Private equity and financial services. Started at ORIX PE Korea, then transferred to ORIX Corporation headquarters in Tokyo.' },
 ];
 ---
 
-<BaseLayout title="About" description="About YoongJae - CEO of Tetra Corp, investor and startup advisor.">
+<BaseLayout title="About" description="About YoongJae - CEO of Tetra Corp, startup studio builder and investor.">
   <section class="py-8">
     <h1 class="font-serif text-4xl font-bold mb-8">About</h1>
 
     <div class="space-y-6 text-ink/70 text-base leading-relaxed mb-16">
       <p>
-        I'm the CEO of <strong class="text-ink">Tetra Corporation</strong>, a boutique startup consultancy
-        in Seoul founded by legal, PR, and VC experts. We provide hands-on solutions for startups
-        with resource challenges, and actively explore investment opportunities.
+        I'm the CEO of <a href="https://www.tetracorp.co.kr/" target="_blank" rel="noopener noreferrer" class="text-ink font-semibold hover:text-accent-blue transition-colors">Tetra Corporation</a>,
+        a startup studio in Seoul. Together with co-founders from legal, PR, and VC backgrounds,
+        we create, invest in, and grow early-stage ventures.
+      </p>
+      <p>
+        I also serve as the General Partner of <strong class="text-ink">조약돌개인투자조합</strong>,
+        a private investment fund focused on early-stage startups.
       </p>
       <p>
         My background spans venture capital, corporate development, and startup operations &mdash;
@@ -42,7 +47,11 @@ const timeline = [
           </div>
           <div>
             <h3 class="font-semibold text-ink">
-              {item.role} <span class="text-ink/40 font-normal">@ {item.org}</span>
+              {item.role} <span class="text-ink/40 font-normal">@ {
+                item.url
+                  ? <a href={item.url} target="_blank" rel="noopener noreferrer" class="hover:text-accent-blue transition-colors">{item.org}</a>
+                  : item.org
+              }</span>
             </h3>
             <p class="text-sm text-ink/50 mt-1">{item.description}</p>
           </div>
