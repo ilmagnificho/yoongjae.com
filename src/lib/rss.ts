@@ -1,71 +1,73 @@
+import { XMLParser } from 'fast-xml-parser';
 import type { Post } from './types';
+
+const SUBSTACK_FEED_URL = 'https://yoongjae.substack.com/feed';
+
+// ─── XML Parsing ────────────────────────────────────────────────
 
 interface RSSItem {
   title: string;
   link: string;
   pubDate: string;
   description?: string;
-  categories?: string[];
-  content?: string;
+  category?: string | string[];
+  'content:encoded'?: string;
 }
 
-const SUBSTACK_FEED_URL = 'https://yoongjae.substack.com/feed';
+function parseRSS(xml: string): RSSItem[] {
+  const parser = new XMLParser({
+    ignoreAttributes: false,
+    cdataPropName: '__cdata',
+    textNodeName: '__text',
+    // Preserve content:encoded as a single string (not parsed as HTML)
+    processEntities: true,
+    htmlEntities: true,
+    tagValueProcessor: (_tagName: string, val: string) => val,
+  });
 
-const HTML_ENTITIES: Record<string, string> = {
-  '&amp;': '&',
-  '&lt;': '<',
-  '&gt;': '>',
-  '&quot;': '"',
-  '&#39;': "'",
-  '&apos;': "'",
-  '&nbsp;': ' ',
-};
-
-function decodeEntities(text: string): string {
-  // Decode named entities
-  let decoded = text.replace(/&\w+;/g, (entity) => HTML_ENTITIES[entity] ?? entity);
-  // Decode numeric entities (&#12345; or &#x1F512;)
-  decoded = decoded.replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number(code)));
-  decoded = decoded.replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCodePoint(parseInt(hex, 16)));
-  return decoded;
-}
-
-function parseXML(xml: string): RSSItem[] {
-  const items: RSSItem[] = [];
-  const itemRegex = /<item>([\s\S]*?)<\/item>/g;
-  let match;
-
-  while ((match = itemRegex.exec(xml)) !== null) {
-    const itemXml = match[1];
-
-    const getTag = (tag: string): string => {
-      // Handle: attributes on tag, whitespace around CDATA, and plain text content
-      const tagMatch = itemXml.match(new RegExp(
-        `<${tag}[^>]*>\\s*<!\\[CDATA\\[([\\s\\S]*?)\\]\\]>\\s*</${tag}>` +
-        `|<${tag}[^>]*>([\\s\\S]*?)</${tag}>`
-      ));
-      return tagMatch ? (tagMatch[1] || tagMatch[2] || '').trim() : '';
-    };
-
-    const categories: string[] = [];
-    const catRegex = /<category>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/category>/g;
-    let catMatch;
-    while ((catMatch = catRegex.exec(itemXml)) !== null) {
-      categories.push(catMatch[1].trim());
-    }
-
-    items.push({
-      title: decodeEntities(getTag('title')),
-      link: getTag('link'),
-      pubDate: getTag('pubDate'),
-      description: getTag('description'),
-      categories,
-      content: getTag('content:encoded'),
-    });
+  const feed = parser.parse(xml);
+  const channel = feed?.rss?.channel;
+  if (!channel) {
+    console.warn('Substack RSS: could not find <rss><channel> in feed');
+    return [];
   }
 
-  return items;
+  // Normalize to array (single item comes as object, not array)
+  const rawItems = channel.item;
+  if (!rawItems) return [];
+  const items: unknown[] = Array.isArray(rawItems) ? rawItems : [rawItems];
+
+  return items.map((raw: unknown) => {
+    const item = raw as Record<string, unknown>;
+    return {
+      title: extractText(item.title),
+      link: extractText(item.link),
+      pubDate: extractText(item.pubDate),
+      description: extractText(item.description),
+      category: item.category as string | string[] | undefined,
+      'content:encoded': extractText(item['content:encoded']),
+    };
+  });
 }
+
+/** Extract text from a parsed XML node (handles CDATA, plain text, nested objects) */
+function extractText(node: unknown): string {
+  if (node == null) return '';
+  if (typeof node === 'string') return node;
+  if (typeof node === 'number') return String(node);
+  if (typeof node === 'object') {
+    const obj = node as Record<string, unknown>;
+    // CDATA content
+    if ('__cdata' in obj) return String(obj.__cdata ?? '');
+    // Text node
+    if ('__text' in obj) return String(obj.__text ?? '');
+    // Try #text (another common parser output)
+    if ('#text' in obj) return String(obj['#text'] ?? '');
+  }
+  return String(node);
+}
+
+// ─── Tag / Category mapping ─────────────────────────────────────
 
 function categorizeTags(categories: string[]): string[] {
   const tags: string[] = [];
@@ -84,30 +86,47 @@ function categorizeTags(categories: string[]): string[] {
   return tags;
 }
 
-function isPaidContent(item: RSSItem): boolean {
-  const categories = item.categories?.map(c => c.toLowerCase()) ?? [];
-  if (categories.some(c => c.includes('paid'))) return true;
+function extractCategories(item: RSSItem): string[] {
+  const cat = item.category;
+  if (!cat) return [];
+  if (Array.isArray(cat)) return cat.map((c) => String(c).trim());
+  return [String(cat).trim()];
+}
 
-  // Check if content is truncated (common Substack pattern for paid posts)
-  if (item.content && item.description) {
-    const contentLength = item.content.replace(/<[^>]*>/g, '').length;
-    if (contentLength < 200 && item.description.includes('…')) return true;
+// ─── Paid detection ─────────────────────────────────────────────
+
+function isPaidContent(item: RSSItem, categories: string[]): boolean {
+  if (categories.some((c) => c.toLowerCase().includes('paid'))) return true;
+
+  const content = item['content:encoded'] ?? '';
+  const description = item.description ?? '';
+  if (content && description) {
+    const textLength = content.replace(/<[^>]*>/g, '').length;
+    if (textLength < 200 && description.includes('…')) return true;
   }
 
   return false;
 }
 
-/** Extract a URL-safe slug from a Substack post URL */
+// ─── Slug extraction ────────────────────────────────────────────
+
 function extractSlug(link: string): string {
   try {
     const url = new URL(link);
-    // Substack URLs: https://yoongjae.substack.com/p/my-post-title
     const parts = url.pathname.split('/').filter(Boolean);
     return parts[parts.length - 1] || 'untitled';
   } catch {
-    return link.replace(/[^a-z0-9]+/gi, '-').toLowerCase();
+    return link.replace(/[^a-z0-9]+/gi, '-').toLowerCase() || 'untitled';
   }
 }
+
+// ─── Strip HTML tags for description ────────────────────────────
+
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]*>/g, '').trim();
+}
+
+// ─── Fetch with retry ───────────────────────────────────────────
 
 async function fetchWithRetry(url: string, retries = 3): Promise<Response> {
   for (let attempt = 0; attempt <= retries; attempt++) {
@@ -119,47 +138,54 @@ async function fetchWithRetry(url: string, retries = 3): Promise<Response> {
       console.warn(`Substack RSS fetch failed (attempt ${attempt + 1}/${retries + 1}):`, error);
     }
     if (attempt < retries) {
-      const delay = 2000 * Math.pow(2, attempt); // 2s, 4s, 8s
+      const delay = 2000 * Math.pow(2, attempt);
       await new Promise((r) => setTimeout(r, delay));
     }
   }
   throw new Error(`Failed to fetch Substack RSS after ${retries + 1} attempts`);
 }
 
+// ─── Main export ────────────────────────────────────────────────
+
 export async function fetchSubstackPosts(): Promise<Post[]> {
   try {
     const response = await fetchWithRetry(SUBSTACK_FEED_URL);
     const xml = await response.text();
-    const items = parseXML(xml);
+    const items = parseRSS(xml);
+
+    // Build-time diagnostics
+    console.log(`[Substack] Fetched ${items.length} items from RSS`);
+    items.forEach((item, i) => {
+      const contentLen = (item['content:encoded'] ?? '').length;
+      console.log(`  [${i}] "${item.title}" — link=${item.link}, content=${contentLen} chars`);
+    });
 
     if (items.length === 0) {
-      console.warn('Substack RSS returned 0 items — feed may be empty or parsing failed');
+      console.warn('[Substack] RSS returned 0 items — feed may be empty or parsing failed');
     }
 
     return items.map((item): Post => {
-      const paid = isPaidContent(item);
+      const categories = extractCategories(item);
+      const paid = isPaidContent(item, categories);
       const slug = extractSlug(item.link);
-      const hasContent = !paid && !!item.content && item.content.trim().length > 0;
-      const description = item.description
-        ? decodeEntities(item.description.replace(/<[^>]*>/g, '')).slice(0, 200)
-        : undefined;
+      const content = item['content:encoded'] ?? '';
+      const hasContent = !paid && content.trim().length > 0;
+      const description = item.description ? stripHtml(item.description).slice(0, 200) : undefined;
 
       return {
         title: item.title,
         date: new Date(item.pubDate),
         description,
-        // Only route internally if we actually have content to render
         url: hasContent ? `/substack/${slug}` : item.link,
         isExternal: !hasContent,
         isPaid: paid,
-        tags: categorizeTags(item.categories ?? []),
+        tags: categorizeTags(categories),
         slug: hasContent ? slug : undefined,
-        content: hasContent ? item.content : undefined,
+        content: hasContent ? content : undefined,
         substackUrl: item.link,
       };
     });
   } catch (error) {
-    // In CI/build, fail loudly so a broken build doesn't overwrite a good deployment
     if (process.env.CI || process.env.GITHUB_ACTIONS) {
       throw new Error(`Substack RSS fetch failed during CI build — aborting to prevent deploying without posts. Original error: ${error}`);
     }
