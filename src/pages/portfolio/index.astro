@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { formatDate } from '../../lib/posts';
 
 const portfolioEntries = await getCollection('portfolio');
 const sortedEntries = portfolioEntries.sort(
@@ -9,41 +8,23 @@ const sortedEntries = portfolioEntries.sort(
 );
 ---
 
-<BaseLayout title="Portfolio" description="Investment track record and development projects.">
+<BaseLayout title="Portfolio" description="Investment portfolio.">
   <section class="py-8">
     <h1 class="font-serif text-4xl font-bold mb-4">Portfolio</h1>
-    <p class="text-ink/50 mb-12">Investment track record and development projects.</p>
+    <p class="text-ink/50 mb-12">Investment portfolio via Tetra Corp.</p>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <h2 class="font-serif text-2xl font-semibold mb-8">Investments</h2>
+    <div class="space-y-4">
       {sortedEntries.map((entry) => (
-        <a
-          href={entry.data.url || `/portfolio/${entry.id}`}
-          target={entry.data.url ? '_blank' : undefined}
-          rel={entry.data.url ? 'noopener noreferrer' : undefined}
-          class="group block border border-ink/10 rounded-xl p-6 hover:border-ink/20 hover:shadow-sm transition-all"
-        >
-          {entry.data.image && (
-            <div class="aspect-video bg-ink/5 rounded-lg mb-4 overflow-hidden">
-              <img
-                src={entry.data.image}
-                alt={entry.data.title}
-                class="w-full h-full object-cover"
-              />
-            </div>
-          )}
-          <div class="flex items-center gap-2 mb-2">
-            <time class="text-xs text-ink/30 font-mono">{formatDate(entry.data.date)}</time>
+        <div class="flex items-center justify-between py-4 border-b border-ink/5">
+          <div class="flex items-center gap-3">
+            <h3 class="font-semibold text-ink">{entry.data.title}</h3>
             {entry.data.tags.map((tag: string) => (
               <span class="text-xs text-ink/30 bg-ink/[0.03] px-2 py-0.5 rounded-full">{tag}</span>
             ))}
           </div>
-          <h3 class="font-serif text-lg font-semibold group-hover:text-accent-blue transition-colors">
-            {entry.data.title}
-          </h3>
-          {entry.data.description && (
-            <p class="text-sm text-ink/50 mt-2 line-clamp-2">{entry.data.description}</p>
-          )}
-        </a>
+          <span class="text-sm text-ink/40 font-mono shrink-0">2025 - Present</span>
+        </div>
       ))}
     </div>
 
