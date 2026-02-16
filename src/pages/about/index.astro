@@ -41,9 +41,9 @@ const timeline = [
     <h2 class="font-serif text-xl font-semibold mb-5">Timeline</h2>
     <div class="space-y-5 mb-10">
       {timeline.map((item) => (
-        <div class:list={['flex gap-4', item.nested && 'ml-5 border-l-2 border-ink/10 pl-4']}>
-          <div class="w-32 shrink-0">
-            <span class="text-xs text-ink/40 font-mono">{item.year}</span>
+        <div class:list={['flex gap-3 md:gap-4', item.nested && 'ml-4 md:ml-5 border-l-2 border-ink/10 pl-3 md:pl-4']}>
+          <div class="w-24 md:w-32 shrink-0">
+            <span class="text-[11px] md:text-xs text-ink/40 font-mono">{item.year}</span>
           </div>
           <div>
             <h3 class="text-sm font-semibold text-ink">

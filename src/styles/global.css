@@ -83,3 +83,12 @@
 .prose a {
   @apply text-accent-blue underline underline-offset-2 hover:text-accent-blue/80;
 }
+
+/* Hide scrollbar for horizontal scroll containers */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

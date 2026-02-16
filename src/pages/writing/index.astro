@@ -8,7 +8,7 @@ const allPosts = await getSortedPosts();
 const filters = [
   { key: 'all', label: 'All' },
   { key: 'essays', label: 'Essays' },
-  { key: 'pebble-letter', label: 'Pebble Letter' },
+  { key: 'yj-letter', label: 'YJ Letter' },
   { key: 'curated', label: 'Curated' },
   { key: 'insights', label: 'Insights' },
 ] as const;
@@ -25,10 +25,10 @@ const postsByFilter = Object.fromEntries(
     <p class="text-sm text-ink/50 mb-6">Essays, investor letters, and curated reads.</p>
 
     <!-- Filter Tabs -->
-    <div class="flex gap-1.5 mb-6 border-b border-ink/10 pb-3" id="filter-tabs">
+    <div class="flex gap-1.5 mb-6 border-b border-ink/10 pb-3 overflow-x-auto -mx-6 px-6 scrollbar-hide" id="filter-tabs">
       {filters.map((filter) => (
         <button
-          class="filter-tab text-xs px-3 py-1 rounded-full transition-colors"
+          class="filter-tab text-xs px-3 py-1 rounded-full transition-colors whitespace-nowrap shrink-0"
           data-filter={filter.key}
           data-active={filter.key === 'all' ? 'true' : 'false'}
         >

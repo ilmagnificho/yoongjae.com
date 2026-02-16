@@ -29,7 +29,7 @@ const { posts } = Astro.props;
             {post.title}
           </span>
           {post.substackUrl && !post.isExternal && (
-            <span class="text-[9px] text-accent-orange bg-accent-orange/10 px-1 py-px rounded shrink-0">
+            <span class="text-[9px] text-accent-orange bg-accent-orange/10 px-1 py-px rounded shrink-0 hidden sm:inline">
               Substack
             </span>
           )}
@@ -41,7 +41,7 @@ const { posts } = Astro.props;
             </svg>
           )}
         </div>
-        <div class="flex gap-1 shrink-0">
+        <div class="hidden sm:flex gap-1 shrink-0">
           {post.tags.map((tag) => (
             <span class="text-[10px] text-ink/25 bg-ink/[0.03] px-1.5 py-px rounded-full">
               {tag}
