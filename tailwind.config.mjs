@@ -4,8 +4,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        paper: '#FAFAF9',
-        ink: '#171717',
+        paper: '#F5F0EB',
+        ink: '#1A1A1A',
         accent: {
           orange: '#FF6719',
           blue: '#2563EB',

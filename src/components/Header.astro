@@ -9,7 +9,7 @@ const navItems = [
 const currentPath = Astro.url.pathname;
 ---
 
-<header class="w-full border-b border-ink/10">
+<header class="w-full border-b border-ink/12">
   <nav class="max-w-3xl mx-auto px-6 py-5 flex items-center justify-between gap-8">
     <a href="/" class="font-serif text-xl font-bold text-ink hover:text-ink/70 shrink-0">
       YoongJae
@@ -22,7 +22,7 @@ const currentPath = Astro.url.pathname;
             'text-xs md:text-sm font-medium transition-colors',
             currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href))
               ? 'text-ink'
-              : 'text-ink/50 hover:text-ink',
+              : 'text-ink/55 hover:text-ink',
           ]}
         >
           {item.label}
