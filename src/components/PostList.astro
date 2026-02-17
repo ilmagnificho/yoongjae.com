@@ -1,14 +1,11 @@
 ---
 import { formatDate } from '../lib/posts';
 import type { Post } from '../lib/types';
-
 interface Props {
   posts: Post[];
 }
-
 const { posts } = Astro.props;
 ---
-
 <ul class="divide-y divide-ink/8">
   {posts.map((post) => (
     <li>
@@ -22,15 +19,17 @@ const { posts } = Astro.props;
           {formatDate(post.date)}
         </time>
         <div class="flex-1 min-w-0 flex items-baseline gap-2">
-          {post.isPaid && (
-            <span class="text-accent-orange text-xs shrink-0" title="Paid content">&#x1f512;</span>
-          )}
           <span class="text-sm text-ink group-hover:text-accent-blue transition-colors font-medium truncate">
             {post.title}
           </span>
-          {post.substackUrl && !post.isExternal && (
-            <span class="text-[9px] text-accent-orange bg-accent-orange/10 px-1 py-px rounded shrink-0 hidden sm:inline">
-              Substack
+          {post.isPaid ? (
+            <span class="inline-flex items-center gap-0.5 text-[9px] text-white bg-accent-orange px-1.5 py-0.5 rounded-full shrink-0 font-medium">
+              <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C9.24 2 7 4.24 7 7v2H6c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-9c0-1.1-.9-2-2-2h-1V7c0-2.76-2.24-5-5-5zm0 2c1.66 0 3 1.34 3 3v2H9V7c0-1.66 1.34-3 3-3z"/></svg>
+              Paid
+            </span>
+          ) : post.substackUrl && (
+            <span class="text-[9px] text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded-full shrink-0 font-medium hidden sm:inline">
+              Free
             </span>
           )}
           {post.isExternal && (
@@ -52,7 +51,6 @@ const { posts } = Astro.props;
     </li>
   ))}
 </ul>
-
 {posts.length === 0 && (
   <p class="text-center text-ink/40 py-8 text-sm">No posts yet.</p>
 )}
