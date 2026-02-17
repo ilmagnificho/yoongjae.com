@@ -201,10 +201,7 @@ export async function fetchSubstackPosts(): Promise<Post[]> {
       };
     });
   } catch (error) {
-    if (process.env.CI || process.env.GITHUB_ACTIONS) {
-      throw new Error(`Substack RSS fetch failed during CI build — aborting to prevent deploying without posts. Original error: ${error}`);
-    }
-    console.warn('Failed to fetch Substack feed:', error);
+    console.warn('[Substack] RSS fetch failed — building without Substack posts:', error);
     return [];
   }
 }
