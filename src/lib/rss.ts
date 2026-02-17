@@ -1,7 +1,52 @@
 import { XMLParser } from 'fast-xml-parser';
+import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
 import type { Post } from './types';
 
 const SUBSTACK_FEED_URL = 'https://yoongjae.substack.com/feed';
+
+// ─── Cache ───────────────────────────────────────────────────────
+
+// Use project root (cwd) so the path is stable in both dev and build
+const CACHE_PATH = resolve(process.cwd(), 'src/data/substack-cache.json');
+
+interface CachedPost {
+  title: string;
+  date: string;          // ISO string
+  description?: string;
+  url: string;
+  isExternal: boolean;
+  isPaid: boolean;
+  tags: string[];
+  slug?: string;
+  content?: string;
+  substackUrl?: string;
+}
+
+function saveCache(posts: Post[]): void {
+  try {
+    const data: CachedPost[] = posts.map((p) => ({
+      ...p,
+      date: p.date.toISOString(),
+    }));
+    mkdirSync(dirname(CACHE_PATH), { recursive: true });
+    writeFileSync(CACHE_PATH, JSON.stringify(data, null, 2), 'utf-8');
+    console.log(`[Substack] Cache saved — ${posts.length} posts → ${CACHE_PATH}`);
+  } catch (err) {
+    console.warn('[Substack] Failed to save cache:', err);
+  }
+}
+
+function loadCache(): Post[] | null {
+  try {
+    const raw = readFileSync(CACHE_PATH, 'utf-8');
+    const data: CachedPost[] = JSON.parse(raw);
+    console.log(`[Substack] Loaded ${data.length} posts from cache`);
+    return data.map((p) => ({ ...p, date: new Date(p.date) }));
+  } catch {
+    return null;
+  }
+}
 
 // ─── XML Parsing ────────────────────────────────────────────────
 
@@ -146,7 +191,12 @@ function stripHtml(html: string): string {
 async function fetchWithRetry(url: string, retries = 3): Promise<Response> {
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (compatible; YoongJaeSite/2.0; +https://yoongjae.com)',
+          'Accept': 'application/rss+xml, application/xml, text/xml, */*',
+        },
+      });
       if (response.ok) return response;
       console.warn(`Substack RSS returned ${response.status} (attempt ${attempt + 1}/${retries + 1})`);
     } catch (error) {
@@ -179,7 +229,7 @@ export async function fetchSubstackPosts(): Promise<Post[]> {
       console.warn('[Substack] RSS returned 0 items — feed may be empty or parsing failed');
     }
 
-    return items.map((item): Post => {
+    const posts = items.map((item): Post => {
       const categories = extractCategories(item);
       const paid = isPaidContent(item, categories);
       const slug = extractSlug(item.link);
@@ -200,8 +250,19 @@ export async function fetchSubstackPosts(): Promise<Post[]> {
         substackUrl: item.link,
       };
     });
+
+    // Save cache on successful fetch
+    saveCache(posts);
+
+    return posts;
   } catch (error) {
-    console.warn('[Substack] RSS fetch failed — building without Substack posts:', error);
+    console.warn('[Substack] RSS fetch failed — trying cache fallback:', error);
+    const cached = loadCache();
+    if (cached && cached.length > 0) {
+      console.log(`[Substack] Using ${cached.length} cached posts`);
+      return cached;
+    }
+    console.warn('[Substack] No cache available — building without Substack posts');
     return [];
   }
 }

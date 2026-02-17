@@ -10,6 +10,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -19,7 +21,49 @@ jobs:
           cache: npm
 
       - run: npm ci
+
+      # Pre-fetch RSS with curl (browser-like headers) and save as cache seed
+      - name: Pre-fetch Substack RSS
+        continue-on-error: true
+        run: |
+          mkdir -p src/data
+          curl -sSL \
+            -H "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" \
+            -H "Accept: application/rss+xml, application/xml, text/xml, */*" \
+            -o /tmp/substack-feed.xml \
+            "https://yoongjae.substack.com/feed" && \
+          echo "[Pre-fetch] RSS downloaded successfully ($(wc -c < /tmp/substack-feed.xml) bytes)" && \
+          node -e "
+            const fs = require('fs');
+            const { XMLParser } = require('fast-xml-parser');
+            const xml = fs.readFileSync('/tmp/substack-feed.xml', 'utf-8');
+            const parser = new XMLParser({ ignoreAttributes: false, cdataPropName: '__cdata', textNodeName: '__text', processEntities: true, htmlEntities: true });
+            const feed = parser.parse(xml);
+            const channel = feed?.rss?.channel;
+            if (!channel?.item) { console.log('[Pre-fetch] No items in RSS'); process.exit(0); }
+            const items = Array.isArray(channel.item) ? channel.item : [channel.item];
+            console.log('[Pre-fetch] Found ' + items.length + ' items in RSS');
+          " || echo "[Pre-fetch] RSS fetch failed — will rely on committed cache"
+
       - run: npm run build
+
+      # Auto-commit cache if it was updated during build
+      - name: Commit Substack cache
+        run: |
+          if [ -f src/data/substack-cache.json ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add src/data/substack-cache.json
+            if git diff --cached --quiet; then
+              echo "Cache unchanged — skipping commit"
+            else
+              git commit -m "chore: update Substack cache [skip ci]"
+              git push
+              echo "Cache committed and pushed"
+            fi
+          else
+            echo "No cache file generated"
+          fi
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
