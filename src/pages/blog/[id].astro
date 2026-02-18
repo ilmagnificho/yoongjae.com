@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Comments from '../../components/Comments.astro';
+import ShareButtons from '../../components/ShareButtons.astro';
 import { formatDate } from '../../lib/posts';
 
 export async function getStaticPaths() {
@@ -16,6 +16,7 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+const postUrl = `/blog/${post.id}`;
 ---
 
 <BaseLayout title={post.data.title} description={post.data.description}>
@@ -41,7 +42,7 @@ const { Content } = await render(post);
       <Content />
     </div>
 
-    <Comments />
+    <ShareButtons title={post.data.title} url={postUrl} />
 
     <footer class="mt-10 pt-6 border-t border-ink/10">
       <a href="/writing" class="text-xs text-ink/40 hover:text-ink transition-colors">

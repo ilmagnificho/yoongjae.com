@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EsopCalculator from '../../components/tools/EsopCalculator';
+
+const title = 'ESOP (스톡옵션) 가치 계산기 - 무료 수익 시뮬레이션';
+const description = '스타트업 스톡옵션의 잠재적 수익을 Exit 밸류에이션 시나리오별로 계산합니다. 행사가격, 옵션 수, 목표 밸류에이션을 입력하세요.';
+
+const faqs = [
+  {
+    q: '스톡옵션(ESOP)이란 무엇인가요?',
+    a: '스톡옵션은 회사가 임직원에게 미리 정해진 가격(행사가격)으로 자사 주식을 매수할 수 있는 권리를 부여하는 보상 제도입니다. 회사 가치가 상승하면 행사가격과 시가의 차액만큼 이익을 얻을 수 있습니다.',
+  },
+  {
+    q: '행사가격(Strike Price)은 어떻게 결정되나요?',
+    a: '보통 옵션 부여 시점의 공정시장가치(Fair Market Value)를 기준으로 결정됩니다. 초기 스타트업의 경우 액면가(100~5,000원)로 설정되는 경우가 많으며, 이후 라운드 진행 시 직전 라운드 주당가격 등을 참고합니다.',
+  },
+  {
+    q: '베스팅(Vesting)이란?',
+    a: '옵션을 실제로 행사할 수 있게 되는 조건입니다. 일반적으로 4년간 월단위 또는 연단위로 나누어 베스팅되며, 1년 클리프(Cliff)가 적용됩니다. 예를 들어 10,000주 / 4년 베스팅이면, 1년 후 2,500주, 이후 매월 약 208주씩 행사 가능합니다.',
+  },
+  {
+    q: '스톡옵션 행사 시 세금은 어떻게 되나요?',
+    a: '한국에서는 행사 시 행사가격과 시가의 차액에 대해 근로소득세(최대 45%)가 부과됩니다. 다만 벤처기업 인증 기업의 경우, 연간 5,000만 원 한도로 비과세 혜택이 있으며, 행사 후 매도 시 양도소득세가 별도 부과될 수 있습니다.',
+  },
+  {
+    q: '우선주 청산우선권은 옵션 가치에 영향을 주나요?',
+    a: '네. M&A나 청산 시 우선주(RCPS/CPS) 투자자가 먼저 투자금을 회수한 후 나머지를 보통주 주주가 나누게 됩니다. 따라서 Exit 금액이 투자금 총액보다 크지 않으면 보통주(스톡옵션 포함)의 실제 가치는 0에 가까울 수 있습니다.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
+const appSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'ESOP (스톡옵션) 가치 계산기',
+  url: 'https://yoongjae.com/tools/esop-calculator',
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+  author: { '@type': 'Person', name: '조융재', url: 'https://yoongjae.com' },
+};
+---
+
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <link rel="canonical" href="https://yoongjae.com/tools/esop-calculator" />
+    <script type="application/ld+json" set:html={JSON.stringify(appSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <section class="py-4">
+    <div class="flex items-center gap-2 text-xs text-ink/40 mb-4">
+      <a href="/tools" class="hover:text-ink transition-colors">Tools</a>
+      <span>/</span>
+      <span>ESOP 계산기</span>
+    </div>
+
+    <h1 class="font-serif text-3xl font-bold mb-3">ESOP (스톡옵션) 가치 계산기</h1>
+    <p class="text-sm text-ink/60 leading-relaxed max-w-2xl">
+      스타트업에서 받은 스톡옵션이 Exit 시 얼마의 가치가 되는지 계산합니다.
+      행사가격, 부여 주식 수, 목표 밸류에이션을 입력하고
+      슬라이더로 다양한 시나리오를 시뮬레이션해 보세요.
+    </p>
+  </section>
+
+  <section class="pb-8">
+    <EsopCalculator client:load />
+  </section>
+
+  <section class="py-8 border-t border-ink/10">
+    <h2 class="font-serif text-xl font-semibold mb-6">자주 묻는 질문</h2>
+    <div class="space-y-5">
+      {faqs.map((faq) => (
+        <details class="group">
+          <summary class="cursor-pointer text-sm font-medium text-ink hover:text-accent-blue transition-colors list-none flex items-start gap-2">
+            <span class="text-ink/30 group-open:rotate-90 transition-transform mt-0.5">&#9654;</span>
+            {faq.q}
+          </summary>
+          <p class="text-sm text-ink/60 leading-relaxed mt-2 ml-5">{faq.a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

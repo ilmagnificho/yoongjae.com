@@ -11,16 +11,16 @@ const tools = [
     available: true,
   },
   {
-    name: 'Runway 계산기',
-    description: '현재 번레이트와 잔액으로 런웨이를 계산하세요',
-    href: '/tools/runway',
-    available: false,
+    name: 'SAFE & Convertible Note 시뮬레이터',
+    description: 'Valuation Cap과 Discount에 따른 전환 주식 수와 지분율 계산',
+    href: '/tools/safe-simulator',
+    available: true,
   },
   {
-    name: '지분 희석 시뮬레이터',
-    description: '여러 라운드에 걸친 창업자 지분 변화를 시각화하세요',
-    href: '/tools/dilution',
-    available: false,
+    name: 'ESOP (스톡옵션) 가치 계산기',
+    description: 'Exit 시나리오별 스톡옵션의 잠재 수익을 시뮬레이션하세요',
+    href: '/tools/esop-calculator',
+    available: true,
   },
 ];
 
@@ -41,7 +41,7 @@ const itemListSchema = {
 
 <BaseLayout
   title="스타트업 창업자를 위한 무료 금융 계산 도구"
-  description="Cap Table 계산기, Runway 계산기 등 스타트업 창업자와 투자자를 위한 무료 계산 도구 모음입니다."
+  description="Cap Table 계산기, SAFE 시뮬레이터, ESOP 계산기 등 스타트업 창업자와 투자자를 위한 무료 계산 도구 모음입니다."
   canonicalUrl="/tools"
 >
   <Fragment slot="head">
@@ -53,39 +53,22 @@ const itemListSchema = {
 
     <div class="grid gap-4">
       {tools.map((tool) => (
-        tool.available ? (
-          <a
-            href={tool.href}
-            class="group block border border-ink/10 rounded-lg p-5 hover:border-ink/20 hover:bg-ink/[0.02] transition-all"
-          >
-            <div class="flex items-start justify-between gap-3">
-              <div>
-                <h2 class="font-serif text-lg font-semibold group-hover:text-accent-blue transition-colors">
-                  {tool.name}
-                </h2>
-                <p class="text-sm text-ink/55 mt-1">{tool.description}</p>
-              </div>
-              <span class="text-[10px] text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full shrink-0 font-medium mt-1">
-                사용 가능
-              </span>
-            </div>
-            <span class="text-sm text-accent-blue mt-3 inline-block group-hover:translate-x-0.5 transition-transform">
-              사용하기 &rarr;
-            </span>
-          </a>
-        ) : (
-          <div class="border border-ink/8 rounded-lg p-5 opacity-60">
-            <div class="flex items-start justify-between gap-3">
-              <div>
-                <h2 class="font-serif text-lg font-semibold">{tool.name}</h2>
-                <p class="text-sm text-ink/45 mt-1">{tool.description}</p>
-              </div>
-              <span class="text-[10px] text-ink/40 bg-ink/[0.05] px-2 py-0.5 rounded-full shrink-0 font-medium mt-1">
-                준비 중
-              </span>
+        <a
+          href={tool.href}
+          class="group block border border-ink/10 rounded-lg p-5 hover:border-ink/20 hover:bg-ink/[0.02] transition-all"
+        >
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <h2 class="font-serif text-lg font-semibold group-hover:text-accent-blue transition-colors">
+                {tool.name}
+              </h2>
+              <p class="text-sm text-ink/55 mt-1">{tool.description}</p>
             </div>
           </div>
-        )
+          <span class="text-sm text-accent-blue mt-3 inline-block group-hover:translate-x-0.5 transition-transform">
+            사용하기 &rarr;
+          </span>
+        </a>
       ))}
     </div>
   </section>

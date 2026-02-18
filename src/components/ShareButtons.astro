@@ -1,0 +1,98 @@
+---
+/**
+ * Share buttons for blog posts.
+ * Supports: Copy Link, X (Twitter), LinkedIn, KakaoTalk.
+ */
+interface Props {
+  title: string;
+  url: string;
+}
+
+const { title, url } = Astro.props;
+---
+
+<section class="mt-12 pt-8 border-t border-ink/10">
+  <h2 class="text-xs text-ink/40 font-mono uppercase tracking-wider mb-4">공유하기</h2>
+  <div class="flex flex-wrap gap-2" data-share-buttons data-title={title} data-url={url}>
+    <!-- Copy Link -->
+    <button
+      data-action="copy"
+      class="inline-flex items-center gap-1.5 px-3 py-1.5 border border-ink/10 rounded-lg text-xs text-ink/60 hover:text-ink hover:border-ink/25 transition-colors"
+    >
+      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+      <span data-copy-label>링크 복사</span>
+    </button>
+
+    <!-- X (Twitter) -->
+    <a
+      data-action="twitter"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex items-center gap-1.5 px-3 py-1.5 border border-ink/10 rounded-lg text-xs text-ink/60 hover:text-ink hover:border-ink/25 transition-colors"
+    >
+      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      X
+    </a>
+
+    <!-- LinkedIn -->
+    <a
+      data-action="linkedin"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex items-center gap-1.5 px-3 py-1.5 border border-ink/10 rounded-lg text-xs text-ink/60 hover:text-ink hover:border-ink/25 transition-colors"
+    >
+      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      LinkedIn
+    </a>
+
+    <!-- KakaoTalk -->
+    <a
+      data-action="kakao"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex items-center gap-1.5 px-3 py-1.5 border border-ink/10 rounded-lg text-xs text-ink/60 hover:text-ink hover:border-ink/25 transition-colors"
+    >
+      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-5.076 0-9.192 3.272-9.192 7.31 0 2.588 1.712 4.862 4.288 6.162-.134.476-.866 3.06-.893 3.268 0 0-.018.152.08.21.098.058.213.026.213.026.281-.039 3.256-2.13 3.775-2.496A11.37 11.37 0 0 0 12 17.62c5.076 0 9.192-3.272 9.192-7.31S17.076 3 12 3z"/></svg>
+      카카오톡
+    </a>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll('[data-share-buttons]').forEach((container) => {
+      const el = container as HTMLElement;
+      const title = el.dataset.title || '';
+      const path = el.dataset.url || '';
+      const fullUrl = `${window.location.origin}${path}`;
+      const encodedUrl = encodeURIComponent(fullUrl);
+      const encodedTitle = encodeURIComponent(title);
+
+      // Set href for social links
+      const twitter = el.querySelector('[data-action="twitter"]') as HTMLAnchorElement | null;
+      if (twitter) twitter.href = `https://x.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`;
+
+      const linkedin = el.querySelector('[data-action="linkedin"]') as HTMLAnchorElement | null;
+      if (linkedin) linkedin.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+
+      const kakao = el.querySelector('[data-action="kakao"]') as HTMLAnchorElement | null;
+      if (kakao) kakao.href = `https://story.kakao.com/share?url=${encodedUrl}`;
+
+      // Copy link button
+      const copyBtn = el.querySelector('[data-action="copy"]') as HTMLButtonElement | null;
+      const copyLabel = el.querySelector('[data-copy-label]') as HTMLSpanElement | null;
+      if (copyBtn && copyLabel) {
+        copyBtn.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(fullUrl);
+            copyLabel.textContent = '복사됨!';
+            setTimeout(() => { copyLabel.textContent = '링크 복사'; }, 2000);
+          } catch {
+            copyLabel.textContent = '복사 실패';
+            setTimeout(() => { copyLabel.textContent = '링크 복사'; }, 2000);
+          }
+        });
+      }
+    });
+  });
+</script>

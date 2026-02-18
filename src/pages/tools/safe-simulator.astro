@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SafeSimulator from '../../components/tools/SafeSimulator';
+
+const title = 'SAFE & Convertible Note 시뮬레이터 - 무료 전환가격 계산';
+const description = 'SAFE 투자 시 Valuation Cap과 Discount Rate에 따른 전환 주식 수, 지분율, 주당가격을 실시간으로 계산합니다.';
+
+const faqs = [
+  {
+    q: 'SAFE(Simple Agreement for Future Equity)란 무엇인가요?',
+    a: 'SAFE는 Y Combinator가 만든 초기 투자 계약 방식입니다. 현재 주식을 발행하지 않고, 다음 투자 라운드에서 할인된 가격으로 주식을 전환받는 구조입니다. 빠르고 간단하여 Pre-Seed/Seed 단계에서 많이 활용됩니다.',
+  },
+  {
+    q: 'Valuation Cap과 Discount Rate의 차이는?',
+    a: 'Valuation Cap은 전환 시 적용되는 최대 기업가치 상한선이고, Discount Rate는 다음 라운드 주당가격에서 할인해주는 비율입니다. SAFE 전환 시 두 가지 중 투자자에게 더 유리한(주당가격이 더 낮은) 조건이 적용됩니다.',
+  },
+  {
+    q: 'Pre-money Valuation은 무엇을 입력하나요?',
+    a: 'SAFE가 전환되는 시점(보통 Series A)의 Pre-money Valuation을 입력합니다. 이 가격을 기준으로 Cap과 Discount 중 어느 것이 투자자에게 유리한지 비교합니다.',
+  },
+  {
+    q: 'Convertible Note와 SAFE의 차이는?',
+    a: 'Convertible Note는 부채(대출)의 형태로 만기일과 이자율이 있지만, SAFE는 지분전환권으로 만기나 이자가 없습니다. 둘 다 Valuation Cap과 Discount가 적용될 수 있으나, SAFE가 더 간단하고 창업자 친화적입니다.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
+const appSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'SAFE & Convertible Note 시뮬레이터',
+  url: 'https://yoongjae.com/tools/safe-simulator',
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+  author: { '@type': 'Person', name: '조융재', url: 'https://yoongjae.com' },
+};
+---
+
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <link rel="canonical" href="https://yoongjae.com/tools/safe-simulator" />
+    <script type="application/ld+json" set:html={JSON.stringify(appSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <section class="py-4">
+    <div class="flex items-center gap-2 text-xs text-ink/40 mb-4">
+      <a href="/tools" class="hover:text-ink transition-colors">Tools</a>
+      <span>/</span>
+      <span>SAFE 시뮬레이터</span>
+    </div>
+
+    <h1 class="font-serif text-3xl font-bold mb-3">SAFE & Convertible Note 시뮬레이터</h1>
+    <p class="text-sm text-ink/60 leading-relaxed max-w-2xl">
+      SAFE 또는 전환사채 투자 시, Valuation Cap과 Discount Rate에 따라
+      투자자가 실제로 몇 주를 받게 되는지 시뮬레이션합니다.
+      두 조건 중 투자자에게 유리한 가격이 자동으로 선택됩니다.
+    </p>
+  </section>
+
+  <section class="pb-8">
+    <SafeSimulator client:load />
+  </section>
+
+  <section class="py-8 border-t border-ink/10">
+    <h2 class="font-serif text-xl font-semibold mb-6">자주 묻는 질문</h2>
+    <div class="space-y-5">
+      {faqs.map((faq) => (
+        <details class="group">
+          <summary class="cursor-pointer text-sm font-medium text-ink hover:text-accent-blue transition-colors list-none flex items-start gap-2">
+            <span class="text-ink/30 group-open:rotate-90 transition-transform mt-0.5">&#9654;</span>
+            {faq.q}
+          </summary>
+          <p class="text-sm text-ink/60 leading-relaxed mt-2 ml-5">{faq.a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
