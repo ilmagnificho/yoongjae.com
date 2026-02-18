@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
+const siteUrl = Astro.site?.toString() ?? 'https://yoongjae.com';
+
 const tools = [
   {
     name: 'Cap Table 계산기',
@@ -21,12 +23,30 @@ const tools = [
     available: false,
   },
 ];
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Startup Finance Tools',
+  numberOfItems: tools.length,
+  itemListElement: tools.map((tool, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    url: new URL(tool.href, siteUrl).toString(),
+    name: tool.name,
+    description: tool.description,
+  })),
+};
 ---
 
 <BaseLayout
   title="스타트업 창업자를 위한 무료 금융 계산 도구"
   description="Cap Table 계산기, Runway 계산기 등 스타트업 창업자와 투자자를 위한 무료 계산 도구 모음입니다."
+  canonicalUrl="/tools"
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} />
+  </Fragment>
   <section class="py-4">
     <h1 class="font-serif text-3xl font-bold mb-2">Tools</h1>
     <p class="text-sm text-ink/55 mb-8">스타트업 창업자와 투자자를 위한 무료 계산 도구</p>

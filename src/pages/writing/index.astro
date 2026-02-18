@@ -3,15 +3,31 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PostList from '../../components/PostList.astro';
 import { getSortedPosts, filterPostsByTag } from '../../lib/posts';
 
+const siteUrl = Astro.site?.toString() ?? 'https://yoongjae.com';
+
 const allPosts = await getSortedPosts();
 
 const filters = [
-  { key: 'all', label: 'All' },
-  { key: 'essays', label: 'Essays' },
-  { key: 'yj-letter', label: 'YJ Letter' },
-  { key: 'curated', label: 'Curated' },
-  { key: 'insights', label: 'Insights' },
+  { key: 'all', label: '전체 All' },
+  { key: 'essays', label: '에세이 Essays' },
+  { key: 'yj-letter', label: 'YJ 레터' },
+  { key: 'curated', label: '큐레이션 Curated' },
+  { key: 'insights', label: '인사이트 Insights' },
 ] as const;
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Writing',
+  itemListOrder: 'https://schema.org/ItemListOrderDescending',
+  numberOfItems: allPosts.length,
+  itemListElement: allPosts.map((post, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    url: new URL(post.url, siteUrl).toString(),
+    name: post.title,
+  })),
+};
 
 // Pre-filter for each tab (client-side switching via JS)
 const postsByFilter = Object.fromEntries(
@@ -19,10 +35,13 @@ const postsByFilter = Object.fromEntries(
 );
 ---
 
-<BaseLayout title="Writing" description="Essays, investor letters, and curated reads.">
+<BaseLayout title="글 Writing" description="한국 창업자·투자자를 위한 에세이, 투자자 레터, 큐레이션 아카이브." canonicalUrl="/writing">
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} />
+  </Fragment>
   <section class="py-4">
-    <h1 class="font-serif text-3xl font-bold mb-2">Writing</h1>
-    <p class="text-sm text-ink/55 mb-6">Essays, investor letters, and curated reads.</p>
+    <h1 class="font-serif text-3xl font-bold mb-2">글 Writing</h1>
+    <p class="text-sm text-ink/55 mb-6">한국 창업자·투자자를 위한 에세이, 투자자 레터, 큐레이션 아카이브.</p>
 
     <!-- Filter Tabs -->
     <div class="flex gap-1.5 mb-6 border-b border-ink/12 pb-3 overflow-x-auto -mx-6 px-6 scrollbar-hide" id="filter-tabs">

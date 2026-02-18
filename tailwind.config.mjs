@@ -13,7 +13,7 @@ export default {
       },
       fontFamily: {
         serif: ['Newsreader', 'Georgia', 'Times New Roman', 'serif'],
-        sans: ['Inter', 'Pretendard', 'system-ui', 'sans-serif'],
+        sans: ['NanumSquareNeo', 'Inter', 'Pretendard', 'system-ui', 'sans-serif'],
       },
     },
   },

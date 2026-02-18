@@ -1,44 +1,87 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
+const siteUrl = Astro.site?.toString() ?? 'https://yoongjae.com';
+const aboutUrl = new URL('/about', siteUrl).toString();
+
+const profilePageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  url: aboutUrl,
+  name: 'About YoongJae Cho',
+  mainEntity: {
+    '@type': 'Person',
+    name: 'YoongJae Cho',
+    alternateName: 'YoongJae',
+    description:
+      'CEO at Tetra Corp and GP at 조약돌개인투자조합. Builder and investor focused on early-stage startups.',
+    jobTitle: ['CEO', 'General Partner'],
+    worksFor: [
+      {
+        '@type': 'Organization',
+        name: 'Tetra Corp',
+        url: 'https://www.tetracorp.co.kr/',
+      },
+      {
+        '@type': 'Organization',
+        name: '조약돌개인투자조합',
+      },
+    ],
+    alumniOf: {
+      '@type': 'Organization',
+      name: 'ORIX Corporation',
+    },
+    sameAs: [
+      'https://www.linkedin.com/in/yjcho/',
+      'https://www.threads.com/@ilmagnificho',
+    ],
+    url: siteUrl,
+  },
+};
+
 const timeline = [
-  { year: '2024 - Present', role: 'CEO', org: 'Tetra Corp', url: 'https://www.tetracorp.co.kr/', description: 'Startup studio creating, investing in, and growing early-stage ventures with a team of legal, PR, and VC experts.' },
-  { year: '2024 - Present', role: 'GP', org: '조약돌개인투자조합', description: 'General Partner of a private investment fund focused on early-stage startup investments.' },
-  { year: '2020 - 2023', role: 'New Business Team Lead', org: 'KRAFTON Inc.', description: 'Corporate development and new business initiatives at the global gaming company (parent of PUBG).' },
-  { year: '2021 - 2022', role: 'COO', org: 'thingsflow', description: 'Mobile app startup acquired by KRAFTON in 2021. Led operations as a KRAFTON subsidiary.', nested: true },
-  { year: '2018 - 2023', role: 'CEO Staff', org: 'PUBG Corporation', description: 'Corporate development at the publisher of PLAYERUNKNOWN\'S BATTLEGROUNDS. PUBG was a KRAFTON subsidiary, later merged.' },
-  { year: '2014 - 2016', role: 'Investment Associate', org: 'BonAngels Venture Partners', description: 'One of the earliest and leading early-stage VC firms in Korea.' },
-  { year: '2010 - 2014', role: 'Analyst → Assistant Manager', org: 'ORIX Corporation (Tokyo, HQ)', description: 'Private equity and financial services. Started at ORIX PE Korea, then transferred to ORIX Corporation headquarters in Tokyo.' },
+  { year: '2024 - Present', role: 'CEO', org: '테트라', url: 'https://www.tetracorp.co.kr/', description: '법률·PR·VC 경험을 결합해 한국 초기팀의 설립, 검증, 스케일업을 함께 만드는 스타트업 스튜디오를 운영하고 있습니다.' },
+  { year: '2024 - Present', role: 'GP', org: '조약돌개인투자조합', description: '한국 초기 창업팀의 첫 라운드 의사결정을 돕는 사모 투자조합 GP로 활동하고 있습니다.' },
+  { year: '2020 - 2023', role: 'New Business Team Lead', org: 'KRAFTON Inc.', description: '크래프톤에서 신사업과 기업개발을 맡아 글로벌 스케일 기준의 사업 검증·확장 경험을 쌓았습니다.' },
+  { year: '2021 - 2022', role: 'COO', org: 'thingsflow', description: '2021년 크래프톤에 인수된 팀에서 운영을 맡아, 인수 이후의 통합과 성장 실행을 리드했습니다.', nested: true },
+  { year: '2018 - 2023', role: 'CEO Staff', org: 'PUBG Corporation', description: 'PUBG 법인에서 기업개발을 담당하며 대형 IP 기반 조직의 성장 전략과 실행을 경험했습니다.' },
+  { year: '2014 - 2016', role: 'Investment Associate', org: 'BonAngels Venture Partners', description: '국내 대표 초기 VC에서 한국 스타트업의 초기 성장과 투자 케이스를 현장에서 학습했습니다.' },
+  { year: '2010 - 2014', role: 'Analyst → Assistant Manager', org: 'ORIX Corporation (Tokyo, HQ)', description: 'ORIX PE Korea를 거쳐 도쿄 본사로 이동하며 PE·금융 실무를 기반으로 투자 판단 프레임을 다졌습니다.' },
 ];
 ---
 
-<BaseLayout title="About" description="About YoongJae - CEO of Tetra Corp, startup studio builder and investor.">
+<BaseLayout
+  title="소개 About"
+  description="한국 창업자와 투자자를 위한 빌더·투자자 요약."
+  canonicalUrl="/about"
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(profilePageSchema)} />
+  </Fragment>
   <section class="py-4">
-    <h1 class="font-serif text-3xl font-bold mb-5">About</h1>
+    <h1 class="font-serif text-3xl font-bold mb-5">소개 About</h1>
 
     <div class="space-y-4 text-ink/70 text-sm leading-relaxed mb-10">
       <p>
-        I'm the CEO of <a href="https://www.tetracorp.co.kr/" target="_blank" rel="noopener noreferrer" class="text-ink font-semibold hover:text-accent-blue transition-colors">Tetra Corporation</a>,
-        a startup studio in Seoul. Together with co-founders from legal, PR, and VC backgrounds,
-        we create, invest in, and grow early-stage ventures.
+        저는 <a href="https://www.tetracorp.co.kr/" target="_blank" rel="noopener noreferrer" class="text-ink font-semibold hover:text-accent-blue transition-colors">테트라</a> 대표로,
+        한국 초기 창업팀이 더 빠르게 제품·팀·자본 전략을 맞출 수 있도록 스튜디오 방식의 빌딩을 실행합니다.
       </p>
       <p>
-        I also serve as the General Partner of <strong class="text-ink">조약돌개인투자조합</strong>,
-        a private investment fund focused on early-stage startups.
+        동시에 <strong class="text-ink">조약돌개인투자조합</strong> GP로서,
+        창업자와 투자자가 같은 언어로 의사결정할 수 있도록 초기 투자 라운드의 구조와 논리를 설계합니다.
       </p>
       <p>
-        My background spans venture capital, corporate development, and startup operations &mdash;
-        from early-stage investing at BonAngels to M&A and new business at KRAFTON/PUBG,
-        and private equity at ORIX in Tokyo.
+        보냉엔젤스의 초기투자, KRAFTON/PUBG의 기업개발·신사업, ORIX 도쿄 본사의 PE 경험을 바탕으로
+        한국 시장에 맞는 성장 시나리오와 실행 우선순위를 제시합니다.
       </p>
       <p>
-        This site is my digital home &mdash; a place to share essays and investment insights
-        with the Korean tech ecosystem.
+        이 사이트는 한국 창업자·투자자를 위한 실전 메모입니다.
+        <span class="text-ink/55">Builder &amp; Investor Playbook for Korea</span>
       </p>
     </div>
 
-    <!-- Career Timeline -->
-    <h2 class="font-serif text-xl font-semibold mb-5">Timeline</h2>
+    <!-- Career 경력 타임라인 Timeline -->
+    <h2 class="font-serif text-xl font-semibold mb-5">경력 타임라인 Timeline</h2>
     <div class="space-y-5 mb-10">
       {timeline.map((item) => (
         <div class:list={['flex gap-3 md:gap-4', item.nested && 'ml-4 md:ml-5 border-l-2 border-ink/10 pl-3 md:pl-4']}>
@@ -59,13 +102,13 @@ const timeline = [
       ))}
     </div>
 
-    <!-- Contact -->
-    <h2 class="font-serif text-xl font-semibold mb-3">Contact</h2>
+    <!-- 연락처 Contact -->
+    <h2 class="font-serif text-xl font-semibold mb-3">연락처 Contact</h2>
     <p class="text-sm text-ink/65">
-      Reach me via
+      협업 제안이나 문의는
       <a href="https://www.linkedin.com/in/yjcho/" target="_blank" rel="noopener noreferrer" class="text-accent-blue hover:underline">LinkedIn</a>
-      or
-      <a href="https://www.threads.com/@ilmagnificho" target="_blank" rel="noopener noreferrer" class="text-accent-blue hover:underline">Threads</a>.
+      또는
+      <a href="https://www.threads.com/@ilmagnificho" target="_blank" rel="noopener noreferrer" class="text-accent-blue hover:underline">Threads</a>로 보내주세요.
     </p>
   </section>
 </BaseLayout>

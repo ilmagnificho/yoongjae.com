@@ -6,14 +6,37 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title?: string;
   description?: string;
+  canonicalUrl?: string;
 }
 
 const {
   title = 'YoongJae',
-  description = 'CEO at Tetra Corp. GP at 조약돌개인투자조합. Startup studio & early-stage investments.',
+  description = 'CEO at 테트라. GP at 조약돌개인투자조합. Startup studio & early-stage investments.',
+  canonicalUrl,
 } = Astro.props;
 
 const pageTitle = title === 'YoongJae' ? title : `${title} | YoongJae`;
+const siteUrl = Astro.site?.toString() ?? 'https://yoongjae.com';
+const canonicalHref = canonicalUrl
+  ? new URL(canonicalUrl, siteUrl).toString()
+  : Astro.url.toString();
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'YoongJae Cho',
+  jobTitle: 'CEO',
+  worksFor: {
+    '@type': 'Organization',
+    name: 'Tetra Corp',
+    url: 'https://www.tetracorp.co.kr/',
+  },
+  url: siteUrl,
+  sameAs: [
+    'https://www.linkedin.com/in/yjcho/',
+    'https://www.threads.com/@ilmagnificho',
+  ],
+};
 ---
 
 <!doctype html>
@@ -22,9 +45,19 @@ const pageTitle = title === 'YoongJae' ? title : `${title} | YoongJae`;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalHref} />
+
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalHref} />
+    <meta property="og:locale" content="ko_KR" />
+    <meta name="twitter:card" content="summary" />
+
     <title>{pageTitle}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
     <slot name="head" />
   </head>
   <body class="min-h-screen flex flex-col">

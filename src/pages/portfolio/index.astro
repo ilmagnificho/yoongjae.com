@@ -2,18 +2,38 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
+const siteUrl = Astro.site?.toString() ?? 'https://yoongjae.com';
+
 const portfolioEntries = await getCollection('portfolio');
 const sortedEntries = portfolioEntries.sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime()
 );
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Portfolio Investments',
+  itemListOrder: 'https://schema.org/ItemListOrderDescending',
+  numberOfItems: sortedEntries.length,
+  itemListElement: sortedEntries.map((entry, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    url: entry.data.url ?? new URL(`/portfolio#${entry.id}`, siteUrl).toString(),
+    name: entry.data.title,
+    description: entry.data.description,
+  })),
+};
 ---
 
-<BaseLayout title="Portfolio" description="Investment portfolio via 조약돌개인투자조합.">
+<BaseLayout title="포트폴리오 Portfolio" description="한국 창업자 생태계와 함께 만든 조약돌개인투자조합 투자 포트폴리오." canonicalUrl="/portfolio">
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} />
+  </Fragment>
   <section class="py-4">
-    <h1 class="font-serif text-3xl font-bold mb-2">Portfolio</h1>
-    <p class="text-sm text-ink/55 mb-6">조약돌개인투자조합 investment portfolio.</p>
+    <h1 class="font-serif text-3xl font-bold mb-2">포트폴리오 Portfolio</h1>
+    <p class="text-sm text-ink/55 mb-6">한국 창업자에게 필요한 문제 해결력과 실행력을 기준으로 함께한 팀들을 소개합니다.</p>
 
-    <h2 class="font-serif text-xl font-semibold mb-4">Investments</h2>
+    <h2 class="font-serif text-xl font-semibold mb-4">주요 투자사 Investments</h2>
     <div class="space-y-0 divide-y divide-ink/8">
       {sortedEntries.map((entry) => {
         const Tag = entry.data.url ? 'a' : 'div';
@@ -47,7 +67,7 @@ const sortedEntries = portfolioEntries.sort(
     </div>
 
     {sortedEntries.length === 0 && (
-      <p class="text-center text-ink/40 py-12">Portfolio items coming soon.</p>
+      <p class="text-center text-ink/40 py-12">곧 더 많은 포트폴리오를 업데이트합니다.</p>
     )}
   </section>
 </BaseLayout>
