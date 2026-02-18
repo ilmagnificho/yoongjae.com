@@ -1,6 +1,5 @@
 ---
 const navItems = [
-  { label: '홈 Home', href: '/' },
   { label: '글 Writing', href: '/writing' },
   { label: '도구 Tools', href: '/tools' },
   { label: '포트폴리오 Portfolio', href: '/portfolio' },
@@ -20,7 +19,7 @@ const currentPath = Astro.url.pathname;
         <a
           href={item.href}
           class:list={[
-            'text-xs md:text-sm font-medium transition-colors',
+            'text-xs md:text-sm font-bold transition-colors',
             currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href))
               ? 'text-ink'
               : 'text-ink/55 hover:text-ink',

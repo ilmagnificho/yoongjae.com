@@ -11,34 +11,15 @@ const { posts } = Astro.props;
     <li>
       <a
         href={post.url}
-        target={post.isExternal ? '_blank' : undefined}
-        rel={post.isExternal ? 'noopener noreferrer' : undefined}
         class="group flex items-baseline gap-3 py-2.5 hover:bg-ink/[0.02] -mx-2 px-2 rounded transition-colors"
       >
         <time class="text-xs text-ink/45 font-mono shrink-0" datetime={post.date.toISOString()}>
           {formatDate(post.date)}
         </time>
         <div class="flex-1 min-w-0 flex items-baseline gap-2">
-          <span class="text-sm text-ink group-hover:text-accent-blue transition-colors font-medium truncate">
+          <span class="text-sm text-ink group-hover:text-accent-blue transition-colors font-bold truncate">
             {post.title}
           </span>
-          {post.isPaid ? (
-            <span class="inline-flex items-center gap-0.5 text-[9px] text-white bg-accent-orange px-1.5 py-0.5 rounded-full shrink-0 font-medium">
-              <svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C9.24 2 7 4.24 7 7v2H6c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-9c0-1.1-.9-2-2-2h-1V7c0-2.76-2.24-5-5-5zm0 2c1.66 0 3 1.34 3 3v2H9V7c0-1.66 1.34-3 3-3z"/></svg>
-              Paid
-            </span>
-          ) : post.substackUrl && (
-            <span class="text-[9px] text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded-full shrink-0 font-medium hidden sm:inline">
-              Free
-            </span>
-          )}
-          {post.isExternal && (
-            <svg class="w-3 h-3 text-ink/35 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-              <polyline points="15 3 21 3 21 9" />
-              <line x1="10" y1="14" x2="21" y2="3" />
-            </svg>
-          )}
         </div>
         <div class="hidden sm:flex gap-1 shrink-0">
           {post.tags.map((tag) => (
@@ -52,5 +33,5 @@ const { posts } = Astro.props;
   ))}
 </ul>
 {posts.length === 0 && (
-  <p class="text-center text-ink/40 py-8 text-sm">No posts yet.</p>
+  <p class="text-center text-ink/40 py-8 text-sm">아직 글이 없습니다.</p>
 )}

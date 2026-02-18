@@ -1,33 +1,20 @@
 import { getCollection } from 'astro:content';
-import { fetchSubstackPosts } from './rss';
 import type { Post } from './types';
 
-async function getLocalPosts(): Promise<Post[]> {
+export async function getSortedPosts(): Promise<Post[]> {
   const entries = await getCollection('blog');
 
-  return entries
+  const posts: Post[] = entries
     .filter((entry) => !entry.data.isDraft)
     .map((entry): Post => ({
       title: entry.data.title,
       date: entry.data.date,
       description: entry.data.description,
       url: `/blog/${entry.id}`,
-      isExternal: false,
-      isPaid: false,
       tags: entry.data.tags,
-      slug: entry.id,
     }));
-}
 
-export async function getSortedPosts(): Promise<Post[]> {
-  const [localPosts, substackPosts] = await Promise.all([
-    getLocalPosts(),
-    fetchSubstackPosts(),
-  ]);
-
-  const allPosts = [...localPosts, ...substackPosts];
-
-  return allPosts.sort((a, b) => b.date.getTime() - a.date.getTime());
+  return posts.sort((a, b) => b.date.getTime() - a.date.getTime());
 }
 
 export function filterPostsByTag(posts: Post[], filter: string): Post[] {

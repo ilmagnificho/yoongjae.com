@@ -17,20 +17,10 @@ const profilePageSchema = {
       'CEO at Tetra Corp and GP at 조약돌개인투자조합. Builder and investor focused on early-stage startups.',
     jobTitle: ['CEO', 'General Partner'],
     worksFor: [
-      {
-        '@type': 'Organization',
-        name: 'Tetra Corp',
-        url: 'https://www.tetracorp.co.kr/',
-      },
-      {
-        '@type': 'Organization',
-        name: '조약돌개인투자조합',
-      },
+      { '@type': 'Organization', name: 'Tetra Corp', url: 'https://www.tetracorp.co.kr/' },
+      { '@type': 'Organization', name: '조약돌개인투자조합' },
     ],
-    alumniOf: {
-      '@type': 'Organization',
-      name: 'ORIX Corporation',
-    },
+    alumniOf: { '@type': 'Organization', name: 'ORIX Corporation' },
     sameAs: [
       'https://www.linkedin.com/in/yjcho/',
       'https://www.threads.com/@ilmagnificho',
@@ -42,25 +32,20 @@ const profilePageSchema = {
 const timeline = [
   { year: '2024 - Present', role: 'CEO', org: '테트라', url: 'https://www.tetracorp.co.kr/', description: '법률·PR·VC 경험을 결합해 한국 초기팀의 설립, 검증, 스케일업을 함께 만드는 스타트업 스튜디오를 운영하고 있습니다.' },
   { year: '2024 - Present', role: 'GP', org: '조약돌개인투자조합', description: '한국 초기 창업팀의 첫 라운드 의사결정을 돕는 사모 투자조합 GP로 활동하고 있습니다.' },
-  { year: '2020 - 2023', role: 'New Business Team Lead', org: 'KRAFTON Inc.', description: '크래프톤에서 신사업과 기업개발을 맡아 글로벌 스케일 기준의 사업 검증·확장 경험을 쌓았습니다.' },
+  { year: '2020 - 2023', role: 'New Business Team Lead', org: 'KRAFTON Inc.', description: '크래프톤에서 신사업과 Corporate Development를 맡아 글로벌 스케일 기준의 사업 검증·확장 경험을 쌓았습니다.' },
   { year: '2021 - 2022', role: 'COO', org: 'thingsflow', description: '2021년 크래프톤에 인수된 팀에서 운영을 맡아, 인수 이후의 통합과 성장 실행을 리드했습니다.', nested: true },
-  { year: '2018 - 2023', role: 'CEO Staff', org: 'PUBG Corporation', description: 'PUBG 법인에서 기업개발을 담당하며 대형 IP 기반 조직의 성장 전략과 실행을 경험했습니다.' },
-  { year: '2014 - 2016', role: 'Investment Associate', org: 'BonAngels Venture Partners', description: '국내 대표 초기 VC에서 한국 스타트업의 초기 성장과 투자 케이스를 현장에서 학습했습니다.' },
-  { year: '2010 - 2014', role: 'Analyst → Assistant Manager', org: 'ORIX Corporation (Tokyo, HQ)', description: 'ORIX PE Korea를 거쳐 도쿄 본사로 이동하며 PE·금융 실무를 기반으로 투자 판단 프레임을 다졌습니다.' },
+  { year: '2018 - 2023', role: 'CEO Staff', org: 'PUBG Corporation', description: 'PUBG 법인에서 Corporate Development를 담당하며 대형 IP 기반 조직의 성장 전략과 실행을 경험했습니다.' },
+  { year: '2014 - 2016', role: 'Venture Capitalist', org: 'BonAngels Venture Partners', description: '국내 대표 초기 VC에서 한국 스타트업의 초기 성장과 투자 케이스를 현장에서 학습했습니다.' },
+  { year: '2010 - 2014', role: 'Associate', org: 'ORIX Corporation (Tokyo, HQ)', description: 'ORIX PE Korea를 거쳐 도쿄 본사로 이동하며, 일본 ORIX Group에서의 PE 투자 경험을 통해 투자 판단 프레임을 다졌습니다.' },
 ];
 ---
 
-<BaseLayout
-  title="소개 About"
-  description="한국 창업자와 투자자를 위한 빌더·투자자 요약."
-  canonicalUrl="/about"
->
+<BaseLayout title="소개 About" description="한국 창업자와 투자자를 위한 빌더·투자자 요약." canonicalUrl="/about">
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(profilePageSchema)} />
   </Fragment>
   <section class="py-4">
     <h1 class="font-serif text-3xl font-bold mb-5">소개 About</h1>
-
     <div class="space-y-4 text-ink/70 text-sm leading-relaxed mb-10">
       <p>
         저는 <a href="https://www.tetracorp.co.kr/" target="_blank" rel="noopener noreferrer" class="text-ink font-semibold hover:text-accent-blue transition-colors">테트라</a> 대표로,
@@ -71,16 +56,15 @@ const timeline = [
         창업자와 투자자가 같은 언어로 의사결정할 수 있도록 초기 투자 라운드의 구조와 논리를 설계합니다.
       </p>
       <p>
-        보냉엔젤스의 초기투자, KRAFTON/PUBG의 기업개발·신사업, ORIX 도쿄 본사의 PE 경험을 바탕으로
+        본엔젤스의 초기투자, KRAFTON/PUBG의 Corporate Development·신사업, 일본 ORIX Group에서의 PE 투자 경험을 바탕으로
         한국 시장에 맞는 성장 시나리오와 실행 우선순위를 제시합니다.
       </p>
       <p>
-        이 사이트는 한국 창업자·투자자를 위한 실전 메모입니다.
-        <span class="text-ink/55">Builder &amp; Investor Playbook for Korea</span>
+        이 사이트에는 그 과정에서 쌓인 투자·빌딩·시장 분석 메모를 정리합니다 —
+        한국 창업자와 투자자가 실전에서 참고할 수 있는 아카이브를 지향합니다.
       </p>
     </div>
 
-    <!-- Career 경력 타임라인 Timeline -->
     <h2 class="font-serif text-xl font-semibold mb-5">경력 타임라인 Timeline</h2>
     <div class="space-y-5 mb-10">
       {timeline.map((item) => (
@@ -102,10 +86,10 @@ const timeline = [
       ))}
     </div>
 
-    <!-- 연락처 Contact -->
     <h2 class="font-serif text-xl font-semibold mb-3">연락처 Contact</h2>
     <p class="text-sm text-ink/65">
       협업 제안이나 문의는
+      <a href="mailto:yjcho@tetracorp.co.kr" class="text-accent-blue hover:underline">yjcho@tetracorp.co.kr</a>,
       <a href="https://www.linkedin.com/in/yjcho/" target="_blank" rel="noopener noreferrer" class="text-accent-blue hover:underline">LinkedIn</a>
       또는
       <a href="https://www.threads.com/@ilmagnificho" target="_blank" rel="noopener noreferrer" class="text-accent-blue hover:underline">Threads</a>로 보내주세요.
