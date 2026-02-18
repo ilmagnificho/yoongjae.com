@@ -1,5 +1,5 @@
-import { useState, useMemo, useCallback } from 'react';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { useState, useMemo } from 'react';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend, type PieLabelRenderProps } from 'recharts';
 
 // ─── Types ──────────────────────────────────────────────────────
 
@@ -14,12 +14,13 @@ interface InvestmentRound {
   id: string;
   name: string;
   roundLabel: string;
-  type: 'equity' | 'safe';
+  type: 'equity' | 'safe' | 'rcps' | 'cps';
   preMoneyValuation: number;
   investmentAmount: number;
   safeValuationCap: number;
   safeDiscount: number;
   safeConversionRound: string;
+  conversionRatio: number; // 전환비율 (1주당 보통주 N주), default 1
   esopEnabled: boolean;
   esopPoolPercent: number;
   esopTiming: 'pre' | 'post';
@@ -91,10 +92,13 @@ function calculateCumulativeRounds(
         ? Math.round((round.investmentAmount * 1e8) / conversionPrice)
         : 0;
     } else {
-      // Equity: standard dilution
+      // Equity / RCPS / CPS: standard dilution
       const postMoney = round.preMoneyValuation + round.investmentAmount;
       const investorPercent = round.investmentAmount / postMoney;
-      newShares = Math.round((totalShares * investorPercent) / (1 - investorPercent));
+      const baseShares = Math.round((totalShares * investorPercent) / (1 - investorPercent));
+      // RCPS/CPS: apply conversion ratio (전환 시 보통주 전환비율)
+      const ratio = (round.type === 'rcps' || round.type === 'cps') ? (round.conversionRatio || 1) : 1;
+      newShares = Math.round(baseShares * ratio);
     }
 
     workingShareholders.push({
@@ -189,6 +193,7 @@ export default function CapTableCalculator() {
       safeValuationCap: 30,
       safeDiscount: 20,
       safeConversionRound: '',
+      conversionRatio: 1,
       esopEnabled: false,
       esopPoolPercent: 10,
       esopTiming: 'pre',
@@ -250,6 +255,7 @@ export default function CapTableCalculator() {
         safeValuationCap: 50,
         safeDiscount: 20,
         safeConversionRound: '',
+        conversionRatio: 1,
         esopEnabled: false,
         esopPoolPercent: 10,
         esopTiming: 'pre',
@@ -280,119 +286,6 @@ export default function CapTableCalculator() {
       [roundId]: { ...prev[roundId], [field]: value },
     }));
   };
-
-  // ── Google Sheets export (GIS + Sheets REST API) ──
-
-  const [isExporting, setIsExporting] = useState(false);
-
-  const exportToGoogleSheets = useCallback(async () => {
-    const CLIENT_ID = import.meta.env.PUBLIC_GOOGLE_CLIENT_ID as string;
-    const SCOPE = 'https://www.googleapis.com/auth/spreadsheets';
-
-    if (isExporting) return;
-    setIsExporting(true);
-
-    try {
-      const google = (window as any).google;
-      if (!google?.accounts?.oauth2) {
-        alert('Google 인증 라이브러리가 아직 로드되지 않았습니다. 잠시 후 다시 시도해주세요.');
-        return;
-      }
-
-      // 1. Get access token via GIS token client
-      const accessToken = await new Promise<string>((resolve, reject) => {
-        const tokenClient = google.accounts.oauth2.initTokenClient({
-          client_id: CLIENT_ID,
-          scope: SCOPE,
-          callback: (resp: any) => {
-            if (resp.error) {
-              reject(new Error(resp.error_description || resp.error));
-            } else {
-              resolve(resp.access_token as string);
-            }
-          },
-          error_callback: (err: any) => {
-            reject(new Error(err.message || 'OAuth 오류'));
-          },
-        });
-        tokenClient.requestAccessToken({ prompt: '' });
-      });
-
-      const headers = {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      };
-
-      // 2. Create spreadsheet
-      const createRes = await fetch('https://sheets.googleapis.com/v4/spreadsheets', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-          properties: {
-            title: `Cap Table - ${new Date().toLocaleDateString('ko-KR')}`,
-          },
-        }),
-      });
-      if (!createRes.ok) throw new Error(`Spreadsheet 생성 실패: ${createRes.status}`);
-      const { spreadsheetId } = await createRes.json();
-
-      // 3. Build data
-      const roundNames = results.slice(1).map((r) => r.roundName);
-      const header = ['주주명', '주주유형', '초기주식수', '초기지분율(%)'];
-      for (const rn of roundNames) header.push(`${rn} 주식수`, `${rn} 지분율(%)`);
-
-      const allNames = new Set<string>();
-      for (const r of results) for (const s of r.shareholders) allNames.add(s.name);
-
-      const rows: (string | number)[][] = [];
-      for (const name of allNames) {
-        const row: (string | number)[] = [name];
-        const initial = results[0].shareholders.find((s) => s.name === name);
-        row.push(initial?.type || '-', initial?.shares || 0, Number((initial?.percent || 0).toFixed(2)));
-        for (const r of results.slice(1)) {
-          const s = r.shareholders.find((sh) => sh.name === name);
-          row.push(s?.shares || 0, Number((s?.percent || 0).toFixed(2)));
-        }
-        rows.push(row);
-      }
-
-      const summaryRows: (string | number)[][] = [
-        [],
-        ['투자 조건 요약'],
-        ['라운드', 'Pre-money (억)', '투자금액 (억)', 'Post-money (억)', '투자자 지분율(%)'],
-      ];
-      for (const r of effectiveRounds) {
-        const investorSh = results
-          .find((res) => res.roundName === r.roundLabel)
-          ?.shareholders.find((s) => s.name === `${r.roundLabel} 투자자`);
-        summaryRows.push([
-          r.roundLabel,
-          r.preMoneyValuation,
-          r.investmentAmount,
-          r.preMoneyValuation + r.investmentAmount,
-          Number((investorSh?.percent || 0).toFixed(2)),
-        ]);
-      }
-
-      const values = [header, ...rows, ...summaryRows];
-
-      // 4. Write data
-      const updateRes = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet1!A1?valueInputOption=USER_ENTERED`,
-        { method: 'PUT', headers, body: JSON.stringify({ values }) },
-      );
-      if (!updateRes.ok) throw new Error(`데이터 입력 실패: ${updateRes.status}`);
-
-      // 5. Open
-      window.open(`https://docs.google.com/spreadsheets/d/${spreadsheetId}`, '_blank');
-    } catch (err: any) {
-      if (err?.message === 'access_denied' || err?.message?.includes('popup_closed')) return;
-      console.error('Google Sheets export failed:', err);
-      alert(`내보내기 실패: ${err.message || '알 수 없는 오류'}`);
-    } finally {
-      setIsExporting(false);
-    }
-  }, [results, effectiveRounds, isExporting]);
 
   // ── Totals for Tab 1 ──
 
@@ -522,6 +415,8 @@ export default function CapTableCalculator() {
                     className="w-full bg-transparent border-b border-ink/15 py-2 px-1 text-sm focus:outline-none focus:border-ink/40"
                   >
                     <option value="equity">보통주 신규 발행</option>
+                    <option value="rcps">RCPS (상환전환우선주)</option>
+                    <option value="cps">CPS (전환우선주)</option>
                     <option value="safe">SAFE</option>
                   </select>
                 </div>
@@ -579,6 +474,29 @@ export default function CapTableCalculator() {
                         onChange={(e) => updateRound(round.id, 'safeDiscount', Number(e.target.value) || 0)}
                         className="w-full bg-transparent border-b border-ink/15 py-2 px-1 text-sm focus:outline-none focus:border-ink/40"
                       />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* RCPS / CPS settings */}
+              {(round.type === 'rcps' || round.type === 'cps') && (
+                <div className="mt-4 pt-4 border-t border-ink/8">
+                  <h4 className="text-xs font-semibold text-ink/50 mb-3">
+                    {round.type === 'rcps' ? 'RCPS 설정' : 'CPS 설정'}
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-xs text-ink/45 block mb-1">전환비율 (우선주 1주당 보통주)</label>
+                      <input
+                        type="number"
+                        step="0.1"
+                        min="0.1"
+                        value={round.conversionRatio || ''}
+                        onChange={(e) => updateRound(round.id, 'conversionRatio', Number(e.target.value) || 1)}
+                        className="w-full bg-transparent border-b border-ink/15 py-2 px-1 text-sm focus:outline-none focus:border-ink/40"
+                      />
+                      <p className="text-[10px] text-ink/35 mt-1">기본 1:1, 희석방지 조항 적용 시 1:1 이상</p>
                     </div>
                   </div>
                 </div>
@@ -798,36 +716,49 @@ export default function CapTableCalculator() {
           )}
 
           {/* Actions */}
-          <div className="mt-8 flex flex-wrap gap-3 items-center justify-between">
+          <div className="mt-8">
             <button
               onClick={() => setActiveTab(1)}
               className="px-5 py-2 border border-ink/15 text-sm rounded-lg hover:bg-ink/[0.03] transition-colors"
             >
               &larr; 조건 수정
             </button>
-            <button
-              onClick={exportToGoogleSheets}
-              disabled={isExporting}
-              className="px-5 py-2.5 bg-accent-blue text-white text-sm font-medium rounded-lg hover:bg-accent-blue/90 disabled:opacity-50 disabled:cursor-wait transition-colors inline-flex items-center gap-2"
-            >
-              {isExporting ? (
-                <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M21 12a9 9 0 1 1-6.219-8.56" strokeLinecap="round" />
-                </svg>
-              ) : (
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                  <polyline points="14 2 14 8 20 8" />
-                  <line x1="16" y1="13" x2="8" y2="13" />
-                  <line x1="16" y1="17" x2="8" y2="17" />
-                </svg>
-              )}
-              {isExporting ? '내보내는 중...' : 'Google Sheets로 내보내기'}
-            </button>
           </div>
         </div>
       )}
+
+      {/* Disclaimer */}
+      <p className="mt-10 text-[11px] text-ink/30 leading-relaxed border-t border-ink/5 pt-4">
+        본 계산기는 참고용이며, 실제 투자 계약 시에는 법률·세무 전문가의 검토를 받으시기 바랍니다.
+        계산 결과는 입력된 가정에 기반한 추정치로, 실제 지분 구조와 다를 수 있습니다.
+      </p>
     </div>
+  );
+}
+
+// ─── Pie label renderer ─────────────────────────────────────────
+
+const RADIAN = Math.PI / 180;
+
+function renderPieLabel(props: PieLabelRenderProps) {
+  const { cx, cy, midAngle, outerRadius, value } = props;
+  const cxN = Number(cx);
+  const cyN = Number(cy);
+  const orN = Number(outerRadius);
+  const radius = orN + 16;
+  const x = cxN + radius * Math.cos(-Number(midAngle) * RADIAN);
+  const y = cyN + radius * Math.sin(-Number(midAngle) * RADIAN);
+  return (
+    <text
+      x={x}
+      y={y}
+      textAnchor={x > cxN ? 'start' : 'end'}
+      dominantBaseline="central"
+      fontSize={11}
+      fill="rgba(26,26,26,0.7)"
+    >
+      {Number(value).toFixed(1)}%
+    </text>
   );
 }
 
@@ -858,17 +789,18 @@ function PieChartSection({ results }: { results: RoundResult[] }) {
           </button>
         ))}
       </div>
-      <ResponsiveContainer width="100%" height={280}>
-        <PieChart>
+      <ResponsiveContainer width="100%" height={340}>
+        <PieChart margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
           <Pie
             data={data}
             cx="50%"
-            cy="50%"
-            innerRadius={60}
-            outerRadius={100}
+            cy="42%"
+            innerRadius={50}
+            outerRadius={85}
             paddingAngle={2}
             dataKey="value"
-            label={({ name, value }) => `${name} ${value}%`}
+            label={renderPieLabel}
+            labelLine={{ stroke: 'rgba(26,26,26,0.15)', strokeWidth: 1 }}
           >
             {data.map((_, i) => (
               <Cell key={i} fill={COLORS[i % COLORS.length]} />
@@ -882,6 +814,12 @@ function PieChartSection({ results }: { results: RoundResult[] }) {
               borderRadius: '8px',
               fontSize: '12px',
             }}
+          />
+          <Legend
+            verticalAlign="bottom"
+            iconType="circle"
+            iconSize={8}
+            wrapperStyle={{ fontSize: '11px', color: 'rgba(26,26,26,0.55)', paddingTop: '8px' }}
           />
         </PieChart>
       </ResponsiveContainer>

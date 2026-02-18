@@ -3,7 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import CapTableCalculator from '../../components/tools/CapTableCalculator';
 
 const title = '스타트업 Cap Table 계산기 - 무료 지분 희석 시뮬레이션';
-const description = '투자 라운드별 지분 희석을 계산하세요. SAFE 전환, 옵션풀 반영, 복수 라운드 시뮬레이션을 지원합니다. 결과를 Google Sheets로 바로 내보낼 수 있습니다.';
+const description = '투자 라운드별 지분 희석을 계산하세요. SAFE, RCPS, CPS 전환, 옵션풀 반영, 복수 라운드 시뮬레이션을 지원합니다.';
 const canonical = 'https://yoongjae.com/tools/cap-table';
 
 const faqs = [
@@ -33,7 +33,7 @@ const faqs = [
   },
   {
     q: '이 계산기의 데이터는 어디에 저장되나요?',
-    a: '모든 데이터는 브라우저에서만 처리되며, 서버에 전송되거나 저장되지 않습니다. Google Sheets 내보내기를 사용하면 본인의 Google 계정에 직접 저장됩니다.',
+    a: '모든 데이터는 브라우저에서만 처리되며, 서버에 전송되거나 저장되지 않습니다.',
   },
 ];
 
@@ -75,8 +75,6 @@ const appSchema = {
     <link rel="canonical" href={canonical} />
     <script type="application/ld+json" set:html={JSON.stringify(appSchema)} />
     <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
-    <!-- Google Identity Services (GIS) for OAuth 2.0 -->
-    <script src="https://accounts.google.com/gsi/client" async></script>
   </Fragment>
 
   <!-- SEO intro -->
@@ -91,9 +89,8 @@ const appSchema = {
     <p class="text-sm text-ink/60 leading-relaxed max-w-2xl">
       투자 협상 전, 지분 희석이 얼마나 일어나는지 미리 확인하세요.
       창업자와 공동창업자의 초기 지분 구성부터, 시드·시리즈 A 투자 라운드,
-      SAFE 전환, ESOP 옵션풀까지 — 복수 라운드에 걸친 Cap Table 변화를
-      실시간으로 시뮬레이션할 수 있습니다. 계산 결과는 Google Sheets로
-      바로 내보내서 투자자 미팅이나 팀 내부 공유에 활용하세요.
+      SAFE·RCPS·CPS 전환, ESOP 옵션풀까지 — 복수 라운드에 걸친 Cap Table 변화를
+      실시간으로 시뮬레이션할 수 있습니다.
       모든 데이터는 브라우저에서만 처리되며, 서버에 전송되지 않습니다.
     </p>
   </section>
