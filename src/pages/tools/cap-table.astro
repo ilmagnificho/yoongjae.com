@@ -1,0 +1,119 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CapTableCalculator from '../../components/tools/CapTableCalculator';
+
+const title = '스타트업 Cap Table 계산기 - 무료 지분 희석 시뮬레이션';
+const description = '투자 라운드별 지분 희석을 계산하세요. SAFE 전환, 옵션풀 반영, 복수 라운드 시뮬레이션을 지원합니다. 결과를 Google Sheets로 바로 내보낼 수 있습니다.';
+const canonical = 'https://yoongjae.com/tools/cap-table';
+
+const faqs = [
+  {
+    q: 'Cap Table(주주명부)이란 무엇인가요?',
+    a: 'Cap Table(Capitalization Table)은 회사의 주식 소유 구조를 정리한 표입니다. 각 주주가 보유한 주식 수, 지분율, 투자금액 등을 한눈에 보여주며, 투자 유치나 M&A 시 필수적으로 활용됩니다.',
+  },
+  {
+    q: 'SAFE(Simple Agreement for Future Equity)란 무엇인가요?',
+    a: 'SAFE는 Y Combinator가 만든 초기 스타트업 투자 방식으로, 즉시 지분을 발행하지 않고 향후 투자 라운드에서 할인된 가격으로 주식을 전환받는 계약입니다. Valuation Cap과 Discount Rate으로 전환 조건이 결정됩니다.',
+  },
+  {
+    q: '지분 희석(Dilution)은 어떻게 계산되나요?',
+    a: '지분 희석은 신규 주식이 발행될 때 기존 주주의 지분율이 줄어드는 현상입니다. 예를 들어, Pre-money Valuation 30억에 5억을 투자받으면 투자자는 약 14.3%(5/35)의 지분을 갖고, 기존 주주들의 지분은 그만큼 희석됩니다.',
+  },
+  {
+    q: 'ESOP(스톡옵션) 풀은 왜 중요한가요?',
+    a: 'ESOP 풀은 핵심 인재를 영입하고 유지하기 위한 주식보상 재원입니다. 투자자들은 보통 10~20%의 ESOP 풀을 요구하며, 이것이 투자 전(pre-money) 또는 투자 후(post-money) 중 언제 설정되느냐에 따라 창업자 희석률이 크게 달라집니다.',
+  },
+  {
+    q: 'Pre-money와 Post-money Valuation의 차이는 무엇인가요?',
+    a: 'Pre-money Valuation은 투자 전 회사 가치, Post-money Valuation은 투자금이 더해진 후의 회사 가치입니다. Post-money = Pre-money + 투자금액. 투자자 지분율 = 투자금액 / Post-money Valuation으로 계산됩니다.',
+  },
+  {
+    q: 'Valuation Cap과 Discount Rate 중 어떤 것이 적용되나요?',
+    a: 'SAFE 전환 시 투자자에게 더 유리한(=주당 가격이 더 낮은) 조건이 적용됩니다. 즉, Valuation Cap 기준 전환가와 Discount Rate 기준 전환가 중 더 낮은 가격으로 주식이 전환됩니다.',
+  },
+  {
+    q: '이 계산기의 데이터는 어디에 저장되나요?',
+    a: '모든 데이터는 브라우저에서만 처리되며, 서버에 전송되거나 저장되지 않습니다. Google Sheets 내보내기를 사용하면 본인의 Google 계정에 직접 저장됩니다.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: f.a,
+    },
+  })),
+};
+
+const appSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: '스타트업 Cap Table 계산기',
+  url: canonical,
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'KRW',
+  },
+  author: {
+    '@type': 'Person',
+    name: '조융재',
+    url: 'https://yoongjae.com',
+  },
+};
+---
+
+<BaseLayout title={title} description={description}>
+  <Fragment slot="head">
+    <link rel="canonical" href={canonical} />
+    <script type="application/ld+json" set:html={JSON.stringify(appSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </Fragment>
+
+  <!-- SEO intro -->
+  <section class="py-4">
+    <div class="flex items-center gap-2 text-xs text-ink/40 mb-4">
+      <a href="/tools" class="hover:text-ink transition-colors">Tools</a>
+      <span>/</span>
+      <span>Cap Table 계산기</span>
+    </div>
+
+    <h1 class="font-serif text-3xl font-bold mb-3">스타트업 Cap Table 계산기</h1>
+    <p class="text-sm text-ink/60 leading-relaxed max-w-2xl">
+      투자 협상 전, 지분 희석이 얼마나 일어나는지 미리 확인하세요.
+      창업자와 공동창업자의 초기 지분 구성부터, 시드·시리즈 A 투자 라운드,
+      SAFE 전환, ESOP 옵션풀까지 — 복수 라운드에 걸친 Cap Table 변화를
+      실시간으로 시뮬레이션할 수 있습니다. 계산 결과는 Google Sheets로
+      바로 내보내서 투자자 미팅이나 팀 내부 공유에 활용하세요.
+      모든 데이터는 브라우저에서만 처리되며, 서버에 전송되지 않습니다.
+    </p>
+  </section>
+
+  <!-- Calculator -->
+  <section class="pb-8">
+    <CapTableCalculator client:load />
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-8 border-t border-ink/10">
+    <h2 class="font-serif text-xl font-semibold mb-6">자주 묻는 질문</h2>
+    <div class="space-y-5">
+      {faqs.map((faq) => (
+        <details class="group">
+          <summary class="cursor-pointer text-sm font-medium text-ink hover:text-accent-blue transition-colors list-none flex items-start gap-2">
+            <span class="text-ink/30 group-open:rotate-90 transition-transform mt-0.5">&#9654;</span>
+            {faq.q}
+          </summary>
+          <p class="text-sm text-ink/60 leading-relaxed mt-2 ml-5">{faq.a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
