@@ -70,7 +70,7 @@ const appSchema = {
 };
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} ogImage="/og/cap-table.png">
   <Fragment slot="head">
     <link rel="canonical" href={canonical} />
     <script type="application/ld+json" set:html={JSON.stringify(appSchema)} />
