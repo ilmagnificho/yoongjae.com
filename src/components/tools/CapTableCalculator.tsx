@@ -281,103 +281,118 @@ export default function CapTableCalculator() {
     }));
   };
 
-  // ── Google Sheets export ──
+  // ── Google Sheets export (GIS + Sheets REST API) ──
+
+  const [isExporting, setIsExporting] = useState(false);
 
   const exportToGoogleSheets = useCallback(async () => {
+    const CLIENT_ID = import.meta.env.PUBLIC_GOOGLE_CLIENT_ID as string;
+    const SCOPE = 'https://www.googleapis.com/auth/spreadsheets';
+
+    if (isExporting) return;
+    setIsExporting(true);
+
     try {
-      const gapi = (window as any).gapi;
-      if (!gapi) {
-        alert('Google API를 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+      const google = (window as any).google;
+      if (!google?.accounts?.oauth2) {
+        alert('Google 인증 라이브러리가 아직 로드되지 않았습니다. 잠시 후 다시 시도해주세요.');
         return;
       }
 
-      await new Promise<void>((resolve) => gapi.load('client:auth2', resolve));
-      await gapi.client.init({
-        clientId: import.meta.env.PUBLIC_GOOGLE_CLIENT_ID,
-        scope: 'https://www.googleapis.com/auth/spreadsheets',
-      });
-
-      const authInstance = gapi.auth2.getAuthInstance();
-      if (!authInstance.isSignedIn.get()) {
-        await authInstance.signIn();
-      }
-
-      await gapi.client.load('sheets', 'v4');
-
-      const createResponse = await gapi.client.sheets.spreadsheets.create({
-        resource: {
-          properties: {
-            title: `Cap Table Simulation - ${new Date().toLocaleDateString('ko-KR')}`,
+      // 1. Get access token via GIS token client
+      const accessToken = await new Promise<string>((resolve, reject) => {
+        const tokenClient = google.accounts.oauth2.initTokenClient({
+          client_id: CLIENT_ID,
+          scope: SCOPE,
+          callback: (resp: any) => {
+            if (resp.error) {
+              reject(new Error(resp.error_description || resp.error));
+            } else {
+              resolve(resp.access_token as string);
+            }
           },
-        },
+          error_callback: (err: any) => {
+            reject(new Error(err.message || 'OAuth 오류'));
+          },
+        });
+        tokenClient.requestAccessToken({ prompt: '' });
       });
 
-      const spreadsheetId = createResponse.result.spreadsheetId;
+      const headers = {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      };
 
-      // Build header row
+      // 2. Create spreadsheet
+      const createRes = await fetch('https://sheets.googleapis.com/v4/spreadsheets', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          properties: {
+            title: `Cap Table - ${new Date().toLocaleDateString('ko-KR')}`,
+          },
+        }),
+      });
+      if (!createRes.ok) throw new Error(`Spreadsheet 생성 실패: ${createRes.status}`);
+      const { spreadsheetId } = await createRes.json();
+
+      // 3. Build data
       const roundNames = results.slice(1).map((r) => r.roundName);
       const header = ['주주명', '주주유형', '초기주식수', '초기지분율(%)'];
-      for (const rn of roundNames) {
-        header.push(`${rn} 주식수`, `${rn} 지분율(%)`);
-      }
+      for (const rn of roundNames) header.push(`${rn} 주식수`, `${rn} 지분율(%)`);
 
-      // Build data rows
       const allNames = new Set<string>();
-      for (const r of results) {
-        for (const s of r.shareholders) allNames.add(s.name);
-      }
+      for (const r of results) for (const s of r.shareholders) allNames.add(s.name);
 
       const rows: (string | number)[][] = [];
       for (const name of allNames) {
         const row: (string | number)[] = [name];
         const initial = results[0].shareholders.find((s) => s.name === name);
-        row.push(initial?.type || '-');
-        row.push(initial?.shares || 0);
-        row.push(Number((initial?.percent || 0).toFixed(2)));
+        row.push(initial?.type || '-', initial?.shares || 0, Number((initial?.percent || 0).toFixed(2)));
         for (const r of results.slice(1)) {
           const s = r.shareholders.find((sh) => sh.name === name);
-          row.push(s?.shares || 0);
-          row.push(Number((s?.percent || 0).toFixed(2)));
+          row.push(s?.shares || 0, Number((s?.percent || 0).toFixed(2)));
         }
         rows.push(row);
       }
 
-      // Investment summary
-      const summaryHeader = ['', '', '', ''];
-      const summaryRows = [
-        [''],
+      const summaryRows: (string | number)[][] = [
+        [],
         ['투자 조건 요약'],
         ['라운드', 'Pre-money (억)', '투자금액 (억)', 'Post-money (억)', '투자자 지분율(%)'],
       ];
       for (const r of effectiveRounds) {
-        const postMoney = r.preMoneyValuation + r.investmentAmount;
-        const investorResult = results.find((res) => res.roundName === r.roundLabel);
-        const investorSh = investorResult?.shareholders.find((s) => s.name === `${r.roundLabel} 투자자`);
+        const investorSh = results
+          .find((res) => res.roundName === r.roundLabel)
+          ?.shareholders.find((s) => s.name === `${r.roundLabel} 투자자`);
         summaryRows.push([
           r.roundLabel,
           r.preMoneyValuation,
           r.investmentAmount,
-          postMoney,
+          r.preMoneyValuation + r.investmentAmount,
           Number((investorSh?.percent || 0).toFixed(2)),
         ]);
       }
 
       const values = [header, ...rows, ...summaryRows];
 
-      await gapi.client.sheets.spreadsheets.values.update({
-        spreadsheetId,
-        range: 'Sheet1!A1',
-        valueInputOption: 'USER_ENTERED',
-        resource: { values },
-      });
+      // 4. Write data
+      const updateRes = await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Sheet1!A1?valueInputOption=USER_ENTERED`,
+        { method: 'PUT', headers, body: JSON.stringify({ values }) },
+      );
+      if (!updateRes.ok) throw new Error(`데이터 입력 실패: ${updateRes.status}`);
 
+      // 5. Open
       window.open(`https://docs.google.com/spreadsheets/d/${spreadsheetId}`, '_blank');
     } catch (err: any) {
-      if (err?.error === 'popup_closed_by_user') return;
+      if (err?.message === 'access_denied' || err?.message?.includes('popup_closed')) return;
       console.error('Google Sheets export failed:', err);
-      alert('Google Sheets 내보내기에 실패했습니다. 다시 시도해주세요.');
+      alert(`내보내기 실패: ${err.message || '알 수 없는 오류'}`);
+    } finally {
+      setIsExporting(false);
     }
-  }, [results, effectiveRounds]);
+  }, [results, effectiveRounds, isExporting]);
 
   // ── Totals for Tab 1 ──
 
@@ -387,9 +402,6 @@ export default function CapTableCalculator() {
 
   return (
     <div className="mt-6">
-      {/* Google API script */}
-      <script src="https://apis.google.com/js/api.js" />
-
       {/* Tabs */}
       <div className="flex border-b border-ink/10 mb-6 gap-1 overflow-x-auto">
         <Tab label="1. 현재 주주 구성" active={activeTab === 0} onClick={() => setActiveTab(0)} />
@@ -795,15 +807,22 @@ export default function CapTableCalculator() {
             </button>
             <button
               onClick={exportToGoogleSheets}
-              className="px-5 py-2.5 bg-accent-blue text-white text-sm font-medium rounded-lg hover:bg-accent-blue/90 transition-colors inline-flex items-center gap-2"
+              disabled={isExporting}
+              className="px-5 py-2.5 bg-accent-blue text-white text-sm font-medium rounded-lg hover:bg-accent-blue/90 disabled:opacity-50 disabled:cursor-wait transition-colors inline-flex items-center gap-2"
             >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                <polyline points="14 2 14 8 20 8" />
-                <line x1="16" y1="13" x2="8" y2="13" />
-                <line x1="16" y1="17" x2="8" y2="17" />
-              </svg>
-              Google Sheets로 내보내기
+              {isExporting ? (
+                <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56" strokeLinecap="round" />
+                </svg>
+              ) : (
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                </svg>
+              )}
+              {isExporting ? '내보내는 중...' : 'Google Sheets로 내보내기'}
             </button>
           </div>
         </div>
