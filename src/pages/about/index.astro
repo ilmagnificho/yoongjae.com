@@ -30,13 +30,13 @@ const profilePageSchema = {
 };
 
 const timeline = [
-  { year: '2024 –', role: 'CEO', org: '테트라', url: 'https://www.tetracorp.co.kr/', description: '법률·PR·VC 경험을 결합해 한국 초기팀의 설립, 검증, 스케일업을 함께 만드는 스타트업 스튜디오를 운영하고 있습니다.' },
-  { year: '2024 –', role: 'GP', org: '조약돌개인투자조합', description: '한국 초기 창업팀의 첫 라운드 의사결정을 돕는 개인투자조합 GP로 활동하고 있습니다.' },
+  { year: '2024 –', role: 'CEO', org: '테트라', url: 'https://www.tetracorp.co.kr/', description: '법률·PR·VC 전문가들이 모여 한국 초기팀의 설립, 검증, 스케일업을 함께 만드는 스타트업 스튜디오를 운영하고 있습니다.' },
+  { year: '2024 –', role: 'GP', org: '조약돌개인투자조합', description: '한국 초기 창업팀에 투자를 집행하는는 개인투자조합 GP로 활동하고 있습니다.' },
   { year: '2020 – 2023', role: 'New Business Team Lead', org: 'KRAFTON Inc.', description: '크래프톤에서 신사업과 Corporate Development를 맡아 글로벌 스케일 기준의 사업 검증·확장 경험을 쌓았습니다.' },
-  { year: '2021 – 2022', role: 'COO', org: 'thingsflow', description: '2021년 크래프톤에 인수된 팀에서 운영을 맡아, 인수 이후의 통합과 성장 실행을 리드했습니다.', nested: true },
-  { year: '2018 – 2023', role: 'CEO Staff', org: 'PUBG Corporation', description: 'PUBG 법인에서 Corporate Development를 담당하며 대형 IP 기반 조직의 성장 전략과 실행을 경험했습니다.' },
-  { year: '2014 – 2016', role: 'Venture Capitalist', org: 'BonAngels Venture Partners', description: '국내 대표 초기 VC에서 한국 스타트업의 초기 성장과 투자 케이스를 현장에서 학습했습니다.' },
-  { year: '2010 – 2014', role: 'Associate', org: 'ORIX Corporation (Tokyo, HQ)', description: 'ORIX PE Korea를 거쳐 도쿄 본사로 이동하며, 일본 ORIX Group에서의 PE 투자 경험을 통해 투자 판단 프레임을 다졌습니다.' },
+  { year: '2021 – 2022', role: 'COO', org: 'thingsflow', description: '2021년 크래프톤에서 인수를 담당하고 인수 이후 운영을 맡아, 통합과 성장 실행을 리드했습니다.', nested: true },
+  { year: '2018 – 2023', role: 'CEO Staff', org: 'PUBG Corporation', description: 'PUBG 법인에서 CEO Staff로서 대표이사의 수명 업무를 담당했습니다.' },
+  { year: '2014 – 2016', role: 'Venture Capitalist', org: 'BonAngels Venture Partners', description: '국내 대표 초기 VC에서 한국 스타트업의 초기 성장과 투자 심사 및 포트폴리오 성장을 현장에서 리드했습니다.' },
+  { year: '2010 – 2014', role: 'Associate', org: 'ORIX Corporation (Tokyo, HQ)', description: 'ORIX PE Korea를 거쳐 도쿄 본사로 이동하며, 일본 ORIX Group에서의 글로벌 PE 투자 환경에서의 판단 프레임과 실전 감각을 익혔습니다.' },
 ];
 ---
 
@@ -55,12 +55,13 @@ const timeline = [
         <strong class="text-ink">조약돌개인투자조합</strong>의 GP로서, 한국 초기 스타트업의 설립·성장·투자를 함께하고 있습니다.
       </p>
       <p>
-        커리어 초기에는 일본 ORIX Group에서 PE 투자로 시작해, 국내 대표 초기 VC인 본엔젤스에서 벤처투자를 경험했습니다.
-        이후 PUBG/KRAFTON에서 Corporate Development와 신사업을 리드하며, 글로벌 IP 기반 조직의 성장 전략과 M&A를 직접 실행했습니다.
+        커리어 초기에는 일본 ORIX Group에서 PE 투자로 시작해, 국내 대표 초기 VC인 본엔젤스에서 벤처투자를 경험했습니다.<br>
+        이후 PUBG/KRAFTON에서 Corporate Development와 신사업을 리드하며,<br>글로벌 IP 기반 조직의 성장 전략과 M&A를 직접 실행했습니다.
       </p>
       <p>
-        지금은 그 경험을 바탕으로 창업자가 가장 필요로 하는 시점 — 처음 팀을 만들고, 첫 투자를 받고, 첫 제품을 검증하는 단계 — 에 함께합니다.
-        스타트업 스튜디오(테트라)로 빌딩을, 투자조합(조약돌)으로 자본을, 홈페이지에서 실전 관점을 공유합니다.
+        지금은 그 경험을 바탕으로 창업자가 가장 필요로 하는 시점 — 처음 팀을 만들고, 첫 투자를 받고, 첫 제품을 검증하는 단계에 함께합니다.
+      <p>
+        스타트업 스튜디오(테트라)로 빌딩을, 투자조합(조약돌)으로 자본을, 여기에서는 관점을 공유합니다.
       </p>
     </div>
 
@@ -106,7 +107,7 @@ const timeline = [
     <h2 class="font-serif text-xl font-semibold mb-3">이 사이트에 대해</h2>
     <div class="text-sm text-ink/65 leading-relaxed space-y-2 mb-10">
       <p>
-        투자·빌딩·시장 분석 과정에서 쌓인 실전 메모를 정리합니다.
+        투자·빌딩·시장 분석 과정에서 쌓인 실전 메모를 정리합니다.<br>
         한국 창업자와 투자자가 의사결정 시 참고할 수 있는 아카이브를 지향합니다.
       </p>
       <p>
