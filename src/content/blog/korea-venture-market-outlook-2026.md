@@ -2,7 +2,7 @@
 title: "2026년 벤처 시장 전망: 본격적인 '양극화'의 시작"
 date: 2026-02-18
 description: "2025년 대기업 EB 발행 급증으로 인한 벤처 자금 경색의 원인을 분석하고, 유동성은 늘어나지만 빈익빈 부익부가 심화될 2026년 시장의 구조적 변화를 전망합니다."
-tags: [Trends, Investment]
+tags: [YJ Letter]
 isDraft: false
 ---
 
