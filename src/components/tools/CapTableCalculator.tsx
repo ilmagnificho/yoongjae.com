@@ -728,10 +728,15 @@ export default function CapTableCalculator() {
       )}
 
       {/* Disclaimer */}
-      <p className="mt-10 text-[11px] text-ink/30 leading-relaxed border-t border-ink/5 pt-4">
-        본 계산기는 참고용이며, 실제 투자 계약 시에는 법률·세무 전문가의 검토를 받으시기 바랍니다.
-        계산 결과는 입력된 가정에 기반한 추정치로, 실제 지분 구조와 다를 수 있습니다.
-      </p>
+      <div className="mt-10 border-t border-ink/5 pt-4 space-y-1">
+        <p className="text-[11px] text-ink/30 leading-relaxed">
+          본 계산기는 참고용이며, 실제 투자 계약 시에는 법률·세무 전문가의 검토를 받으시기 바랍니다.
+          계산 결과는 입력된 가정에 기반한 추정치로, 실제 지분 구조와 다를 수 있습니다.
+        </p>
+        <p className="text-[11px] text-ink/30 leading-relaxed">
+          모든 데이터는 브라우저에서만 처리되며, 서버에 전송되거나 저장되지 않습니다.
+        </p>
+      </div>
     </div>
   );
 }

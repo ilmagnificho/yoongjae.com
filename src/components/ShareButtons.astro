@@ -59,9 +59,12 @@ const { title, url } = Astro.props;
 </section>
 
 <script>
-  document.addEventListener('astro:page-load', () => {
+  function initShareButtons() {
     document.querySelectorAll('[data-share-buttons]').forEach((container) => {
       const el = container as HTMLElement;
+      if (el.dataset.initialized) return;
+      el.dataset.initialized = 'true';
+
       const title = el.dataset.title || '';
       const path = el.dataset.url || '';
       const fullUrl = `${window.location.origin}${path}`;
@@ -94,5 +97,9 @@ const { title, url } = Astro.props;
         });
       }
     });
-  });
+  }
+
+  // Support both static pages and View Transitions
+  document.addEventListener('DOMContentLoaded', initShareButtons);
+  document.addEventListener('astro:page-load', initShareButtons);
 </script>

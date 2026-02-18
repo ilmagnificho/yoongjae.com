@@ -3,23 +3,50 @@ import { useState, useMemo } from 'react';
 // ─── Fun "what can I buy" thresholds ────────────────────────────
 
 const MILESTONES = [
-  { threshold: 500_000, label: '맥북 프로 M4', emoji: '' },
-  { threshold: 3_000_000, label: '중고차 한 대', emoji: '' },
-  { threshold: 10_000_000, label: '유럽 한 달 여행', emoji: '' },
-  { threshold: 50_000_000, label: '테슬라 모델 3', emoji: '' },
-  { threshold: 100_000_000, label: '강남 전세 보증금', emoji: '' },
-  { threshold: 300_000_000, label: '서울 아파트 매매', emoji: '' },
-  { threshold: 1_000_000_000, label: '건물주 진입', emoji: '' },
-  { threshold: 5_000_000_000, label: '파이어(FIRE) 달성', emoji: '' },
+  { threshold: 50_000, label: '에어팟 프로' },
+  { threshold: 200_000, label: '아이패드 프로' },
+  { threshold: 500_000, label: '맥북 프로 M4' },
+  { threshold: 1_000_000, label: '명품 가방 하나' },
+  { threshold: 2_000_000, label: '부모님 효도 여행' },
+  { threshold: 3_000_000, label: '중고차 한 대' },
+  { threshold: 5_000_000, label: '제주도 한 달 살기' },
+  { threshold: 10_000_000, label: '유럽 한 달 배낭여행' },
+  { threshold: 20_000_000, label: '신차 한 대 (아반떼급)' },
+  { threshold: 50_000_000, label: '테슬라 모델 3' },
+  { threshold: 80_000_000, label: '벤츠 E-Class' },
+  { threshold: 100_000_000, label: '강남 전세 보증금' },
+  { threshold: 150_000_000, label: 'MBA 유학 2년 (학비+생활비)' },
+  { threshold: 200_000_000, label: '포르쉐 911' },
+  { threshold: 300_000_000, label: '서울 아파트 (비강남)' },
+  { threshold: 500_000_000, label: '서울 주요지역 아파트' },
+  { threshold: 700_000_000, label: '강남 아파트 30평대' },
+  { threshold: 1_000_000_000, label: '10억 클럽 가입' },
+  { threshold: 2_000_000_000, label: '건물 한 채 (지방)' },
+  { threshold: 3_000_000_000, label: '한남더힐 전세' },
+  { threshold: 5_000_000_000, label: '강남 빌딩 매입' },
+  { threshold: 10_000_000_000, label: '파이어(FIRE) + 자녀 교육비 해결' },
+  { threshold: 30_000_000_000, label: '제주도 호텔 하나 인수' },
+  { threshold: 50_000_000_000, label: 'Forbes Korea 등재 가능' },
+  { threshold: 100_000_000_000, label: '슈퍼카 컬렉션 + 전세기' },
 ];
 
-function getWhatCanIBuy(amount: number): string {
+function getWhatCanIBuy(amount: number): { current: string; next: string | null; nextAmount: number } {
+  let currentIdx = -1;
   for (let i = MILESTONES.length - 1; i >= 0; i--) {
     if (amount >= MILESTONES[i].threshold) {
-      return MILESTONES[i].label;
+      currentIdx = i;
+      break;
     }
   }
-  return '커피 한 잔';
+
+  const current = currentIdx >= 0 ? MILESTONES[currentIdx].label : '커피 한 잔';
+  const next = currentIdx < MILESTONES.length - 1 ? MILESTONES[currentIdx + 1] : null;
+
+  return {
+    current,
+    next: next ? next.label : null,
+    nextAmount: next ? next.threshold : 0,
+  };
 }
 
 // ─── Main Component ─────────────────────────────────────────────
@@ -44,10 +71,11 @@ export default function EsopCalculator() {
     return { sharePriceAtExit, grossValue, exerciseCost, netProfit, multiple };
   }, [optionsGranted, strikePrice, exitValuation, totalShares]);
 
-  // Progress bar for profit margin
   const profitRatio = result.grossValue > 0
     ? ((result.grossValue - result.exerciseCost) / result.grossValue) * 100
     : 0;
+
+  const whatCanIBuy = useMemo(() => getWhatCanIBuy(result.netProfit), [result.netProfit]);
 
   return (
     <div className="mt-6 space-y-8">
@@ -159,22 +187,34 @@ export default function EsopCalculator() {
 
       {/* What can I buy */}
       {result.netProfit > 0 && (
-        <div className="border border-ink/10 rounded-lg p-5 text-center">
-          <p className="text-xs text-ink/40 mb-1">이 금액이면?</p>
-          <p className="font-serif text-xl font-bold text-ink">
-            {getWhatCanIBuy(result.netProfit)}
+        <div className="border border-ink/10 rounded-lg p-5">
+          <p className="text-xs text-ink/40 mb-2 text-center">이 금액이면?</p>
+          <p className="font-serif text-xl font-bold text-ink text-center">
+            {whatCanIBuy.current}
           </p>
-          <p className="text-xs text-ink/40 mt-1">
+          <p className="text-xs text-ink/40 mt-1 text-center">
             순이익 {formatKRW(result.netProfit)} 기준
           </p>
+          {whatCanIBuy.next && (
+            <p className="text-[11px] text-ink/30 mt-3 text-center border-t border-ink/5 pt-3">
+              다음 목표: <span className="font-bold text-ink/50">{whatCanIBuy.next}</span>
+              <span className="text-ink/25"> ({formatKRW(whatCanIBuy.nextAmount)} 필요)</span>
+            </p>
+          )}
         </div>
       )}
 
       {/* Disclaimer */}
-      <p className="text-[11px] text-ink/30 leading-relaxed border-t border-ink/5 pt-4">
-        본 계산기는 참고용이며, 실제 스톡옵션 행사 시에는 세금(근로소득세, 양도소득세),
-        베스팅 조건, 우선주 청산 우선권 등을 반드시 고려하셔야 합니다.
-      </p>
+      <div className="border-t border-ink/5 pt-4 space-y-1">
+        <p className="text-[11px] text-ink/30 leading-relaxed">
+          본 계산기는 참고용이며, 실제 스톡옵션 행사 시에는 세금(근로소득세, 양도소득세),
+          베스팅 조건, 우선주 청산 우선권 등을 반드시 고려하셔야 합니다.
+        </p>
+        <p className="text-[11px] text-ink/30 leading-relaxed">
+          계산 결과는 입력된 가정에 기반한 추정치로, 실제 수익과 다를 수 있습니다.
+          모든 데이터는 브라우저에서만 처리되며, 서버에 전송되거나 저장되지 않습니다.
+        </p>
+      </div>
     </div>
   );
 }
@@ -182,6 +222,7 @@ export default function EsopCalculator() {
 // ─── Helpers ────────────────────────────────────────────────────
 
 function formatKRW(amount: number): string {
+  if (amount >= 1e12) return `${(amount / 1e12).toFixed(1)}조 원`;
   if (amount >= 1e8) return `${(amount / 1e8).toFixed(1)}억 원`;
   if (amount >= 1e4) return `${(amount / 1e4).toFixed(0)}만 원`;
   return `${amount.toLocaleString()}원`;
