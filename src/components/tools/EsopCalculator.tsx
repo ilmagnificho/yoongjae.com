@@ -126,26 +126,33 @@ export default function EsopCalculator() {
         </div>
       </div>
 
-      {/* Exit Valuation Slider */}
+      {/* Exit Valuation Slider — log scale: 10억 → 100억 → 1,000억 → 1조 */}
       <div className="border border-ink/10 rounded-lg p-5">
         <div className="flex justify-between items-center mb-2">
           <h3 className="text-xs font-semibold text-ink/50">Exit 밸류에이션 시나리오</h3>
-          <span className="text-sm font-bold text-ink tabular-nums">{exitValuation.toLocaleString()}억 원</span>
+          <span className="text-sm font-bold text-ink tabular-nums">
+            {exitValuation >= 10000 ? '1조' : `${exitValuation.toLocaleString()}억`} 원
+          </span>
         </div>
         <input
           type="range"
-          min={10}
-          max={10000}
-          step={10}
-          value={exitValuation}
-          onChange={(e) => setExitValuation(Number(e.target.value))}
+          min={0}
+          max={100}
+          step={0.5}
+          value={Math.max(0, Math.min(100, (Math.log10(Math.max(exitValuation, 10)) - 1) * (100 / 3)))}
+          onChange={(e) => {
+            const pct = Number(e.target.value);
+            const raw = Math.round(Math.pow(10, 1 + pct * 3 / 100));
+            setExitValuation(Math.min(10000, Math.max(10, raw)));
+          }}
           className="w-full accent-ink h-1.5"
         />
-        <div className="flex justify-between text-[10px] text-ink/30 mt-1">
-          <span>10억</span>
-          <span>1,000억</span>
-          <span>5,000억</span>
-          <span>1조</span>
+        {/* Tick labels at exact log positions: 0%=10억, 33.3%=100억, 66.7%=1,000억, 100%=1조 */}
+        <div className="relative text-[10px] text-ink/30 mt-1 h-4">
+          <span className="absolute left-0">10억</span>
+          <span className="absolute" style={{ left: '33.3%', transform: 'translateX(-50%)' }}>100억</span>
+          <span className="absolute" style={{ left: '66.7%', transform: 'translateX(-50%)' }}>1,000억</span>
+          <span className="absolute right-0">1조</span>
         </div>
       </div>
 

@@ -305,6 +305,14 @@ export default function CapTableCalculator() {
       {/* ─── Tab 1: 현재 주주 구성 ──────────────────────────── */}
       {activeTab === 0 && (
         <div>
+          {/* Column headers */}
+          <div className="hidden sm:flex items-center gap-2 mb-1 px-1 text-[10px] text-ink/35">
+            <span className="flex-1 min-w-[100px]">주주명</span>
+            <span className="min-w-[100px]">구분</span>
+            <span className="w-[120px] text-right">주식 수 (주)</span>
+            <span className="w-[50px] text-right">지분율</span>
+            <span className="w-[24px]" />
+          </div>
           <div className="space-y-3">
             {shareholders.map((s) => (
               <div key={s.id} className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
