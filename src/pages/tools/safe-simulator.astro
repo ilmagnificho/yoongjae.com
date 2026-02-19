@@ -46,9 +46,8 @@ const appSchema = {
 };
 ---
 
-<BaseLayout title={title} description={description} ogImage="/og/safe-simulator.png">
+<BaseLayout title={title} description={description} ogImage="/og/safe-simulator.png" canonicalUrl="/tools/safe-simulator">
   <Fragment slot="head">
-    <link rel="canonical" href="https://yoongjae.com/tools/safe-simulator" />
     <script type="application/ld+json" set:html={JSON.stringify(appSchema)} />
     <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   </Fragment>

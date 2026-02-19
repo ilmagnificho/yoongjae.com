@@ -70,7 +70,6 @@ const personSchema = {
       if (localStorage.getItem('skip_analytics') !== 'true') {
         const script = document.createElement('script');
         script.src = "https://static.cloudflareinsights.com/beacon.min.js";
-        // 아래 "YOUR_TOKEN" 부분을 실제 사장님의 토큰으로 교체해야 합니다.
         script.setAttribute("data-cf-beacon", '{"token": "6eafbb9814ab488baf067bb73405c041"}');
         script.defer = true;
         document.head.appendChild(script);

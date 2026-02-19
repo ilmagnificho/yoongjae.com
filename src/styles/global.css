@@ -47,15 +47,25 @@
 }
 
 .prose h2 {
-  @apply mt-12 mb-4 font-serif;
+  @apply mt-12 mb-4 font-serif text-xl md:text-2xl;
 }
 
 .prose h3 {
-  @apply mt-8 mb-3 font-serif;
+  @apply mt-8 mb-3 font-serif text-lg md:text-xl;
 }
 
-.prose ul, .prose ol {
-  @apply mb-6 pl-6;
+.prose ul {
+  @apply mb-6 pl-6 list-disc;
+}
+
+.prose ol {
+  @apply mb-6 pl-6 list-decimal;
+}
+
+.prose iframe {
+  @apply w-full rounded-lg my-6;
+  aspect-ratio: 16 / 9;
+  height: auto;
 }
 
 .prose li {

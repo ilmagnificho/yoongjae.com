@@ -8,7 +8,6 @@ isDraft: false
 
 > 📝 이 글은 **2025년 6월**에 발행된 [Tetra Monthly] 뉴스레터를 재가공한 콘텐츠입니다.
 
-![AI 생태계의 기회]
 
 어느새 2025년의 절반이 지나고 있습니다. 올 한 해 AI는 모든 논의의 중심에 서 있습니다. 하루가 다르게 진화하며, 매 순간 새로운 국면으로 접어들고 있습니다.
 
@@ -16,7 +15,7 @@ isDraft: false
 
 흥미롭게도 정확히 1년 전인 2024년 6월 HBS 인터뷰에서는 "일자리의 형태는 변하겠지만 사람들이 예측하는 완전한 종말은 오지 않을 것"이라며 지금보다 낙관적인 견해를 보였던 터라, 불과 1년 만에 바뀐 톤에 주목할 필요가 있습니다. ([원문 링크](https://www.hbs.edu/bigs/120-minutes-with-openai-ceo-sam-altman))
 
-[![Sam Altman Interview](https://img.youtube.com/vi/cT63mvqN54o/0.jpg)](https://www.youtube.com/watch?v=cT63mvqN54o)
+<iframe width="100%" height="400" src="https://www.youtube.com/embed/cT63mvqN54o" title="Sam Altman Interview" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius: 12px; margin: 1.5rem 0;"></iframe>
 
 ---
 

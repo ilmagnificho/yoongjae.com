@@ -45,16 +45,6 @@ const { title, url } = Astro.props;
       LinkedIn
     </a>
 
-    <!-- KakaoTalk -->
-    <a
-      data-action="kakao"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="inline-flex items-center gap-1.5 px-3 py-1.5 border border-ink/10 rounded-lg text-xs text-ink/60 hover:text-ink hover:border-ink/25 transition-colors"
-    >
-      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-5.076 0-9.192 3.272-9.192 7.31 0 2.588 1.712 4.862 4.288 6.162-.134.476-.866 3.06-.893 3.268 0 0-.018.152.08.21.098.058.213.026.213.026.281-.039 3.256-2.13 3.775-2.496A11.37 11.37 0 0 0 12 17.62c5.076 0 9.192-3.272 9.192-7.31S17.076 3 12 3z"/></svg>
-      카카오톡
-    </a>
   </div>
 </section>
 
@@ -77,9 +67,6 @@ const { title, url } = Astro.props;
 
       const linkedin = el.querySelector('[data-action="linkedin"]') as HTMLAnchorElement | null;
       if (linkedin) linkedin.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
-
-      const kakao = el.querySelector('[data-action="kakao"]') as HTMLAnchorElement | null;
-      if (kakao) kakao.href = `https://story.kakao.com/share?url=${encodedUrl}`;
 
       // Copy link button
       const copyBtn = el.querySelector('[data-action="copy"]') as HTMLButtonElement | null;

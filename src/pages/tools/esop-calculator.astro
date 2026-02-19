@@ -50,9 +50,8 @@ const appSchema = {
 };
 ---
 
-<BaseLayout title={title} description={description} ogImage="/og/esop-calculator.png">
+<BaseLayout title={title} description={description} ogImage="/og/esop-calculator.png" canonicalUrl="/tools/esop-calculator">
   <Fragment slot="head">
-    <link rel="canonical" href="https://yoongjae.com/tools/esop-calculator" />
     <script type="application/ld+json" set:html={JSON.stringify(appSchema)} />
     <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   </Fragment>
