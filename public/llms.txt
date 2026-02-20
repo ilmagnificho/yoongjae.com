@@ -1,0 +1,40 @@
+# YoongJae.com
+
+> 한국 창업자와 투자자를 위한 빌더·투자 관점 기록
+
+YoongJae Cho(조용재)는 테트라(Tetra Corp) 대표이자 조약돌개인투자조합 GP로, 초기 스타트업의 설립·성장·투자를 함께하며 한국 생태계에 필요한 실전 관점을 기록합니다.
+
+## 주요 콘텐츠
+
+### 글 (Writing)
+에세이, YJ Letter, 큐레이션 등 한국 창업자·투자자를 위한 인사이트를 공유합니다.
+- 에세이: 투자자이자 빌더로서의 경험과 생각
+- YJ Letter: 벤처 시장 전망 및 투자자 관점 분석
+- 큐레이션: 국내외 스타트업 생태계 관련 선별 콘텐츠
+
+### 무료 도구 (Tools)
+스타트업 창업자와 투자자를 위한 실용 도구를 제공합니다.
+- Cap Table 계산기: 투자 라운드별 지분 희석 시뮬레이션
+- SAFE 시뮬레이터: Valuation Cap·Discount 전환가격 계산
+- ESOP 계산기: Exit 시나리오별 스톡옵션 수익 계산
+- PromptForge: Claude & Gemini 시스템 프롬프트 생성기
+
+### 함께하는 팀 (Companies)
+조약돌개인투자조합이 함께하는 초기 스타트업을 소개합니다.
+
+## 페이지 목록
+
+- https://yoongjae.com/ : 홈
+- https://yoongjae.com/about : 소개
+- https://yoongjae.com/writing : 글 목록
+- https://yoongjae.com/companies : 함께하는 팀
+- https://yoongjae.com/tools : 무료 도구 목록
+- https://yoongjae.com/tools/cap-table : Cap Table 계산기
+- https://yoongjae.com/tools/safe-simulator : SAFE 시뮬레이터
+- https://yoongjae.com/tools/esop-calculator : ESOP 계산기
+- https://yoongjae.com/tools/prompt : PromptForge 프롬프트 생성기
+
+## 연락처
+
+- LinkedIn: https://www.linkedin.com/in/yjcho/
+- Threads: https://www.threads.com/@ilmagnificho

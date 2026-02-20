@@ -17,9 +17,46 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 const postUrl = `/blog/${post.id}`;
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://yoongjae.com';
+
+const blogPostingSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.date.toISOString(),
+  author: {
+    '@type': 'Person',
+    name: 'YoongJae Cho',
+    url: siteUrl,
+  },
+  publisher: {
+    '@type': 'Person',
+    name: 'YoongJae Cho',
+    url: siteUrl,
+  },
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': new URL(postUrl, siteUrl).toString(),
+  },
+  image: new URL(`/blog/${post.id}-og.png`, siteUrl).toString(),
+  keywords: post.data.tags?.join(', '),
+  inLanguage: 'ko',
+};
 ---
 
-<BaseLayout title={post.data.title} description={post.data.description} ogImage={`/blog/${post.id}-og.png`}>
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  ogImage={`/blog/${post.id}-og.png`}
+  ogType="article"
+  articleDate={post.data.date}
+  articleTags={post.data.tags}
+  canonicalUrl={postUrl}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(blogPostingSchema)} />
+  </Fragment>
   <article class="py-4">
     <header class="mb-8">
       <div class="flex items-center gap-3 mb-3">
