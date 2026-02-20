@@ -1,51 +1,42 @@
 ---
-// Place this file at: src/pages/tools/prompt.astro in the yoongjae.com repo
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import PromptForge from '../../components/tools/PromptForge';
 
 const title = 'PromptForge — Claude & Gemini 시스템 프롬프트 생성기';
-const description = 'Claude Projects와 Gemini Gems를 위한 전문가급 시스템 프롬프트를 몇 초 만에 생성하세요. 13개 템플릿, 일회성 $4.99.';
+const description = 'Claude Projects와 Gemini Gems를 위한 전문가급 시스템 프롬프트를 몇 초 만에 생성하세요. 13개 템플릿, 무료, 설치 불필요.';
 
 const faqs = [
   {
     q: 'PromptForge가 뭔가요?',
-    a: 'Claude Projects나 Gemini Gems를 만들 때 "Custom Instructions(지침)" 필드에 넣을 시스템 프롬프트를 자동으로 생성해주는 Chrome 확장프로그램입니다. 프롬프트 엔지니어링 지식 없이도 전문가급 설정을 몇 초 만에 완성할 수 있습니다.',
+    a: 'Claude Projects나 Gemini Gems를 만들 때 "Custom Instructions(지침)" 필드에 넣을 시스템 프롬프트를 자동으로 생성해주는 웹 도구입니다. 프롬프트 엔지니어링 지식 없이도 전문가급 설정을 몇 초 만에 완성할 수 있습니다.',
   },
   {
-    q: 'Pro 라이선스 구매 후 어떻게 활성화하나요?',
-    a: '결제 완료 후 입력하신 이메일로 라이선스 키가 발송됩니다. Chrome Extension을 열고 ⚙️ 설정 아이콘 → 이메일과 키 입력 → Activate 버튼을 누르면 즉시 Pro 기능이 활성화됩니다.',
+    q: 'Claude Projects 포맷과 Gemini Gems 포맷이 다른가요?',
+    a: '네. Claude Projects는 XML 태그 구조(<role>, <guidelines>, <output_format>)를 활용한 상세한 프롬프트를, Gemini Gems는 간결하고 직관적인 평문 형식을 사용합니다. PromptForge는 선택한 플랫폼에 최적화된 형식으로 자동 생성합니다.',
   },
   {
-    q: 'Claude Pro 구독과 별개인가요?',
-    a: '네, 완전히 별개입니다. PromptForge는 Claude나 Gemini 계정과 무관하게 작동합니다. Claude.ai나 Gemini에 붙여넣을 프롬프트 텍스트를 생성해주는 도구입니다.',
+    q: '생성된 프롬프트는 어떻게 사용하나요?',
+    a: 'Claude: claude.ai → Projects → 프로젝트 생성 또는 열기 → Project Instructions → 붙여넣기. Gemini: gemini.google.com → Gems → Create a Gem → Instructions 필드 → 붙여넣기.',
   },
   {
-    q: 'AI Custom Generator는 어떻게 작동하나요?',
-    a: '본인 Anthropic(Claude) 또는 Google API 키를 설정에 입력하면, 원하는 AI 어시스턴트의 역할을 자유롭게 설명했을 때 Claude Haiku 또는 Gemini Flash가 최적화된 시스템 프롬프트를 자동 생성합니다. API 비용은 회당 $0.001 이하로 매우 저렴합니다.',
+    q: '데이터는 어디에 저장되나요?',
+    a: '모든 프롬프트 생성은 브라우저 내에서만 처리됩니다. 서버로 전송되는 데이터가 없으며, API 호출도 없습니다. 완전히 클라이언트 사이드에서 작동합니다.',
   },
   {
-    q: '환불 정책이 어떻게 되나요?',
-    a: '구매 후 7일 이내에 문의 주시면 전액 환불해드립니다. yj@yoongjae.com으로 연락해 주세요.',
+    q: '무료인가요?',
+    a: '네, 완전 무료입니다. 설치도 필요 없고, 계정 가입도 없습니다. 바로 사용하세요.',
   },
 ];
 
 const appSchema = {
   '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
+  '@type': 'WebApplication',
   name: 'PromptForge',
   applicationCategory: 'ProductivityApplication',
-  operatingSystem: 'Chrome',
+  operatingSystem: 'Web',
   description,
-  offers: {
-    '@type': 'Offer',
-    price: '4.99',
-    priceCurrency: 'USD',
-    priceValidUntil: '2027-12-31',
-  },
-  author: {
-    '@type': 'Person',
-    name: 'YJ Cho',
-    url: 'https://yoongjae.com',
-  },
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  author: { '@type': 'Person', name: 'YJ Cho', url: 'https://yoongjae.com' },
 };
 
 const faqSchema = {
@@ -59,158 +50,29 @@ const faqSchema = {
 };
 ---
 
-<BaseLayout
-  title={title}
-  description={description}
-  canonicalUrl="/tools/prompt"
-  ogImage="/og/prompt.png"
->
+<BaseLayout title={title} description={description} canonicalUrl="/tools/prompt" ogImage="/og/prompt.png">
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(appSchema)} />
     <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
-    <!-- PayPal SDK: replace YOUR_PAYPAL_CLIENT_ID -->
-    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD" defer></script>
   </Fragment>
 
-  <!-- Breadcrumb -->
+  <!-- Breadcrumb + header -->
   <section class="py-4">
     <div class="flex items-center gap-2 text-xs text-ink/40 mb-4">
       <a href="/tools" class="hover:text-ink transition-colors">Tools</a>
       <span>/</span>
       <span>PromptForge</span>
     </div>
-
     <h1 class="font-serif text-3xl font-bold mb-3">PromptForge</h1>
     <p class="text-sm text-ink/60 leading-relaxed max-w-2xl">
-      Claude Projects와 Gemini Gems용 시스템 프롬프트를 몇 초 만에 생성하는 Chrome 확장프로그램.
-      13개 전문 템플릿과 AI 자동 생성 기능 포함.
+      Claude Projects와 Gemini Gems용 시스템 프롬프트를 몇 초 만에 생성합니다.
+      13개 전문 템플릿, 완전 무료, 설치 불필요.
     </p>
   </section>
 
-  <!-- How it works -->
-  <section class="pb-6">
-    <div class="grid grid-cols-3 gap-3 text-center text-sm">
-      <div class="border border-ink/10 rounded-lg p-4">
-        <div class="text-2xl mb-2">🎯</div>
-        <div class="font-semibold text-ink text-xs mb-1">1. 템플릿 선택</div>
-        <div class="text-ink/50 text-xs">비즈니스, 개발, 콘텐츠 등 6개 카테고리</div>
-      </div>
-      <div class="border border-ink/10 rounded-lg p-4">
-        <div class="text-2xl mb-2">⚡</div>
-        <div class="font-semibold text-ink text-xs mb-1">2. 파라미터 입력</div>
-        <div class="text-ink/50 text-xs">라이브 미리보기로 실시간 확인</div>
-      </div>
-      <div class="border border-ink/10 rounded-lg p-4">
-        <div class="text-2xl mb-2">📋</div>
-        <div class="font-semibold text-ink text-xs mb-1">3. 복사 & 붙여넣기</div>
-        <div class="text-ink/50 text-xs">Claude Project / Gemini Gem에 바로 적용</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Templates list -->
-  <section class="pb-6 border-t border-ink/10 pt-6">
-    <h2 class="font-serif text-lg font-semibold mb-4">포함된 템플릿</h2>
-    <div class="grid grid-cols-2 gap-2 text-sm">
-      {[
-        { emoji: '⭐', name: 'General Assistant', free: true },
-        { emoji: '⭐', name: 'Simple Q&A', free: true },
-        { emoji: '⭐', name: 'Basic Writing', free: true },
-        { emoji: '💼', name: 'Startup IR Coaching', free: false },
-        { emoji: '💼', name: 'Business Plan Writer', free: false },
-        { emoji: '💻', name: 'Full-Stack Coding Assistant', free: false },
-        { emoji: '💻', name: 'Code Review Expert', free: false },
-        { emoji: '✍️', name: 'Blog Post Writer (SEO)', free: false },
-        { emoji: '✍️', name: 'Social Media Creator', free: false },
-        { emoji: '🎓', name: 'Language Learning Tutor', free: false },
-        { emoji: '🎓', name: 'Exam Prep Coach', free: false },
-        { emoji: '📊', name: 'Data Analysis Assistant', free: false },
-        { emoji: '📊', name: 'SQL Query Helper', free: false },
-      ].map((t) => (
-        <div class="flex items-center gap-2 border border-ink/10 rounded-md px-3 py-2">
-          <span>{t.emoji}</span>
-          <span class="text-ink/80 text-xs flex-1">{t.name}</span>
-          <span class={`text-xs font-semibold px-1.5 py-0.5 rounded-full ${t.free ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
-            {t.free ? 'Free' : 'Pro'}
-          </span>
-        </div>
-      ))}
-    </div>
-    <p class="text-xs text-ink/40 mt-3">+ ✨ Custom AI 생성 — 자유 설명으로 맞춤 프롬프트 자동 생성 (본인 API 키 사용)</p>
-  </section>
-
-  <!-- Pricing & Purchase -->
-  <section class="py-6 border-t border-ink/10" id="pricing">
-    <h2 class="font-serif text-lg font-semibold mb-1">Pro 라이선스</h2>
-    <p class="text-sm text-ink/50 mb-5">일회성 결제 · 구독 없음 · 평생 이용</p>
-
-    <div class="border border-accent-blue/30 rounded-xl p-6 max-w-sm bg-white/50">
-      <!-- Price -->
-      <div class="flex items-baseline gap-1 mb-1">
-        <span class="text-4xl font-black text-ink">$4.99</span>
-        <span class="text-sm text-ink/40">one-time</span>
-      </div>
-      <p class="text-xs text-ink/40 mb-5">PayPal로 안전하게 결제</p>
-
-      <!-- Includes -->
-      <ul class="space-y-2 mb-6 text-sm">
-        {[
-          '13개 전문 템플릿 (무료 3 + Pro 10)',
-          'Claude Projects & Gemini Gems 최적화',
-          '✨ AI Custom 생성 기능',
-          '향후 추가 템플릿 포함',
-          '평생 이용권',
-          '이메일로 라이선스 키 즉시 발송',
-        ].map((item) => (
-          <li class="flex gap-2 text-ink/70">
-            <span class="text-accent-blue shrink-0">✓</span>
-            {item}
-          </li>
-        ))}
-      </ul>
-
-      <!-- Email input -->
-      <div class="mb-3">
-        <label class="block text-xs font-semibold text-ink/60 mb-1" for="buyer-email">
-          이메일 (라이선스 키 수신용)
-        </label>
-        <input
-          type="email"
-          id="buyer-email"
-          placeholder="you@example.com"
-          class="w-full border border-ink/20 rounded-lg px-3 py-2 text-sm outline-none focus:border-accent-blue focus:ring-1 focus:ring-accent-blue/20 transition-all"
-        />
-      </div>
-
-      <!-- PayPal button -->
-      <div id="paypal-button-container" class="mb-3"></div>
-
-      <!-- Success state -->
-      <div id="purchase-success" class="hidden border border-green-200 bg-green-50 rounded-lg p-4 text-sm">
-        <p class="font-semibold text-green-800 mb-1">🎉 결제 완료!</p>
-        <p class="text-green-700 text-xs">
-          <span id="success-email" class="font-medium"></span>으로 라이선스 키가 발송됩니다.
-          메일함(스팸 포함)을 확인해 주세요.
-        </p>
-      </div>
-
-      <p class="text-xs text-ink/30 mt-3 text-center">
-        🔒 결제 정보는 PayPal이 처리합니다. 이메일은 라이선스 발급에만 사용됩니다.
-      </p>
-    </div>
-  </section>
-
-  <!-- Install CTA -->
-  <section class="py-6 border-t border-ink/10">
-    <h2 class="font-serif text-lg font-semibold mb-2">Chrome에 설치하기</h2>
-    <p class="text-sm text-ink/60 mb-4">무료로 설치 후 Pro 업그레이드는 Extension 내에서 언제든 가능합니다.</p>
-    <a
-      href="https://chrome.google.com/webstore"
-      class="inline-flex items-center gap-2 bg-accent-blue text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors"
-    >
-      Chrome Web Store에서 설치 →
-    </a>
-    <p class="text-xs text-ink/30 mt-2">* Chrome Web Store 심사 완료 후 링크가 업데이트됩니다.</p>
+  <!-- Tool -->
+  <section class="pb-10">
+    <PromptForge client:load />
   </section>
 
   <!-- FAQ -->
@@ -228,64 +90,4 @@ const faqSchema = {
       ))}
     </div>
   </section>
-
 </BaseLayout>
-
-<script>
-  window.addEventListener('load', function () {
-    if (typeof window.paypal === 'undefined') return;
-
-    window.paypal.Buttons({
-      style: { shape: 'rect', color: 'blue', layout: 'vertical', label: 'pay', height: 40 },
-
-      createOrder: function (_data: unknown, actions: any) {
-        const emailEl = document.getElementById('buyer-email') as HTMLInputElement;
-        const email = emailEl?.value.trim() ?? '';
-        if (!email || !email.includes('@')) {
-          alert('이메일 주소를 먼저 입력해 주세요.');
-          return Promise.reject(new Error('No email'));
-        }
-        return actions.order.create({
-          purchase_units: [{ amount: { value: '4.99', currency_code: 'USD' }, description: 'PromptForge Pro License' }],
-        });
-      },
-
-      onApprove: function (_data: unknown, actions: any) {
-        return actions.order.capture().then(function (details: any) {
-          const emailEl = document.getElementById('buyer-email') as HTMLInputElement;
-          const email = emailEl?.value.trim().toLowerCase() ?? '';
-
-          // Show success UI
-          const container = document.getElementById('paypal-button-container');
-          const success = document.getElementById('purchase-success');
-          const successEmail = document.getElementById('success-email');
-          if (container) container.style.display = 'none';
-          if (success) success.classList.remove('hidden');
-          if (successEmail) successEmail.textContent = email;
-
-          // Notify make.com for automated license delivery
-          // Replace YOUR_MAKE_WEBHOOK_ID with actual ID from make.com
-          fetch('https://hook.us1.make.com/YOUR_MAKE_WEBHOOK_ID', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email,
-              orderId: details.id,
-              amount: '4.99',
-              product: 'promptforge-pro',
-              timestamp: new Date().toISOString(),
-            }),
-          }).catch(function (err: Error) {
-            // Non-critical — manual fallback via PayPal dashboard notification
-            console.warn('Webhook error (non-critical):', err);
-          });
-        });
-      },
-
-      onError: function (err: Error) {
-        console.error('PayPal error:', err);
-        alert('결제 중 오류가 발생했습니다. 다시 시도하거나 yj@yoongjae.com으로 문의해 주세요.');
-      },
-    }).render('#paypal-button-container');
-  });
-</script>

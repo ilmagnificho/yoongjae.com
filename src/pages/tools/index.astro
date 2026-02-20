@@ -6,28 +6,24 @@ const siteUrl = Astro.site?.toString() ?? 'https://yoongjae.com';
 const tools = [
   {
     name: 'PromptForge',
-    description: 'Claude Projects & Gemini Gems용 시스템 프롬프트를 몇 초 만에 생성하는 Chrome 확장프로그램. 13개 템플릿, 일회성 $4.99.',
+    description: 'Claude Projects & Gemini Gems용 시스템 프롬프트 생성기. 13개 전문 템플릿, 완전 무료.',
     href: '/tools/prompt',
-    available: true,
-    badge: 'Chrome Extension',
+    badge: 'Free',
   },
   {
     name: 'Cap Table 계산기',
     description: '투자 라운드별 지분 희석을 시뮬레이션하세요',
     href: '/tools/cap-table',
-    available: true,
   },
   {
     name: 'SAFE & Convertible Note 시뮬레이터',
     description: 'Valuation Cap과 Discount에 따른 전환 주식 수와 지분율 계산',
     href: '/tools/safe-simulator',
-    available: true,
   },
   {
     name: 'ESOP (스톡옵션) 가치 계산기',
     description: 'Exit 시나리오별 스톡옵션의 잠재 수익을 시뮬레이션하세요',
     href: '/tools/esop-calculator',
-    available: true,
   },
 ];
 
@@ -48,7 +44,7 @@ const itemListSchema = {
 
 <BaseLayout
   title="Tools — YJ Cho"
-  description="Chrome 확장프로그램, 스타트업 금융 계산기 등 창업자와 개발자를 위한 도구 모음입니다."
+  description="Claude 프롬프트 생성기, 스타트업 금융 계산기 등 창업자와 개발자를 위한 무료 도구 모음입니다."
   canonicalUrl="/tools"
   ogImage="/og/tools.png"
 >
@@ -57,7 +53,7 @@ const itemListSchema = {
   </Fragment>
   <section class="py-4">
     <h1 class="font-serif text-3xl font-bold mb-2">Tools</h1>
-    <p class="text-sm text-ink/55 mb-8">창업자와 개발자를 위한 도구 모음</p>
+    <p class="text-sm text-ink/55 mb-8">창업자와 개발자를 위한 무료 도구 모음</p>
 
     <div class="grid gap-4">
       {tools.map((tool) => (
@@ -72,7 +68,7 @@ const itemListSchema = {
                   {tool.name}
                 </h2>
                 {tool.badge && (
-                  <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-accent-blue/10 text-accent-blue">
+                  <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-green-100 text-green-700">
                     {tool.badge}
                   </span>
                 )}
