@@ -1,697 +1,291 @@
 ---
-// src/pages/tools/prompt.astro
-// PromptForge - Chrome Extension Landing & Purchase Page
-// Add this file to: src/pages/tools/prompt.astro in the yoongjae.com repo
+// Place this file at: src/pages/tools/prompt.astro in the yoongjae.com repo
+import BaseLayout from '../../layouts/BaseLayout.astro';
 
-import Layout from '../../layouts/Layout.astro';
+const title = 'PromptForge — Claude & Gemini 시스템 프롬프트 생성기';
+const description = 'Claude Projects와 Gemini Gems를 위한 전문가급 시스템 프롬프트를 몇 초 만에 생성하세요. 13개 템플릿, 일회성 $4.99.';
+
+const faqs = [
+  {
+    q: 'PromptForge가 뭔가요?',
+    a: 'Claude Projects나 Gemini Gems를 만들 때 "Custom Instructions(지침)" 필드에 넣을 시스템 프롬프트를 자동으로 생성해주는 Chrome 확장프로그램입니다. 프롬프트 엔지니어링 지식 없이도 전문가급 설정을 몇 초 만에 완성할 수 있습니다.',
+  },
+  {
+    q: 'Pro 라이선스 구매 후 어떻게 활성화하나요?',
+    a: '결제 완료 후 입력하신 이메일로 라이선스 키가 발송됩니다. Chrome Extension을 열고 ⚙️ 설정 아이콘 → 이메일과 키 입력 → Activate 버튼을 누르면 즉시 Pro 기능이 활성화됩니다.',
+  },
+  {
+    q: 'Claude Pro 구독과 별개인가요?',
+    a: '네, 완전히 별개입니다. PromptForge는 Claude나 Gemini 계정과 무관하게 작동합니다. Claude.ai나 Gemini에 붙여넣을 프롬프트 텍스트를 생성해주는 도구입니다.',
+  },
+  {
+    q: 'AI Custom Generator는 어떻게 작동하나요?',
+    a: '본인 Anthropic(Claude) 또는 Google API 키를 설정에 입력하면, 원하는 AI 어시스턴트의 역할을 자유롭게 설명했을 때 Claude Haiku 또는 Gemini Flash가 최적화된 시스템 프롬프트를 자동 생성합니다. API 비용은 회당 $0.001 이하로 매우 저렴합니다.',
+  },
+  {
+    q: '환불 정책이 어떻게 되나요?',
+    a: '구매 후 7일 이내에 문의 주시면 전액 환불해드립니다. yj@yoongjae.com으로 연락해 주세요.',
+  },
+];
+
+const appSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'PromptForge',
+  applicationCategory: 'ProductivityApplication',
+  operatingSystem: 'Chrome',
+  description,
+  offers: {
+    '@type': 'Offer',
+    price: '4.99',
+    priceCurrency: 'USD',
+    priceValidUntil: '2027-12-31',
+  },
+  author: {
+    '@type': 'Person',
+    name: 'YJ Cho',
+    url: 'https://yoongjae.com',
+  },
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.q,
+    acceptedAnswer: { '@type': 'Answer', text: faq.a },
+  })),
+};
 ---
 
-<Layout title="PromptForge - AI Project Setup Assistant | YoongJae">
-  <main class="prompt-page">
-    
-    <!-- Hero Section -->
-    <section class="hero">
-      <div class="hero-badge">Chrome Extension</div>
-      <h1>PromptForge</h1>
-      <p class="hero-subtitle">
-        Generate expert-level system prompts for<br/>
-        <strong>Claude Projects</strong> & <strong>Gemini Gems</strong> in seconds.
-      </p>
-      <div class="hero-cta">
-        <a href="https://chromewebstore.google.com/detail/promptforge/EXTENSION_ID_HERE" 
-           target="_blank" 
-           rel="noopener noreferrer" 
-           class="btn-primary">
-          Install Free from Chrome Web Store →
-        </a>
+<BaseLayout
+  title={title}
+  description={description}
+  canonicalUrl="/tools/prompt"
+  ogImage="/og/prompt.png"
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(appSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+    <!-- PayPal SDK: replace YOUR_PAYPAL_CLIENT_ID -->
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD" defer></script>
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <section class="py-4">
+    <div class="flex items-center gap-2 text-xs text-ink/40 mb-4">
+      <a href="/tools" class="hover:text-ink transition-colors">Tools</a>
+      <span>/</span>
+      <span>PromptForge</span>
+    </div>
+
+    <h1 class="font-serif text-3xl font-bold mb-3">PromptForge</h1>
+    <p class="text-sm text-ink/60 leading-relaxed max-w-2xl">
+      Claude Projects와 Gemini Gems용 시스템 프롬프트를 몇 초 만에 생성하는 Chrome 확장프로그램.
+      13개 전문 템플릿과 AI 자동 생성 기능 포함.
+    </p>
+  </section>
+
+  <!-- How it works -->
+  <section class="pb-6">
+    <div class="grid grid-cols-3 gap-3 text-center text-sm">
+      <div class="border border-ink/10 rounded-lg p-4">
+        <div class="text-2xl mb-2">🎯</div>
+        <div class="font-semibold text-ink text-xs mb-1">1. 템플릿 선택</div>
+        <div class="text-ink/50 text-xs">비즈니스, 개발, 콘텐츠 등 6개 카테고리</div>
       </div>
-    </section>
-
-    <!-- Problem / Solution -->
-    <section class="section">
-      <h2>The Problem</h2>
-      <p>
-        Every time you create a new Claude Project or Gemini Gem, you need to write a system prompt from scratch.
-        Writing effective prompts requires expertise most people don't have — and copy-pasting generic instructions
-        leads to mediocre AI performance.
-      </p>
-      <h2>The Solution</h2>
-      <p>
-        PromptForge gives you <strong>professionally crafted, platform-optimized prompts</strong> with just two clicks.
-        Select your goal, customize a few parameters, and copy a prompt that's been tested and refined
-        for each platform's unique requirements.
-      </p>
-    </section>
-
-    <!-- How It Works -->
-    <section class="section">
-      <h2>How It Works</h2>
-      <div class="steps">
-        <div class="step">
-          <div class="step-number">1</div>
-          <div class="step-content">
-            <h3>Choose Your Goal</h3>
-            <p>Browse 13+ templates across Business, Development, Content, Education, Data Analysis, and Creative categories.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-number">2</div>
-          <div class="step-content">
-            <h3>Customize</h3>
-            <p>Fill in a few parameters — your industry, focus area, preferred style. See a live preview as you type.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-number">3</div>
-          <div class="step-content">
-            <h3>Copy & Paste</h3>
-            <p>One click copies the prompt to your clipboard. Paste it into Claude Projects or Gemini Gems. Done.</p>
-          </div>
-        </div>
+      <div class="border border-ink/10 rounded-lg p-4">
+        <div class="text-2xl mb-2">⚡</div>
+        <div class="font-semibold text-ink text-xs mb-1">2. 파라미터 입력</div>
+        <div class="text-ink/50 text-xs">라이브 미리보기로 실시간 확인</div>
       </div>
-    </section>
-
-    <!-- Features -->
-    <section class="section">
-      <h2>Features</h2>
-      <div class="features-grid">
-        <div class="feature">
-          <div class="feature-icon">⚡</div>
-          <h3>Platform-Optimized</h3>
-          <p>Each prompt is formatted differently for Claude (XML-structured) and Gemini (concise plain text).</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">🎯</div>
-          <h3>13+ Expert Templates</h3>
-          <p>From Startup IR Coaching to Full-Stack Coding Assistant — each tested on real projects.</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">✨</div>
-          <h3>Custom AI Generation</h3>
-          <p>Use your own API key to generate completely custom prompts with AI. Your key, your cost, our meta-prompt.</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">🔒</div>
-          <h3>No Server, No Tracking</h3>
-          <p>Everything runs locally in your browser. No data leaves your machine. No account needed.</p>
-        </div>
+      <div class="border border-ink/10 rounded-lg p-4">
+        <div class="text-2xl mb-2">📋</div>
+        <div class="font-semibold text-ink text-xs mb-1">3. 복사 & 붙여넣기</div>
+        <div class="text-ink/50 text-xs">Claude Project / Gemini Gem에 바로 적용</div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Template Categories -->
-    <section class="section">
-      <h2>Template Categories</h2>
-      <div class="categories">
-        <div class="category">
-          <h3>Business</h3>
-          <p>Startup IR Coaching, Business Plan Writer</p>
+  <!-- Templates list -->
+  <section class="pb-6 border-t border-ink/10 pt-6">
+    <h2 class="font-serif text-lg font-semibold mb-4">포함된 템플릿</h2>
+    <div class="grid grid-cols-2 gap-2 text-sm">
+      {[
+        { emoji: '⭐', name: 'General Assistant', free: true },
+        { emoji: '⭐', name: 'Simple Q&A', free: true },
+        { emoji: '⭐', name: 'Basic Writing', free: true },
+        { emoji: '💼', name: 'Startup IR Coaching', free: false },
+        { emoji: '💼', name: 'Business Plan Writer', free: false },
+        { emoji: '💻', name: 'Full-Stack Coding Assistant', free: false },
+        { emoji: '💻', name: 'Code Review Expert', free: false },
+        { emoji: '✍️', name: 'Blog Post Writer (SEO)', free: false },
+        { emoji: '✍️', name: 'Social Media Creator', free: false },
+        { emoji: '🎓', name: 'Language Learning Tutor', free: false },
+        { emoji: '🎓', name: 'Exam Prep Coach', free: false },
+        { emoji: '📊', name: 'Data Analysis Assistant', free: false },
+        { emoji: '📊', name: 'SQL Query Helper', free: false },
+      ].map((t) => (
+        <div class="flex items-center gap-2 border border-ink/10 rounded-md px-3 py-2">
+          <span>{t.emoji}</span>
+          <span class="text-ink/80 text-xs flex-1">{t.name}</span>
+          <span class={`text-xs font-semibold px-1.5 py-0.5 rounded-full ${t.free ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+            {t.free ? 'Free' : 'Pro'}
+          </span>
         </div>
-        <div class="category">
-          <h3>Development</h3>
-          <p>Full-Stack Coding Assistant, Code Review Expert</p>
-        </div>
-        <div class="category">
-          <h3>Content</h3>
-          <p>SEO Blog Writer, Social Media Creator</p>
-        </div>
-        <div class="category">
-          <h3>Education</h3>
-          <p>Language Learning Tutor, Exam Prep Coach</p>
-        </div>
-        <div class="category">
-          <h3>Data & Analysis</h3>
-          <p>Data Analysis Assistant, SQL Query Helper</p>
-        </div>
-        <div class="category">
-          <h3>Creative</h3>
-          <p>Fiction Writing Coach, Brainstorming Partner</p>
-        </div>
+      ))}
+    </div>
+    <p class="text-xs text-ink/40 mt-3">+ ✨ Custom AI 생성 — 자유 설명으로 맞춤 프롬프트 자동 생성 (본인 API 키 사용)</p>
+  </section>
+
+  <!-- Pricing & Purchase -->
+  <section class="py-6 border-t border-ink/10" id="pricing">
+    <h2 class="font-serif text-lg font-semibold mb-1">Pro 라이선스</h2>
+    <p class="text-sm text-ink/50 mb-5">일회성 결제 · 구독 없음 · 평생 이용</p>
+
+    <div class="border border-accent-blue/30 rounded-xl p-6 max-w-sm bg-white/50">
+      <!-- Price -->
+      <div class="flex items-baseline gap-1 mb-1">
+        <span class="text-4xl font-black text-ink">$4.99</span>
+        <span class="text-sm text-ink/40">one-time</span>
       </div>
-    </section>
+      <p class="text-xs text-ink/40 mb-5">PayPal로 안전하게 결제</p>
 
-    <!-- Pricing -->
-    <section class="section pricing-section" id="pricing">
-      <h2>Pricing</h2>
-      <div class="pricing-cards">
-        <div class="pricing-card">
-          <div class="pricing-tier">Free</div>
-          <div class="pricing-amount">$0</div>
-          <ul>
-            <li>3 basic templates</li>
-            <li>Claude & Gemini formats</li>
-            <li>Copy to clipboard</li>
-            <li>Platform toggle</li>
-          </ul>
-          <a href="https://chromewebstore.google.com/detail/promptforge/EXTENSION_ID_HERE" 
-             target="_blank" 
-             rel="noopener noreferrer" 
-             class="btn-secondary">
-            Install Free →
-          </a>
-        </div>
-        <div class="pricing-card featured">
-          <div class="pricing-badge">Most Popular</div>
-          <div class="pricing-tier">Pro</div>
-          <div class="pricing-amount">$4.99 <span class="pricing-note">one-time</span></div>
-          <ul>
-            <li>All 13+ templates (and growing)</li>
-            <li>Claude & Gemini formats</li>
-            <li>Custom AI generation</li>
-            <li>Future template updates</li>
-            <li>Lifetime access</li>
-          </ul>
-          <a href="#purchase" class="btn-primary">
-            Get Pro →
-          </a>
-        </div>
+      <!-- Includes -->
+      <ul class="space-y-2 mb-6 text-sm">
+        {[
+          '13개 전문 템플릿 (무료 3 + Pro 10)',
+          'Claude Projects & Gemini Gems 최적화',
+          '✨ AI Custom 생성 기능',
+          '향후 추가 템플릿 포함',
+          '평생 이용권',
+          '이메일로 라이선스 키 즉시 발송',
+        ].map((item) => (
+          <li class="flex gap-2 text-ink/70">
+            <span class="text-accent-blue shrink-0">✓</span>
+            {item}
+          </li>
+        ))}
+      </ul>
+
+      <!-- Email input -->
+      <div class="mb-3">
+        <label class="block text-xs font-semibold text-ink/60 mb-1" for="buyer-email">
+          이메일 (라이선스 키 수신용)
+        </label>
+        <input
+          type="email"
+          id="buyer-email"
+          placeholder="you@example.com"
+          class="w-full border border-ink/20 rounded-lg px-3 py-2 text-sm outline-none focus:border-accent-blue focus:ring-1 focus:ring-accent-blue/20 transition-all"
+        />
       </div>
-    </section>
 
-    <!-- Purchase Section -->
-    <section class="section purchase-section" id="purchase">
-      <h2>Purchase Pro License</h2>
-      <div class="purchase-box">
-        <p class="purchase-info">
-          After payment, you'll receive a license key via email within 24 hours.
-          Enter it in the extension's Settings to unlock all Pro features.
-        </p>
-        
-        <div class="purchase-steps">
-          <div class="purchase-step">
-            <strong>Step 1:</strong> Click the PayPal button below and complete payment ($4.99).
-          </div>
-          <div class="purchase-step">
-            <strong>Step 2:</strong> Use the <strong>same email</strong> in PayPal that you'll use in the extension.
-          </div>
-          <div class="purchase-step">
-            <strong>Step 3:</strong> You'll receive your license key via email.
-          </div>
-          <div class="purchase-step">
-            <strong>Step 4:</strong> Open PromptForge extension → Settings → Enter your email and license key.
-          </div>
-        </div>
+      <!-- PayPal button -->
+      <div id="paypal-button-container" class="mb-3"></div>
 
-        <!-- PayPal Button Container -->
-        <div id="paypal-button-container" class="paypal-container">
-          <p class="paypal-loading">Loading PayPal...</p>
-        </div>
-
-        <p class="purchase-note">
-          Secure payment via PayPal. No subscription - one-time payment for lifetime access.<br/>
-          Questions? Contact <a href="mailto:yj@tetracorp.co.kr">yj@tetracorp.co.kr</a>
+      <!-- Success state -->
+      <div id="purchase-success" class="hidden border border-green-200 bg-green-50 rounded-lg p-4 text-sm">
+        <p class="font-semibold text-green-800 mb-1">🎉 결제 완료!</p>
+        <p class="text-green-700 text-xs">
+          <span id="success-email" class="font-medium"></span>으로 라이선스 키가 발송됩니다.
+          메일함(스팸 포함)을 확인해 주세요.
         </p>
       </div>
-    </section>
 
-    <!-- FAQ -->
-    <section class="section">
-      <h2>FAQ</h2>
-      <div class="faq-list">
-        <div class="faq-item">
-          <h3>What platforms does PromptForge support?</h3>
-          <p>Claude Projects (Anthropic) and Gemini Gems (Google). Each prompt is optimized for the platform's specific format and constraints.</p>
-        </div>
-        <div class="faq-item">
-          <h3>Do I need an API key?</h3>
-          <p>No. Template-based prompts work entirely offline. The Custom AI feature optionally uses your own Claude or Gemini API key.</p>
-        </div>
-        <div class="faq-item">
-          <h3>Is this a subscription?</h3>
-          <p>No. Pro is a one-time $4.99 payment for lifetime access, including all future template updates.</p>
-        </div>
-        <div class="faq-item">
-          <h3>What if I don't receive my license key?</h3>
-          <p>Check your spam folder first. If it's not there, email <a href="mailto:yj@tetracorp.co.kr">yj@tetracorp.co.kr</a> with your PayPal transaction ID.</p>
-        </div>
-        <div class="faq-item">
-          <h3>Can I get a refund?</h3>
-          <p>Yes. If you're not satisfied within 14 days of purchase, email us for a full refund via PayPal.</p>
-        </div>
-      </div>
-    </section>
+      <p class="text-xs text-ink/30 mt-3 text-center">
+        🔒 결제 정보는 PayPal이 처리합니다. 이메일은 라이선스 발급에만 사용됩니다.
+      </p>
+    </div>
+  </section>
 
-  </main>
+  <!-- Install CTA -->
+  <section class="py-6 border-t border-ink/10">
+    <h2 class="font-serif text-lg font-semibold mb-2">Chrome에 설치하기</h2>
+    <p class="text-sm text-ink/60 mb-4">무료로 설치 후 Pro 업그레이드는 Extension 내에서 언제든 가능합니다.</p>
+    <a
+      href="https://chrome.google.com/webstore"
+      class="inline-flex items-center gap-2 bg-accent-blue text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors"
+    >
+      Chrome Web Store에서 설치 →
+    </a>
+    <p class="text-xs text-ink/30 mt-2">* Chrome Web Store 심사 완료 후 링크가 업데이트됩니다.</p>
+  </section>
 
-  <!-- PayPal SDK -->
-  <script is:inline src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD"></script>
-  <script is:inline>
-    // Replace YOUR_PAYPAL_CLIENT_ID with your actual PayPal client ID
-    // Get it from: https://developer.paypal.com/dashboard/applications
-    
-    if (typeof paypal !== 'undefined') {
-      paypal.Buttons({
-        style: {
-          shape: 'rect',
-          color: 'black',
-          layout: 'vertical',
-          label: 'pay'
-        },
-        createOrder: function(data, actions) {
-          return actions.order.create({
-            purchase_units: [{
-              description: 'PromptForge Pro License - Lifetime',
-              amount: {
-                currency_code: 'USD',
-                value: '4.99'
-              }
-            }]
-          });
-        },
-        onApprove: function(data, actions) {
-          return actions.order.capture().then(function(details) {
-            // Payment successful
-            const email = details.payer.email_address;
-            const orderId = data.orderID;
-            
-            document.getElementById('paypal-button-container').innerHTML = `
-              <div class="payment-success">
-                <h3>Payment Successful!</h3>
-                <p>Thank you, ${details.payer.name.given_name}!</p>
-                <p>Order ID: <strong>${orderId}</strong></p>
-                <p>Your license key will be sent to <strong>${email}</strong> within 24 hours.</p>
-                <p>If you don't receive it, email <a href="mailto:yj@tetracorp.co.kr">yj@tetracorp.co.kr</a> with your Order ID.</p>
-              </div>
-            `;
+  <!-- FAQ -->
+  <section class="py-8 border-t border-ink/10">
+    <h2 class="font-serif text-xl font-semibold mb-6">자주 묻는 질문</h2>
+    <div class="space-y-5">
+      {faqs.map((faq) => (
+        <details class="group">
+          <summary class="cursor-pointer text-sm font-medium text-ink hover:text-accent-blue transition-colors list-none flex items-start gap-2">
+            <span class="text-ink/30 group-open:rotate-90 transition-transform mt-0.5">&#9654;</span>
+            {faq.q}
+          </summary>
+          <p class="text-sm text-ink/60 leading-relaxed mt-2 ml-5">{faq.a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
 
-            // Optional: Send webhook to make.com for auto license key generation
-            // Uncomment and replace with your make.com webhook URL
-            /*
-            fetch('https://hook.us1.make.com/YOUR_MAKE_WEBHOOK_ID', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                email: email,
-                orderId: orderId,
-                amount: '4.99',
-                product: 'promptforge-pro',
-                timestamp: new Date().toISOString()
-              })
-            }).catch(err => console.log('Webhook sent'));
-            */
-          });
-        },
-        onError: function(err) {
-          console.error('PayPal error:', err);
-          document.getElementById('paypal-button-container').innerHTML = `
-            <div class="payment-error">
-              <p>Payment failed. Please try again or contact <a href="mailto:yj@tetracorp.co.kr">yj@tetracorp.co.kr</a></p>
-            </div>
-          `;
+</BaseLayout>
+
+<script>
+  window.addEventListener('load', function () {
+    if (typeof window.paypal === 'undefined') return;
+
+    window.paypal.Buttons({
+      style: { shape: 'rect', color: 'blue', layout: 'vertical', label: 'pay', height: 40 },
+
+      createOrder: function (_data: unknown, actions: any) {
+        const emailEl = document.getElementById('buyer-email') as HTMLInputElement;
+        const email = emailEl?.value.trim() ?? '';
+        if (!email || !email.includes('@')) {
+          alert('이메일 주소를 먼저 입력해 주세요.');
+          return Promise.reject(new Error('No email'));
         }
-      }).render('#paypal-button-container');
-    }
-  </script>
-</Layout>
+        return actions.order.create({
+          purchase_units: [{ amount: { value: '4.99', currency_code: 'USD' }, description: 'PromptForge Pro License' }],
+        });
+      },
 
-<style>
-  .prompt-page {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem 4rem;
-  }
+      onApprove: function (_data: unknown, actions: any) {
+        return actions.order.capture().then(function (details: any) {
+          const emailEl = document.getElementById('buyer-email') as HTMLInputElement;
+          const email = emailEl?.value.trim().toLowerCase() ?? '';
 
-  /* Hero */
-  .hero {
-    text-align: center;
-    padding: 3rem 0 2.5rem;
-    border-bottom: 1px solid var(--color-border, #e5e5e5);
-    margin-bottom: 2.5rem;
-  }
+          // Show success UI
+          const container = document.getElementById('paypal-button-container');
+          const success = document.getElementById('purchase-success');
+          const successEmail = document.getElementById('success-email');
+          if (container) container.style.display = 'none';
+          if (success) success.classList.remove('hidden');
+          if (successEmail) successEmail.textContent = email;
 
-  .hero-badge {
-    display: inline-block;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--color-muted, #666);
-    border: 1px solid var(--color-border, #e5e5e5);
-    padding: 0.25rem 0.75rem;
-    border-radius: 100px;
-    margin-bottom: 1rem;
-  }
+          // Notify make.com for automated license delivery
+          // Replace YOUR_MAKE_WEBHOOK_ID with actual ID from make.com
+          fetch('https://hook.us1.make.com/YOUR_MAKE_WEBHOOK_ID', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email,
+              orderId: details.id,
+              amount: '4.99',
+              product: 'promptforge-pro',
+              timestamp: new Date().toISOString(),
+            }),
+          }).catch(function (err: Error) {
+            // Non-critical — manual fallback via PayPal dashboard notification
+            console.warn('Webhook error (non-critical):', err);
+          });
+        });
+      },
 
-  .hero h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin: 0 0 0.75rem;
-    letter-spacing: -0.02em;
-  }
-
-  .hero-subtitle {
-    font-size: 1.125rem;
-    color: var(--color-muted, #555);
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
-  }
-
-  .hero-subtitle strong {
-    color: var(--color-text, #111);
-  }
-
-  /* Buttons */
-  .btn-primary {
-    display: inline-block;
-    background: var(--color-text, #111);
-    color: #fff;
-    padding: 0.75rem 1.5rem;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.95rem;
-    transition: opacity 0.2s;
-  }
-
-  .btn-primary:hover {
-    opacity: 0.85;
-  }
-
-  .btn-secondary {
-    display: inline-block;
-    background: transparent;
-    color: var(--color-text, #111);
-    padding: 0.75rem 1.5rem;
-    border-radius: 6px;
-    border: 1px solid var(--color-border, #ccc);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.95rem;
-    transition: background 0.2s;
-  }
-
-  .btn-secondary:hover {
-    background: var(--color-bg-hover, #f5f5f5);
-  }
-
-  /* Sections */
-  .section {
-    margin-bottom: 3rem;
-  }
-
-  .section h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    letter-spacing: -0.01em;
-  }
-
-  .section p {
-    color: var(--color-muted, #555);
-    line-height: 1.7;
-    margin-bottom: 1rem;
-  }
-
-  /* Steps */
-  .steps {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-
-  .step {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-  }
-
-  .step-number {
-    flex-shrink: 0;
-    width: 2rem;
-    height: 2rem;
-    background: var(--color-text, #111);
-    color: #fff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 0.875rem;
-  }
-
-  .step-content h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-  }
-
-  .step-content p {
-    font-size: 0.925rem;
-    margin: 0;
-  }
-
-  /* Features Grid */
-  .features-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-  }
-
-  @media (max-width: 600px) {
-    .features-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .feature {
-    padding: 1.25rem;
-    border: 1px solid var(--color-border, #e5e5e5);
-    border-radius: 8px;
-  }
-
-  .feature-icon {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .feature h3 {
-    font-size: 0.95rem;
-    font-weight: 600;
-    margin-bottom: 0.375rem;
-  }
-
-  .feature p {
-    font-size: 0.875rem;
-    margin: 0;
-  }
-
-  /* Categories */
-  .categories {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 1rem;
-  }
-
-  @media (max-width: 600px) {
-    .categories {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-
-  .category {
-    padding: 1rem;
-    border: 1px solid var(--color-border, #e5e5e5);
-    border-radius: 8px;
-  }
-
-  .category h3 {
-    font-size: 0.875rem;
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-  }
-
-  .category p {
-    font-size: 0.8rem;
-    margin: 0;
-    color: var(--color-muted, #888);
-  }
-
-  /* Pricing */
-  .pricing-cards {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-  }
-
-  @media (max-width: 600px) {
-    .pricing-cards {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .pricing-card {
-    padding: 2rem 1.5rem;
-    border: 1px solid var(--color-border, #e5e5e5);
-    border-radius: 8px;
-    text-align: center;
-    position: relative;
-  }
-
-  .pricing-card.featured {
-    border: 2px solid var(--color-text, #111);
-  }
-
-  .pricing-badge {
-    position: absolute;
-    top: -0.75rem;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--color-text, #111);
-    color: #fff;
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 0.25rem 0.75rem;
-    border-radius: 100px;
-  }
-
-  .pricing-tier {
-    font-size: 0.875rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-muted, #666);
-    margin-bottom: 0.5rem;
-  }
-
-  .pricing-amount {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 1.25rem;
-  }
-
-  .pricing-note {
-    font-size: 0.875rem;
-    font-weight: 400;
-    color: var(--color-muted, #888);
-  }
-
-  .pricing-card ul {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 1.5rem;
-    text-align: left;
-  }
-
-  .pricing-card li {
-    font-size: 0.9rem;
-    padding: 0.375rem 0;
-    color: var(--color-muted, #555);
-    border-bottom: 1px solid var(--color-border, #f0f0f0);
-  }
-
-  .pricing-card li:last-child {
-    border-bottom: none;
-  }
-
-  .pricing-card li::before {
-    content: '✓ ';
-    color: var(--color-text, #111);
-    font-weight: 600;
-  }
-
-  /* Purchase */
-  .purchase-box {
-    border: 1px solid var(--color-border, #e5e5e5);
-    border-radius: 8px;
-    padding: 2rem;
-  }
-
-  .purchase-info {
-    font-size: 0.95rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .purchase-steps {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .purchase-step {
-    font-size: 0.9rem;
-    color: var(--color-muted, #555);
-    padding: 0.5rem 0;
-    border-bottom: 1px solid var(--color-border, #f0f0f0);
-  }
-
-  .paypal-container {
-    min-height: 150px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 1.5rem 0;
-  }
-
-  .paypal-loading {
-    color: var(--color-muted, #888);
-    font-size: 0.875rem;
-  }
-
-  .purchase-note {
-    font-size: 0.8rem;
-    color: var(--color-muted, #888);
-    text-align: center;
-    margin: 0;
-  }
-
-  .purchase-note a {
-    color: var(--color-text, #111);
-  }
-
-  /* Payment Success/Error */
-  :global(.payment-success) {
-    text-align: center;
-    padding: 1.5rem;
-    background: #f0fdf4;
-    border-radius: 8px;
-    border: 1px solid #86efac;
-  }
-
-  :global(.payment-success h3) {
-    color: #166534;
-    margin-bottom: 0.5rem;
-  }
-
-  :global(.payment-error) {
-    text-align: center;
-    padding: 1rem;
-    background: #fef2f2;
-    border-radius: 8px;
-    border: 1px solid #fca5a5;
-    color: #991b1b;
-  }
-
-  /* FAQ */
-  .faq-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-  }
-
-  .faq-item {
-    padding-bottom: 1.25rem;
-    border-bottom: 1px solid var(--color-border, #e5e5e5);
-  }
-
-  .faq-item:last-child {
-    border-bottom: none;
-  }
-
-  .faq-item h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-  }
-
-  .faq-item p {
-    font-size: 0.9rem;
-    margin: 0;
-  }
-
-  .faq-item a {
-    color: var(--color-text, #111);
-    text-decoration: underline;
-  }
-</style>
+      onError: function (err: Error) {
+        console.error('PayPal error:', err);
+        alert('결제 중 오류가 발생했습니다. 다시 시도하거나 yj@yoongjae.com으로 문의해 주세요.');
+      },
+    }).render('#paypal-button-container');
+  });
+</script>
