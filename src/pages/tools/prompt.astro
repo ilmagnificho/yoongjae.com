@@ -1,0 +1,697 @@
+---
+// src/pages/tools/prompt.astro
+// PromptForge - Chrome Extension Landing & Purchase Page
+// Add this file to: src/pages/tools/prompt.astro in the yoongjae.com repo
+
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="PromptForge - AI Project Setup Assistant | YoongJae">
+  <main class="prompt-page">
+    
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-badge">Chrome Extension</div>
+      <h1>PromptForge</h1>
+      <p class="hero-subtitle">
+        Generate expert-level system prompts for<br/>
+        <strong>Claude Projects</strong> & <strong>Gemini Gems</strong> in seconds.
+      </p>
+      <div class="hero-cta">
+        <a href="https://chromewebstore.google.com/detail/promptforge/EXTENSION_ID_HERE" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="btn-primary">
+          Install Free from Chrome Web Store →
+        </a>
+      </div>
+    </section>
+
+    <!-- Problem / Solution -->
+    <section class="section">
+      <h2>The Problem</h2>
+      <p>
+        Every time you create a new Claude Project or Gemini Gem, you need to write a system prompt from scratch.
+        Writing effective prompts requires expertise most people don't have — and copy-pasting generic instructions
+        leads to mediocre AI performance.
+      </p>
+      <h2>The Solution</h2>
+      <p>
+        PromptForge gives you <strong>professionally crafted, platform-optimized prompts</strong> with just two clicks.
+        Select your goal, customize a few parameters, and copy a prompt that's been tested and refined
+        for each platform's unique requirements.
+      </p>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section">
+      <h2>How It Works</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>Choose Your Goal</h3>
+            <p>Browse 13+ templates across Business, Development, Content, Education, Data Analysis, and Creative categories.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>Customize</h3>
+            <p>Fill in a few parameters — your industry, focus area, preferred style. See a live preview as you type.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>Copy & Paste</h3>
+            <p>One click copies the prompt to your clipboard. Paste it into Claude Projects or Gemini Gems. Done.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="section">
+      <h2>Features</h2>
+      <div class="features-grid">
+        <div class="feature">
+          <div class="feature-icon">⚡</div>
+          <h3>Platform-Optimized</h3>
+          <p>Each prompt is formatted differently for Claude (XML-structured) and Gemini (concise plain text).</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🎯</div>
+          <h3>13+ Expert Templates</h3>
+          <p>From Startup IR Coaching to Full-Stack Coding Assistant — each tested on real projects.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">✨</div>
+          <h3>Custom AI Generation</h3>
+          <p>Use your own API key to generate completely custom prompts with AI. Your key, your cost, our meta-prompt.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🔒</div>
+          <h3>No Server, No Tracking</h3>
+          <p>Everything runs locally in your browser. No data leaves your machine. No account needed.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Template Categories -->
+    <section class="section">
+      <h2>Template Categories</h2>
+      <div class="categories">
+        <div class="category">
+          <h3>Business</h3>
+          <p>Startup IR Coaching, Business Plan Writer</p>
+        </div>
+        <div class="category">
+          <h3>Development</h3>
+          <p>Full-Stack Coding Assistant, Code Review Expert</p>
+        </div>
+        <div class="category">
+          <h3>Content</h3>
+          <p>SEO Blog Writer, Social Media Creator</p>
+        </div>
+        <div class="category">
+          <h3>Education</h3>
+          <p>Language Learning Tutor, Exam Prep Coach</p>
+        </div>
+        <div class="category">
+          <h3>Data & Analysis</h3>
+          <p>Data Analysis Assistant, SQL Query Helper</p>
+        </div>
+        <div class="category">
+          <h3>Creative</h3>
+          <p>Fiction Writing Coach, Brainstorming Partner</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="section pricing-section" id="pricing">
+      <h2>Pricing</h2>
+      <div class="pricing-cards">
+        <div class="pricing-card">
+          <div class="pricing-tier">Free</div>
+          <div class="pricing-amount">$0</div>
+          <ul>
+            <li>3 basic templates</li>
+            <li>Claude & Gemini formats</li>
+            <li>Copy to clipboard</li>
+            <li>Platform toggle</li>
+          </ul>
+          <a href="https://chromewebstore.google.com/detail/promptforge/EXTENSION_ID_HERE" 
+             target="_blank" 
+             rel="noopener noreferrer" 
+             class="btn-secondary">
+            Install Free →
+          </a>
+        </div>
+        <div class="pricing-card featured">
+          <div class="pricing-badge">Most Popular</div>
+          <div class="pricing-tier">Pro</div>
+          <div class="pricing-amount">$4.99 <span class="pricing-note">one-time</span></div>
+          <ul>
+            <li>All 13+ templates (and growing)</li>
+            <li>Claude & Gemini formats</li>
+            <li>Custom AI generation</li>
+            <li>Future template updates</li>
+            <li>Lifetime access</li>
+          </ul>
+          <a href="#purchase" class="btn-primary">
+            Get Pro →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Purchase Section -->
+    <section class="section purchase-section" id="purchase">
+      <h2>Purchase Pro License</h2>
+      <div class="purchase-box">
+        <p class="purchase-info">
+          After payment, you'll receive a license key via email within 24 hours.
+          Enter it in the extension's Settings to unlock all Pro features.
+        </p>
+        
+        <div class="purchase-steps">
+          <div class="purchase-step">
+            <strong>Step 1:</strong> Click the PayPal button below and complete payment ($4.99).
+          </div>
+          <div class="purchase-step">
+            <strong>Step 2:</strong> Use the <strong>same email</strong> in PayPal that you'll use in the extension.
+          </div>
+          <div class="purchase-step">
+            <strong>Step 3:</strong> You'll receive your license key via email.
+          </div>
+          <div class="purchase-step">
+            <strong>Step 4:</strong> Open PromptForge extension → Settings → Enter your email and license key.
+          </div>
+        </div>
+
+        <!-- PayPal Button Container -->
+        <div id="paypal-button-container" class="paypal-container">
+          <p class="paypal-loading">Loading PayPal...</p>
+        </div>
+
+        <p class="purchase-note">
+          Secure payment via PayPal. No subscription - one-time payment for lifetime access.<br/>
+          Questions? Contact <a href="mailto:yj@tetracorp.co.kr">yj@tetracorp.co.kr</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section">
+      <h2>FAQ</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <h3>What platforms does PromptForge support?</h3>
+          <p>Claude Projects (Anthropic) and Gemini Gems (Google). Each prompt is optimized for the platform's specific format and constraints.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Do I need an API key?</h3>
+          <p>No. Template-based prompts work entirely offline. The Custom AI feature optionally uses your own Claude or Gemini API key.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Is this a subscription?</h3>
+          <p>No. Pro is a one-time $4.99 payment for lifetime access, including all future template updates.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What if I don't receive my license key?</h3>
+          <p>Check your spam folder first. If it's not there, email <a href="mailto:yj@tetracorp.co.kr">yj@tetracorp.co.kr</a> with your PayPal transaction ID.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can I get a refund?</h3>
+          <p>Yes. If you're not satisfied within 14 days of purchase, email us for a full refund via PayPal.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- PayPal SDK -->
+  <script is:inline src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD"></script>
+  <script is:inline>
+    // Replace YOUR_PAYPAL_CLIENT_ID with your actual PayPal client ID
+    // Get it from: https://developer.paypal.com/dashboard/applications
+    
+    if (typeof paypal !== 'undefined') {
+      paypal.Buttons({
+        style: {
+          shape: 'rect',
+          color: 'black',
+          layout: 'vertical',
+          label: 'pay'
+        },
+        createOrder: function(data, actions) {
+          return actions.order.create({
+            purchase_units: [{
+              description: 'PromptForge Pro License - Lifetime',
+              amount: {
+                currency_code: 'USD',
+                value: '4.99'
+              }
+            }]
+          });
+        },
+        onApprove: function(data, actions) {
+          return actions.order.capture().then(function(details) {
+            // Payment successful
+            const email = details.payer.email_address;
+            const orderId = data.orderID;
+            
+            document.getElementById('paypal-button-container').innerHTML = `
+              <div class="payment-success">
+                <h3>Payment Successful!</h3>
+                <p>Thank you, ${details.payer.name.given_name}!</p>
+                <p>Order ID: <strong>${orderId}</strong></p>
+                <p>Your license key will be sent to <strong>${email}</strong> within 24 hours.</p>
+                <p>If you don't receive it, email <a href="mailto:yj@tetracorp.co.kr">yj@tetracorp.co.kr</a> with your Order ID.</p>
+              </div>
+            `;
+
+            // Optional: Send webhook to make.com for auto license key generation
+            // Uncomment and replace with your make.com webhook URL
+            /*
+            fetch('https://hook.us1.make.com/YOUR_MAKE_WEBHOOK_ID', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email: email,
+                orderId: orderId,
+                amount: '4.99',
+                product: 'promptforge-pro',
+                timestamp: new Date().toISOString()
+              })
+            }).catch(err => console.log('Webhook sent'));
+            */
+          });
+        },
+        onError: function(err) {
+          console.error('PayPal error:', err);
+          document.getElementById('paypal-button-container').innerHTML = `
+            <div class="payment-error">
+              <p>Payment failed. Please try again or contact <a href="mailto:yj@tetracorp.co.kr">yj@tetracorp.co.kr</a></p>
+            </div>
+          `;
+        }
+      }).render('#paypal-button-container');
+    }
+  </script>
+</Layout>
+
+<style>
+  .prompt-page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    padding: 3rem 0 2.5rem;
+    border-bottom: 1px solid var(--color-border, #e5e5e5);
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-muted, #666);
+    border: 1px solid var(--color-border, #e5e5e5);
+    padding: 0.25rem 0.75rem;
+    border-radius: 100px;
+    margin-bottom: 1rem;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 0.75rem;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-subtitle {
+    font-size: 1.125rem;
+    color: var(--color-muted, #555);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-subtitle strong {
+    color: var(--color-text, #111);
+  }
+
+  /* Buttons */
+  .btn-primary {
+    display: inline-block;
+    background: var(--color-text, #111);
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: opacity 0.2s;
+  }
+
+  .btn-primary:hover {
+    opacity: 0.85;
+  }
+
+  .btn-secondary {
+    display: inline-block;
+    background: transparent;
+    color: var(--color-text, #111);
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    border: 1px solid var(--color-border, #ccc);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: background 0.2s;
+  }
+
+  .btn-secondary:hover {
+    background: var(--color-bg-hover, #f5f5f5);
+  }
+
+  /* Sections */
+  .section {
+    margin-bottom: 3rem;
+  }
+
+  .section h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    letter-spacing: -0.01em;
+  }
+
+  .section p {
+    color: var(--color-muted, #555);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+
+  /* Steps */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .step {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .step-number {
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    background: var(--color-text, #111);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+  }
+
+  .step-content h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  .step-content p {
+    font-size: 0.925rem;
+    margin: 0;
+  }
+
+  /* Features Grid */
+  .features-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 600px) {
+    .features-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .feature {
+    padding: 1.25rem;
+    border: 1px solid var(--color-border, #e5e5e5);
+    border-radius: 8px;
+  }
+
+  .feature-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .feature h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.375rem;
+  }
+
+  .feature p {
+    font-size: 0.875rem;
+    margin: 0;
+  }
+
+  /* Categories */
+  .categories {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+  }
+
+  @media (max-width: 600px) {
+    .categories {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .category {
+    padding: 1rem;
+    border: 1px solid var(--color-border, #e5e5e5);
+    border-radius: 8px;
+  }
+
+  .category h3 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  .category p {
+    font-size: 0.8rem;
+    margin: 0;
+    color: var(--color-muted, #888);
+  }
+
+  /* Pricing */
+  .pricing-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 600px) {
+    .pricing-cards {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .pricing-card {
+    padding: 2rem 1.5rem;
+    border: 1px solid var(--color-border, #e5e5e5);
+    border-radius: 8px;
+    text-align: center;
+    position: relative;
+  }
+
+  .pricing-card.featured {
+    border: 2px solid var(--color-text, #111);
+  }
+
+  .pricing-badge {
+    position: absolute;
+    top: -0.75rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-text, #111);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.25rem 0.75rem;
+    border-radius: 100px;
+  }
+
+  .pricing-tier {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-muted, #666);
+    margin-bottom: 0.5rem;
+  }
+
+  .pricing-amount {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+  }
+
+  .pricing-note {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--color-muted, #888);
+  }
+
+  .pricing-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem;
+    text-align: left;
+  }
+
+  .pricing-card li {
+    font-size: 0.9rem;
+    padding: 0.375rem 0;
+    color: var(--color-muted, #555);
+    border-bottom: 1px solid var(--color-border, #f0f0f0);
+  }
+
+  .pricing-card li:last-child {
+    border-bottom: none;
+  }
+
+  .pricing-card li::before {
+    content: '✓ ';
+    color: var(--color-text, #111);
+    font-weight: 600;
+  }
+
+  /* Purchase */
+  .purchase-box {
+    border: 1px solid var(--color-border, #e5e5e5);
+    border-radius: 8px;
+    padding: 2rem;
+  }
+
+  .purchase-info {
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .purchase-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .purchase-step {
+    font-size: 0.9rem;
+    color: var(--color-muted, #555);
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--color-border, #f0f0f0);
+  }
+
+  .paypal-container {
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1.5rem 0;
+  }
+
+  .paypal-loading {
+    color: var(--color-muted, #888);
+    font-size: 0.875rem;
+  }
+
+  .purchase-note {
+    font-size: 0.8rem;
+    color: var(--color-muted, #888);
+    text-align: center;
+    margin: 0;
+  }
+
+  .purchase-note a {
+    color: var(--color-text, #111);
+  }
+
+  /* Payment Success/Error */
+  :global(.payment-success) {
+    text-align: center;
+    padding: 1.5rem;
+    background: #f0fdf4;
+    border-radius: 8px;
+    border: 1px solid #86efac;
+  }
+
+  :global(.payment-success h3) {
+    color: #166534;
+    margin-bottom: 0.5rem;
+  }
+
+  :global(.payment-error) {
+    text-align: center;
+    padding: 1rem;
+    background: #fef2f2;
+    border-radius: 8px;
+    border: 1px solid #fca5a5;
+    color: #991b1b;
+  }
+
+  /* FAQ */
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .faq-item {
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--color-border, #e5e5e5);
+  }
+
+  .faq-item:last-child {
+    border-bottom: none;
+  }
+
+  .faq-item h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .faq-item p {
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .faq-item a {
+    color: var(--color-text, #111);
+    text-decoration: underline;
+  }
+</style>
