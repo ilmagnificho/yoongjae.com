@@ -19,6 +19,19 @@ const { Content } = await render(post);
 const postUrl = `/blog/${post.id}`;
 const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://yoongjae.com';
 
+// Reading time (Korean ~500 chars/min)
+const body = post.body ?? '';
+const plainText = body.replace(/```[\s\S]*?```/g, '').replace(/[#*>\-\[\]()!`|_~]/g, '').replace(/https?:\/\/\S+/g, '').trim();
+const readingTime = Math.max(1, Math.round(plainText.length / 500));
+
+// Related posts (same tag, exclude self)
+const allPosts = (await getCollection('blog')).filter((p) => !p.data.isDraft && p.id !== post.id);
+const currentTags = post.data.tags ?? [];
+const relatedPosts = allPosts
+  .filter((p) => p.data.tags?.some((t: string) => currentTags.includes(t)))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
+
 const blogPostingSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
@@ -63,6 +76,8 @@ const blogPostingSchema = {
         <time class="text-xs text-ink/40 font-mono" datetime={post.data.date.toISOString()}>
           {formatDate(post.data.date)}
         </time>
+        <span class="text-[10px] text-ink/30">&middot;</span>
+        <span class="text-xs text-ink/40">{readingTime}분 읽기</span>
         <div class="flex gap-1.5">
           {post.data.tags.map((tag: string) => (
             <span class="text-[10px] text-ink/40 bg-ink/[0.04] px-1.5 py-0.5 rounded-full">{tag}</span>
@@ -79,9 +94,57 @@ const blogPostingSchema = {
       <Content />
     </div>
 
+    <!-- Newsletter CTA -->
+    <aside class="mt-10 border border-ink/10 rounded-lg p-5">
+      <p class="text-sm font-bold text-ink mb-1">이런 글을 계속 받아보고 싶으시다면</p>
+      <p class="text-xs text-ink/50 mb-3">투자·빌딩 인사이트를 메일로 전합니다.</p>
+      <form
+        action="https://stibee.com/api/v1.0/lists/b-u-zuAfT1K6CYLofSqcWz4JC2OSSg==/public/subscribers"
+        method="POST"
+        target="_blank"
+        class="flex gap-2"
+      >
+        <input
+          type="email"
+          name="email"
+          required
+          placeholder="이메일 주소"
+          class="flex-1 bg-transparent border border-ink/15 rounded-lg px-3 py-1.5 text-xs placeholder:text-ink/30 focus:outline-none focus:border-ink/40"
+        />
+        <button
+          type="submit"
+          class="px-4 py-1.5 bg-ink text-paper text-xs font-medium rounded-lg hover:bg-ink/80 transition-colors shrink-0"
+        >
+          구독
+        </button>
+      </form>
+    </aside>
+
     <ShareButtons title={post.data.title} url={postUrl} />
 
-    <footer class="mt-10 pt-6 border-t border-ink/10">
+    <!-- Related Posts -->
+    {relatedPosts.length > 0 && (
+      <section class="mt-8 pt-6 border-t border-ink/10">
+        <h2 class="text-sm font-bold text-ink mb-3">관련 글</h2>
+        <div class="space-y-2">
+          {relatedPosts.map((related) => (
+            <a
+              href={`/blog/${related.id}`}
+              class="group flex items-baseline justify-between gap-4 py-1.5"
+            >
+              <span class="text-sm text-ink/70 group-hover:text-ink transition-colors line-clamp-1">
+                {related.data.title}
+              </span>
+              <time class="text-[11px] text-ink/35 font-mono shrink-0">
+                {formatDate(related.data.date)}
+              </time>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <footer class="mt-6 pt-6 border-t border-ink/10">
       <a href="/writing" class="text-xs text-ink/40 hover:text-ink transition-colors">
         &larr; 글 목록으로
       </a>
