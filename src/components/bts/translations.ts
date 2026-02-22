@@ -120,6 +120,13 @@ const t: Record<BtsLang, Record<string, string | string[]>> = {
     'share.copy': 'Copy link',
     'share.copied': 'Copied! 💜',
 
+    // Merch
+    'merch.title': '💜 BTS Official Merch',
+    'merch.subtitle': 'Gear up for Gwanghwamun!',
+    'merch.lightstick': 'BTS Official Light Stick Keyring SE',
+    'merch.album': 'BTS 2025 FESTA Capsule Album Vol.1',
+    'merch.cta': 'View on Coupang →',
+
     // Monetization
     'ad.coupang.notice': 'This post contains Coupang Partners affiliate links. A small commission may be earned at no cost to you.',
     'ad.pdf': '📄 Download Offline Guide PDF — $7',
@@ -235,6 +242,12 @@ const t: Record<BtsLang, Record<string, string | string[]>> = {
     'share.copy': '링크 복사',
     'share.copied': '복사 완료! 💜',
 
+    'merch.title': '💜 BTS 공식 굿즈',
+    'merch.subtitle': '광화문 공연 준비물!',
+    'merch.lightstick': '[정품] 방탄소년단 응원봉 키링 스페셜에디션',
+    'merch.album': '방탄소년단 2025 BTS FESTA : CAPSULE ALBUM Vol.1',
+    'merch.cta': '쿠팡에서 보기 →',
+
     'ad.coupang.notice': '이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.',
     'ad.pdf': '📄 오프라인 가이드 PDF 다운로드 — ₩7,000',
     'ad.newsletter.cta': '공연 당일 실시간 업데이트 받기',
@@ -347,6 +360,12 @@ const t: Record<BtsLang, Record<string, string | string[]>> = {
     'share.kakao': '💜 BTS 光化門コンサート完全ガイド\n• 交通規制の代替ルート\n• ゾーンマップ＋チェックリスト',
     'share.copy': 'リンクをコピー',
     'share.copied': 'コピー完了！💜',
+
+    'merch.title': '💜 BTS公式グッズ',
+    'merch.subtitle': '光化門コンサートの準備に！',
+    'merch.lightstick': '[正規品] BTS公式ペンライトキーリング スペシャルエディション',
+    'merch.album': 'BTS 2025 FESTA : CAPSULE ALBUM Vol.1',
+    'merch.cta': 'Coupangで見る →',
 
     'ad.coupang.notice': '本記事はクーパンパートナーズ活動の一環であり、これに伴い一定の手数料を受け取ることがあります。',
     'ad.pdf': '📄 オフラインガイドPDFダウンロード — $7',

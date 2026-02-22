@@ -7,7 +7,10 @@ interface Props {
 }
 
 const STORAGE_KEY = 'bts-checklist-2026';
-const COUPANG_ITEMS = [0, 3]; // indices: portable charger, rain poncho
+const COUPANG_LINKS: Record<number, string> = {
+  0: 'https://link.coupang.com/a/dQ224f', // portable charger
+  3: 'https://link.coupang.com/a/dQ24Ll', // rain poncho
+};
 
 export default function Checklist({ lang }: Props) {
   const t = getT(lang);
@@ -90,9 +93,9 @@ export default function Checklist({ lang }: Props) {
                 >
                   {item}
                 </span>
-                {COUPANG_ITEMS.includes(i) && (
+                {COUPANG_LINKS[i] && (
                   <a
-                    href="COUPANG_PARTNER_LINK"
+                    href={COUPANG_LINKS[i]}
                     target="_blank"
                     rel="noopener noreferrer sponsored"
                     className="text-xs text-[#6A0DAD] font-semibold hover:underline shrink-0"

@@ -72,6 +72,32 @@ export default function BtsGuide() {
       <SubwayGuide lang={lang} />
       <ZoneMap lang={lang} />
       <Checklist lang={lang} />
+
+      {/* BTS Official Merch — Coupang Partners */}
+      <section className="max-w-3xl mx-auto px-6 py-12">
+        <h2 className="text-2xl md:text-3xl font-bold mb-1">{t('merch.title')}</h2>
+        <p className="text-sm text-gray-500 mb-6">{t('merch.subtitle')}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {[
+            { name: t('merch.lightstick'), href: 'https://link.coupang.com/a/dQ26ay' },
+            { name: t('merch.album'), href: 'https://link.coupang.com/a/dQ27vL' },
+          ].map((product) => (
+            <a
+              key={product.href}
+              href={product.href}
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              className="block border border-gray-200 rounded-xl p-4 hover:border-[#C39BD3] hover:shadow-md transition-all group"
+            >
+              <p className="text-sm font-semibold text-gray-800 group-hover:text-[#6A0DAD] transition-colors mb-3">
+                {product.name}
+              </p>
+              <span className="text-xs font-bold text-[#6A0DAD]">{t('merch.cta')}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+
       <Timeline lang={lang} />
       <ForInternational lang={lang} />
 
