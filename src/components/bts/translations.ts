@@ -122,8 +122,6 @@ const t: Record<BtsLang, Record<string, string | string[]>> = {
 
     // Monetization
     'ad.coupang.notice': 'This post contains Coupang Partners affiliate links. A small commission may be earned at no cost to you.',
-    'ad.mrt.airport': '✈️ Incheon Airport Pickup Service — Book on MyRealTrip',
-    'ad.mrt.tour': '🏙️ Seoul K-pop Tour — Explore BTS landmarks',
     'ad.pdf': '📄 Download Offline Guide PDF — $7',
     'ad.newsletter.cta': 'Get D-Day real-time updates',
 
@@ -238,8 +236,6 @@ const t: Record<BtsLang, Record<string, string | string[]>> = {
     'share.copied': '복사 완료! 💜',
 
     'ad.coupang.notice': '이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.',
-    'ad.mrt.airport': '✈️ 인천공항 픽업 서비스 — 마이리얼트립에서 예약',
-    'ad.mrt.tour': '🏙️ 서울 K-pop 투어 — BTS 성지 탐방',
     'ad.pdf': '📄 오프라인 가이드 PDF 다운로드 — ₩7,000',
     'ad.newsletter.cta': '공연 당일 실시간 업데이트 받기',
 
@@ -353,8 +349,6 @@ const t: Record<BtsLang, Record<string, string | string[]>> = {
     'share.copied': 'コピー完了！💜',
 
     'ad.coupang.notice': 'This post contains Coupang Partners affiliate links.',
-    'ad.mrt.airport': '✈️ 仁川空港ピックアップサービス — MyRealTripで予約',
-    'ad.mrt.tour': '🏙️ ソウルK-popツアー — BTSの聖地巡り',
     'ad.pdf': '📄 オフラインガイドPDFダウンロード — $7',
     'ad.newsletter.cta': 'D-Dayリアルタイム情報を受け取る',
 

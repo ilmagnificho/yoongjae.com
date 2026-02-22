@@ -41,15 +41,6 @@ export default function Timeline({ lang }: Props) {
         </div>
       </div>
 
-      {/* MyRealTrip banner */}
-      <a
-        href="MYREALTRIP_KPOP_TOUR_LINK"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="block mt-8 border border-[#E8D5FF] bg-[#E8D5FF]/30 rounded-xl p-4 hover:bg-[#E8D5FF]/50 transition-colors"
-      >
-        <p className="text-sm font-bold text-[#4A0080]">{t('ad.mrt.tour')}</p>
-      </a>
     </section>
   );
 }

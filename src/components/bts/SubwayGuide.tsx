@@ -77,16 +77,6 @@ export default function SubwayGuide({ lang }: Props) {
           {t(`routes.tab.${activeTab}`)}
         </p>
         <p className="text-sm text-gray-600">{t(`routes.${activeTab}`)}</p>
-        {activeTab === 'airport' && (
-          <a
-            href="MYREALTRIP_AIRPORT_PICKUP_LINK"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block mt-3 text-xs bg-[#E8D5FF] text-[#4A0080] font-semibold px-3 py-1.5 rounded-full hover:bg-[#d4bfef] transition-colors"
-          >
-            {t('ad.mrt.airport')}
-          </a>
-        )}
       </div>
     </section>
   );
