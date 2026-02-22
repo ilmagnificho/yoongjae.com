@@ -108,6 +108,7 @@ export default function Checklist({ lang }: Props) {
             </li>
           ))}
         </ul>
+        <p className="text-xs text-gray-500 mt-3">{t('ad.coupang.widget')}</p>
       )}
     </section>
   );

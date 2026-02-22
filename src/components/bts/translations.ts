@@ -128,7 +128,8 @@ const t: Record<BtsLang, Record<string, string | string[]>> = {
     'merch.cta': 'View on Coupang →',
 
     // Monetization
-    'ad.coupang.notice': 'This post contains Coupang Partners affiliate links. A small commission may be earned at no cost to you.',
+    'ad.coupang.notice': 'This post is part of the Coupang Partners program, and a commission is earned from qualifying purchases.',
+    'ad.coupang.widget': 'The above contains Coupang Partners affiliate links, and a commission is earned from qualifying purchases.',
     'ad.pdf': '📄 Download Offline Guide PDF — $7',
     'ad.newsletter.cta': 'Get D-Day real-time updates',
 
@@ -249,6 +250,7 @@ const t: Record<BtsLang, Record<string, string | string[]>> = {
     'merch.cta': '쿠팡에서 보기 →',
 
     'ad.coupang.notice': '이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.',
+    'ad.coupang.widget': '위 상품 링크는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.',
     'ad.pdf': '📄 오프라인 가이드 PDF 다운로드 — ₩7,000',
     'ad.newsletter.cta': '공연 당일 실시간 업데이트 받기',
 
@@ -367,7 +369,8 @@ const t: Record<BtsLang, Record<string, string | string[]>> = {
     'merch.album': 'BTS 2025 FESTA : CAPSULE ALBUM Vol.1',
     'merch.cta': 'Coupangで見る →',
 
-    'ad.coupang.notice': '本記事はクーパンパートナーズ活動の一環であり、これに伴い一定の手数料を受け取ることがあります。',
+    'ad.coupang.notice': '本記事はクーパンパートナーズ活動の一環であり、これに伴い一定額の手数料を受け取っています。',
+    'ad.coupang.widget': '上記の商品リンクはクーパンパートナーズ活動の一環であり、これに伴い一定額の手数料を受け取っています。',
     'ad.pdf': '📄 オフラインガイドPDFダウンロード — $7',
     'ad.newsletter.cta': 'D-Dayリアルタイム情報を受け取る',
 
