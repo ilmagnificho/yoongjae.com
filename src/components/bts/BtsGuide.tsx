@@ -75,10 +75,13 @@ export default function BtsGuide() {
       <ZoneMap lang={lang} />
       <Checklist lang={lang} />
 
-      {/* BTS Official Merch — Coupang Partners */}
+      {/* Merch — Coupang Partners */}
       <section className="max-w-3xl mx-auto px-6 py-12">
         <h2 className="text-2xl md:text-3xl font-bold mb-1">{t('merch.title')}</h2>
-        <p className="text-sm text-gray-500 mb-6">{t('merch.subtitle')}</p>
+        <p className="text-sm text-gray-500 mb-4">{t('merch.subtitle')}</p>
+        <p className="text-xs text-gray-600 border border-gray-200 rounded-lg px-3 py-2 mb-4 bg-gray-50">
+          {t('ad.coupang.notice')}
+        </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
             { name: t('merch.lightstick'), href: 'https://link.coupang.com/a/dQ26ay' },
@@ -98,9 +101,6 @@ export default function BtsGuide() {
             </a>
           ))}
         </div>
-        <p className="text-xs text-gray-600 border border-gray-200 rounded-lg px-3 py-2 mt-4 bg-gray-50">
-          {t('ad.coupang.widget')}
-        </p>
       </section>
 
       <Timeline lang={lang} />

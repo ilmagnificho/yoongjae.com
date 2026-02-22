@@ -74,7 +74,9 @@ const t: Record<BtsLang, Record<string, string | string[]>> = {
       '🆔 ID card',
       '💵 Some cash (KRW)',
     ],
-    'check.coupang': 'Buy on Coupang →',
+    'check.products.title': 'Recommended Essentials',
+    'check.product.charger': 'Portable Charger / Power Bank',
+    'check.product.poncho': 'Foldable Rain Poncho',
 
     // Timeline
     'tl.title': '⏰ Day-of Timeline',
@@ -121,7 +123,7 @@ const t: Record<BtsLang, Record<string, string | string[]>> = {
     'share.copied': 'Copied! 💜',
 
     // Merch
-    'merch.title': '💜 BTS Official Merch',
+    'merch.title': '💜 Concert Day Merch',
     'merch.subtitle': 'Gear up for Gwanghwamun!',
     'merch.lightstick': 'BTS Official Light Stick Keyring SE',
     'merch.album': 'BTS 2025 FESTA Capsule Album Vol.1',
@@ -200,7 +202,9 @@ const t: Record<BtsLang, Record<string, string | string[]>> = {
       '🆔 신분증',
       '💵 현금 소액',
     ],
-    'check.coupang': '쿠팡에서 보기 →',
+    'check.products.title': '추천 준비물',
+    'check.product.charger': '보조배터리 / 휴대용 충전기',
+    'check.product.poncho': '접이식 비옷 / 우의',
 
     'tl.title': '⏰ 당일 타임라인',
     'tl.dminus1': 'D-1 (3/20)',
@@ -243,7 +247,7 @@ const t: Record<BtsLang, Record<string, string | string[]>> = {
     'share.copy': '링크 복사',
     'share.copied': '복사 완료! 💜',
 
-    'merch.title': '💜 BTS 공식 굿즈',
+    'merch.title': '💜 콘서트 준비 굿즈',
     'merch.subtitle': '광화문 공연 준비물!',
     'merch.lightstick': '[정품] 방탄소년단 응원봉 키링 스페셜에디션',
     'merch.album': '방탄소년단 2025 BTS FESTA : CAPSULE ALBUM Vol.1',
@@ -320,7 +324,9 @@ const t: Record<BtsLang, Record<string, string | string[]>> = {
       '🆔 身分証明書',
       '💵 少額の現金（KRW）',
     ],
-    'check.coupang': 'Coupangで購入 →',
+    'check.products.title': 'おすすめ準備品',
+    'check.product.charger': 'モバイルバッテリー / ポータブル充電器',
+    'check.product.poncho': '折りたたみレインコート / ポンチョ',
 
     'tl.title': '⏰ 当日タイムライン',
     'tl.dminus1': 'D-1（3/20）',
@@ -363,7 +369,7 @@ const t: Record<BtsLang, Record<string, string | string[]>> = {
     'share.copy': 'リンクをコピー',
     'share.copied': 'コピー完了！💜',
 
-    'merch.title': '💜 BTS公式グッズ',
+    'merch.title': '💜 コンサート準備グッズ',
     'merch.subtitle': '光化門コンサートの準備に！',
     'merch.lightstick': '[正規品] BTS公式ペンライトキーリング スペシャルエディション',
     'merch.album': 'BTS 2025 FESTA : CAPSULE ALBUM Vol.1',

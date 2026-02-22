@@ -7,10 +7,11 @@ interface Props {
 }
 
 const STORAGE_KEY = 'bts-checklist-2026';
-const COUPANG_LINKS: Record<number, string> = {
-  0: 'https://link.coupang.com/a/dQ224f', // portable charger
-  3: 'https://link.coupang.com/a/dQ24Ll', // rain poncho
-};
+
+const PRODUCTS = [
+  { key: 'check.product.charger', href: 'https://link.coupang.com/a/dQ224f' },
+  { key: 'check.product.poncho', href: 'https://link.coupang.com/a/dQ24Ll' },
+];
 
 export default function Checklist({ lang }: Props) {
   const t = getT(lang);
@@ -76,44 +77,52 @@ export default function Checklist({ lang }: Props) {
           </button>
         </div>
       ) : (
-        <>
-          <ul className="space-y-2">
-            {items.map((item, i) => (
-              <li key={i}>
-                <label className="flex items-center gap-3 p-3 rounded-xl border border-gray-200 hover:border-[#C39BD3] cursor-pointer transition-colors group">
-                  <input
-                    type="checkbox"
-                    checked={checked[i] || false}
-                    onChange={() => toggle(i)}
-                    className="w-5 h-5 rounded accent-[#6A0DAD] shrink-0"
-                  />
-                  <span
-                    className={`text-sm flex-1 transition-colors ${
-                      checked[i] ? 'line-through text-gray-400' : 'text-gray-700'
-                    }`}
-                  >
-                    {item}
-                  </span>
-                  {COUPANG_LINKS[i] && (
-                    <a
-                      href={COUPANG_LINKS[i]}
-                      target="_blank"
-                      rel="noopener noreferrer sponsored"
-                      className="text-xs text-[#6A0DAD] font-semibold hover:underline shrink-0"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {t('check.coupang')}
-                    </a>
-                  )}
-                </label>
-              </li>
-            ))}
-          </ul>
-          <p className="text-xs text-gray-500 border border-gray-200 rounded-lg px-3 py-2 mt-4 bg-gray-50">
-            {t('ad.coupang.widget')}
-          </p>
-        </>
+        <ul className="space-y-2">
+          {items.map((item, i) => (
+            <li key={i}>
+              <label className="flex items-center gap-3 p-3 rounded-xl border border-gray-200 hover:border-[#C39BD3] cursor-pointer transition-colors group">
+                <input
+                  type="checkbox"
+                  checked={checked[i] || false}
+                  onChange={() => toggle(i)}
+                  className="w-5 h-5 rounded accent-[#6A0DAD] shrink-0"
+                />
+                <span
+                  className={`text-sm flex-1 transition-colors ${
+                    checked[i] ? 'line-through text-gray-400' : 'text-gray-700'
+                  }`}
+                >
+                  {item}
+                </span>
+              </label>
+            </li>
+          ))}
+        </ul>
       )}
+
+      {/* Recommended products — separate from checklist */}
+      <div className="mt-8">
+        <h3 className="text-lg font-bold mb-2">{t('check.products.title')}</h3>
+        <p className="text-xs text-gray-600 border border-gray-200 rounded-lg px-3 py-2 mb-4 bg-gray-50">
+          {t('ad.coupang.notice')}
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {PRODUCTS.map((product) => (
+            <a
+              key={product.href}
+              href={product.href}
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              className="block border border-gray-200 rounded-xl p-4 hover:border-[#C39BD3] hover:shadow-md transition-all group"
+            >
+              <p className="text-sm font-semibold text-gray-800 group-hover:text-[#6A0DAD] transition-colors mb-3">
+                {t(product.key)}
+              </p>
+              <span className="text-xs font-bold text-[#6A0DAD]">{t('merch.cta')}</span>
+            </a>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }
