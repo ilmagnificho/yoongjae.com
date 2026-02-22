@@ -87,6 +87,8 @@ const personSchema = {
     <meta name="generator" content={Astro.generator} />
     <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
     <slot name="head" />
+    <!-- Google AdSense -->
+    <script is:inline async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2021805347195633" crossorigin="anonymous"></script>
 <script is:inline>
       if (localStorage.getItem('skip_analytics') !== 'true') {
         const script = document.createElement('script');
