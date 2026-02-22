@@ -18,10 +18,10 @@ export default function ForInternational({ lang }: Props) {
       <h3 className="text-lg font-bold mb-4">{t('intl.phrases.title')}</h3>
       <div className="space-y-3 mb-8">
         {PHRASES.map((key) => (
-          <div key={key} className="border border-gray-200 rounded-xl p-4 bg-white">
-            <p className="text-xs text-gray-500 mb-1">{t(`intl.phrases.${key}`)}</p>
-            <p className="text-base font-bold text-gray-900 mb-1">{t(`intl.phrases.${key}.ko`)}</p>
-            <p className="text-sm text-[#6A0DAD] font-mono">{t(`intl.phrases.${key}.pron`)}</p>
+          <div key={key} className="border border-white/10 rounded-xl p-4 bg-[#1A0A35]">
+            <p className="text-xs text-white/50 mb-1">{t(`intl.phrases.${key}`)}</p>
+            <p className="text-base font-bold text-white/90 mb-1">{t(`intl.phrases.${key}.ko`)}</p>
+            <p className="text-sm text-[#A855F7] font-mono">{t(`intl.phrases.${key}.pron`)}</p>
           </div>
         ))}
       </div>
@@ -32,7 +32,7 @@ export default function ForInternational({ lang }: Props) {
         {(['police', 'fire', 'tourist'] as const).map((key) => (
           <div
             key={key}
-            className="border border-gray-200 rounded-xl p-4 text-center"
+            className="border border-white/10 rounded-xl p-4 text-center bg-[#1A0A35]"
           >
             <p className="text-sm font-bold">{t(`intl.emergency.${key}`)}</p>
           </div>

@@ -23,18 +23,18 @@ export default function Timeline({ lang }: Props) {
 
       <div className="relative">
         {/* Vertical line */}
-        <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-[#E8D5FF]" />
+        <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-[#A855F7]/30" />
 
         <div className="space-y-6">
           {STEPS.map((step, i) => (
             <div key={i} className="relative flex gap-4 pl-12">
               {/* Dot */}
-              <span className="absolute left-2 w-7 h-7 flex items-center justify-center text-base bg-white border-2 border-[#C39BD3] rounded-full">
+              <span className="absolute left-2 w-7 h-7 flex items-center justify-center text-base bg-[#1A0A35] border-2 border-[#A855F7]/50 rounded-full">
                 {step.dot}
               </span>
-              <div className="flex-1 bg-white border border-gray-200 rounded-xl p-4">
-                <p className="text-sm font-bold text-[#6A0DAD] mb-1">{t(step.timeKey)}</p>
-                <p className="text-sm text-gray-600">{t(step.descKey)}</p>
+              <div className="flex-1 bg-[#1A0A35] border border-white/10 rounded-xl p-4">
+                <p className="text-sm font-bold text-[#A855F7] mb-1">{t(step.timeKey)}</p>
+                <p className="text-sm text-white/60">{t(step.descKey)}</p>
               </div>
             </div>
           ))}

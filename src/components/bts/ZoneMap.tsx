@@ -141,20 +141,39 @@ export default function ZoneMap({ lang }: Props) {
   return (
     <section id="zone-map" className="max-w-3xl mx-auto px-6 py-12">
       <h2 className="text-2xl md:text-3xl font-bold mb-2">{t('zone.title')}</h2>
-      <p className="text-sm text-gray-500 mb-6">{t('zone.note')}</p>
+      <p className="text-sm text-white/50 mb-6">{t('zone.note')}</p>
 
       {/* Naver Map — hidden when error */}
       {!mapError && (
         <div
           ref={mapRef}
-          className="w-full rounded-2xl overflow-hidden border border-gray-200"
+          className="w-full rounded-2xl overflow-hidden border border-white/10"
           style={{ height: 420 }}
         />
       )}
 
+      {/* SVG infographic fallback when map fails */}
+      {mapError && (
+        <div className="w-full rounded-2xl overflow-hidden border border-white/10 mb-4">
+          <svg viewBox="0 0 200 500" className="w-full max-w-sm mx-auto block">
+            <rect width="200" height="500" fill="#1A0A35" />
+            <rect x="40" y="30" width="120" height="100" rx="8" fill="#4A0080" opacity="0.9" />
+            <rect x="40" y="140" width="120" height="100" rx="8" fill="#6A0DAD" opacity="0.9" />
+            <rect x="40" y="250" width="120" height="100" rx="8" fill="#9B59B6" opacity="0.9" />
+            <rect x="40" y="360" width="120" height="100" rx="8" fill="#C39BD3" opacity="0.9" />
+            <text x="100" y="85" textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">CORE</text>
+            <text x="100" y="195" textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">HOT</text>
+            <text x="100" y="305" textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">WARM</text>
+            <text x="100" y="415" textAnchor="middle" fill="white" fontSize="14" fontWeight="bold">COLD</text>
+            <text x="100" y="55" textAnchor="middle" fill="#F5C842" fontSize="10">🎤 STAGE (NORTH)</text>
+            <text x="100" y="490" textAnchor="middle" fill="white" fontSize="9" opacity="0.5">↓ SOUTH (City Hall)</text>
+          </svg>
+        </div>
+      )}
+
       {/* Visual zone strip — always visible as quick reference */}
-      <div className={`rounded-2xl overflow-hidden border border-gray-200 ${!mapError ? 'mt-4' : ''}`}>
-        <div className="bg-gray-900 text-white text-center py-2 text-xs font-bold tracking-wider">
+      <div className={`rounded-2xl overflow-hidden border border-white/10 ${!mapError ? 'mt-4' : ''}`}>
+        <div className="bg-[#0D0520] text-white text-center py-2 text-xs font-bold tracking-wider">
           🎤 STAGE (North)
         </div>
         {ZONES_UI.map((zone) => (
@@ -171,7 +190,7 @@ export default function ZoneMap({ lang }: Props) {
             </span>
           </div>
         ))}
-        <div className="bg-gray-100 text-gray-500 text-center py-2 text-xs font-bold tracking-wider">
+        <div className="bg-[#1A0A35] text-white/50 text-center py-2 text-xs font-bold tracking-wider">
           🏛️ CITY HALL (South)
         </div>
       </div>
