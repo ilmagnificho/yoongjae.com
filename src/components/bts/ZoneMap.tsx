@@ -118,6 +118,11 @@ export default function ZoneMap({ lang }: Props) {
       }
     };
 
+    // Register auth failure callback BEFORE loading the script
+    (window as any).navermap_authFailure = () => {
+      setMapError(true);
+    };
+
     if (window.naver?.maps) {
       initMap();
       return;
