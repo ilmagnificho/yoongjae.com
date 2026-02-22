@@ -1,0 +1,112 @@
+---
+import '../../styles/global.css';
+import BtsGuide from '../../components/bts/BtsGuide';
+
+const siteUrl = 'https://yoongjae.com';
+const pageTitle = 'BTS Gwanghwamun Concert 2026 — Complete Survival Guide | YoongJae';
+const description = 'BTS Gwanghwamun free concert March 21, 2026. Closed subway stations, alternative routes, zone map, and survival checklist. Available in EN/KO/JA.';
+const ogImage = `${siteUrl}/og-bts.png`;
+const canonicalUrl = `${siteUrl}/bts`;
+
+const eventSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Event',
+  name: 'BTS 광화문 콘서트 2026',
+  alternateName: 'BTS Gwanghwamun Concert 2026',
+  startDate: '2026-03-21',
+  endDate: '2026-03-21',
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  location: {
+    '@type': 'Place',
+    name: '광화문 광장',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: '세종대로 172',
+      addressLocality: '서울',
+      addressCountry: 'KR',
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: 37.576,
+      longitude: 126.9769,
+    },
+  },
+  organizer: {
+    '@type': 'Organization',
+    name: 'HYBE / BigHit Music',
+  },
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'KRW',
+    availability: 'https://schema.org/InStock',
+  },
+  audience: {
+    '@type': 'Audience',
+    audienceType: 'BTS ARMY',
+  },
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#6A0DAD" />
+
+    <!-- hreflang -->
+    <link rel="alternate" hreflang="en" href={`${siteUrl}/bts`} />
+    <link rel="alternate" hreflang="ko" href={`${siteUrl}/bts?lang=ko`} />
+    <link rel="alternate" hreflang="ja" href={`${siteUrl}/bts?lang=ja`} />
+    <link rel="alternate" hreflang="x-default" href={`${siteUrl}/bts`} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content="BTS Gwanghwamun 2026 💜 Complete Survival Guide" />
+    <meta property="og:description" content="260,000 fans expected. Closed stations, zone map, survival checklist — all in one page. EN/KO/JA available." />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ko_KR" />
+    <meta property="og:locale:alternate" content="ja_JP" />
+    <meta property="og:site_name" content="YoongJae" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="BTS Gwanghwamun 2026 💜 Complete Survival Guide" />
+    <meta name="twitter:description" content="Closed stations + zone map + checklist. yoongjae.com/bts" />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- GEO -->
+    <meta name="geo.region" content="KR-11" />
+    <meta name="geo.placename" content="Seoul, Gwanghwamun" />
+    <meta name="geo.position" content="37.5760;126.9769" />
+    <meta name="ICBM" content="37.5760, 126.9769" />
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json" set:html={JSON.stringify(eventSchema)} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <script is:inline>
+      if (localStorage.getItem('skip_analytics') !== 'true') {
+        const script = document.createElement('script');
+        script.src = "https://static.cloudflareinsights.com/beacon.min.js";
+        script.setAttribute("data-cf-beacon", '{"token": "6eafbb9814ab488baf067bb73405c041"}');
+        script.defer = true;
+        document.head.appendChild(script);
+      }
+    </script>
+  </head>
+  <body class="bg-white text-gray-900">
+    <BtsGuide client:load />
+  </body>
+</html>
