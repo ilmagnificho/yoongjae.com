@@ -129,7 +129,7 @@ export default function ZoneMap({ lang }: Props) {
     }
 
     const script = document.createElement('script');
-    script.src = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${CLIENT_ID}`;
+    script.src = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${CLIENT_ID}`;
     script.onload = () => {
       // Small delay to let naver.maps fully initialize
       setTimeout(() => initMap(), 100);
