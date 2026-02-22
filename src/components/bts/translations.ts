@@ -348,7 +348,7 @@ const t: Record<BtsLang, Record<string, string | string[]>> = {
     'share.copy': 'リンクをコピー',
     'share.copied': 'コピー完了！💜',
 
-    'ad.coupang.notice': 'This post contains Coupang Partners affiliate links.',
+    'ad.coupang.notice': '本記事はクーパンパートナーズ活動の一環であり、これに伴い一定の手数料を受け取ることがあります。',
     'ad.pdf': '📄 オフラインガイドPDFダウンロード — $7',
     'ad.newsletter.cta': 'D-Dayリアルタイム情報を受け取る',
 

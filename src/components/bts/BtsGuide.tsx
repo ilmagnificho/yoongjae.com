@@ -37,6 +37,11 @@ export default function BtsGuide() {
     <div className="min-h-screen bg-white">
       <HeroCountdown lang={lang} onLangChange={switchLang} />
 
+      {/* Coupang Partners disclosure — required by KFTC guidelines (top of page) */}
+      <div className="max-w-3xl mx-auto px-6 pt-3">
+        <p className="text-xs text-gray-400 text-center">{t('ad.coupang.notice')}</p>
+      </div>
+
       {/* Newsletter CTA #1 */}
       <div id="newsletter-hero" className="max-w-3xl mx-auto px-6 py-8">
         <div className="bg-[#E8D5FF]/40 border border-[#C39BD3] rounded-xl p-5 text-center">

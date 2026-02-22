@@ -94,7 +94,7 @@ export default function Checklist({ lang }: Props) {
                   <a
                     href="COUPANG_PARTNER_LINK"
                     target="_blank"
-                    rel="noopener noreferrer"
+                    rel="noopener noreferrer sponsored"
                     className="text-xs text-[#6A0DAD] font-semibold hover:underline shrink-0"
                     onClick={(e) => e.stopPropagation()}
                   >
