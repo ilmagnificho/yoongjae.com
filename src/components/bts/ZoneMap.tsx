@@ -6,7 +6,7 @@ interface Props {
   lang: BtsLang;
 }
 
-const CLIENT_ID = 'YLkaBhluuIKERSg15PlJN2aPYK67kQohmmAeOJds';
+const CLIENT_ID = 'fdglbtq3u5';
 
 const WEST = 126.9748;
 const EAST = 126.9790;
