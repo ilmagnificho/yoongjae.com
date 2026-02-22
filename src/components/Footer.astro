@@ -1,4 +1,9 @@
 ---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
 const socialLinks = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/yjcho/' },
   { label: 'Threads', href: 'https://www.threads.com/@ilmagnificho' },
@@ -12,9 +17,9 @@ const year = new Date().getFullYear();
     <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
       <!-- Newsletter (Stibee) -->
       <div class="flex-1 max-w-sm">
-        <h3 class="font-serif text-base font-semibold mb-1">뉴스레터</h3>
+        <h3 class="font-serif text-base font-semibold mb-1">{t('footer.newsletter.title')}</h3>
         <p class="text-xs text-ink/65 mb-3">
-          투자·빌딩 인사이트 — 한국 창업자와 투자자를 위한 실전 메모를 전합니다.
+          {t('footer.newsletter.description')}
         </p>
         <form
           action="https://stibee.com/api/v1.0/lists/b-u-zuAfT1K6CYLofSqcWz4JC2OSSg==/public/subscribers"
@@ -26,7 +31,7 @@ const year = new Date().getFullYear();
             type="email"
             name="email"
             required
-            placeholder="이메일 주소"
+            placeholder={t('footer.email.placeholder')}
             class="w-full bg-transparent border border-ink/15 rounded-lg px-3 py-1.5 text-xs placeholder:text-ink/30 focus:outline-none focus:border-ink/40"
           />
           <div class="flex gap-2">
@@ -34,26 +39,26 @@ const year = new Date().getFullYear();
               type="text"
               name="name"
               required
-              placeholder="이름"
+              placeholder={t('footer.name.placeholder')}
               class="flex-1 bg-transparent border border-ink/15 rounded-lg px-3 py-1.5 text-xs placeholder:text-ink/30 focus:outline-none focus:border-ink/40"
             />
             <input
               type="text"
               name="phone_number"
               required
-              placeholder="연락처"
+              placeholder={t('footer.phone.placeholder')}
               class="flex-1 bg-transparent border border-ink/15 rounded-lg px-3 py-1.5 text-xs placeholder:text-ink/30 focus:outline-none focus:border-ink/40"
             />
           </div>
           <label class="flex items-start gap-1.5 cursor-pointer">
             <input type="checkbox" name="agree_privacy" required class="mt-0.5 accent-ink" />
-            <span class="text-[10px] text-ink/40 leading-tight">개인정보 수집 및 이용에 동의합니다.</span>
+            <span class="text-[10px] text-ink/40 leading-tight">{t('footer.privacy')}</span>
           </label>
           <button
             type="submit"
             class="w-full px-4 py-2 bg-ink text-paper text-xs font-medium rounded-lg hover:bg-ink/80 transition-colors"
           >
-            구독하기
+            {t('footer.subscribe')}
           </button>
         </form>
       </div>

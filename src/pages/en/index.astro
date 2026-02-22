@@ -1,0 +1,118 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { getSortedPosts } from '../../lib/posts';
+
+const allPosts = await getSortedPosts();
+const recentPosts = allPosts.slice(0, 5);
+
+const portfolioEntries = await getCollection('portfolio');
+const sortedPortfolio = portfolioEntries
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 4);
+---
+
+<BaseLayout
+  title="YoongJae"
+  description="CEO at Tetra. GP at 조약돌개인투자조합. Building and investing with Korean founders."
+  canonicalUrl="/en/"
+  ogImage="/og/home.png"
+>
+  <!-- Hero -->
+  <section class="pt-12 pb-8 md:pt-16 md:pb-10 border-b border-ink/8">
+    <p class="text-xs text-ink/40 font-mono tracking-wider uppercase mb-4">Investor &amp; Builder</p>
+    <h1 class="font-serif text-4xl md:text-5xl font-bold leading-[1.15] mb-5">
+      Building and investing<br />
+      with Korean founders.
+    </h1>
+    <p class="text-base text-ink/60 max-w-lg leading-relaxed">
+      CEO at <a href="https://www.tetracorp.co.kr/" target="_blank" rel="noopener noreferrer" class="text-ink/80 hover:text-accent-blue transition-colors font-bold">Tetra</a> · GP at 조약돌개인투자조합.<br />
+      Helping early-stage startups launch, grow, and fundraise —<br class="hidden md:inline" />
+      sharing hands-on perspectives from the Korean ecosystem.
+    </p>
+    <div class="flex gap-4 mt-6">
+      <a href="/en/writing" class="inline-flex items-center gap-1.5 text-sm font-bold text-accent-blue hover:text-accent-blue/80 transition-colors">
+        Read Writing
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+      <a href="/en/about" class="inline-flex items-center gap-1.5 text-sm font-bold text-ink/45 hover:text-ink transition-colors">
+        About Me
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- Recent Writing -->
+  <section class="py-8 border-b border-ink/8">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="font-serif text-xl font-semibold">Recent Writing</h2>
+      <a href="/en/writing" class="text-xs text-ink/40 hover:text-ink font-mono transition-colors">
+        View All &rarr;
+      </a>
+    </div>
+    <PostList posts={recentPosts} />
+  </section>
+
+  <!-- Portfolio Preview -->
+  {sortedPortfolio.length > 0 && (
+    <section class="py-8 border-b border-ink/8">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="font-serif text-xl font-semibold">Portfolio Companies</h2>
+        <a href="/en/companies" class="text-xs text-ink/40 hover:text-ink font-mono transition-colors">
+          View All &rarr;
+        </a>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        {sortedPortfolio.map((entry) => {
+          const Tag = entry.data.url ? 'a' : 'span';
+          const linkProps = entry.data.url
+            ? { href: entry.data.url, target: '_blank', rel: 'noopener noreferrer' }
+            : {};
+          return (
+            <Tag
+              {...linkProps}
+              class:list={[
+                'text-sm font-semibold px-3 py-1.5 border border-ink/10 rounded-lg',
+                entry.data.url
+                  ? 'hover:border-accent-blue hover:text-accent-blue transition-colors'
+                  : 'text-ink/70',
+              ]}
+            >
+              {entry.data.title}
+            </Tag>
+          );
+        })}
+      </div>
+    </section>
+  )}
+
+  <!-- Tools -->
+  <section class="py-8">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="font-serif text-xl font-semibold">Free Tools</h2>
+      <a href="/en/tools" class="text-xs text-ink/40 hover:text-ink font-mono transition-colors">
+        View All &rarr;
+      </a>
+    </div>
+    <div class="space-y-2">
+      {[
+        { href: '/tools/prompt', name: 'PromptForge', desc: 'Claude & Gemini Prompt Generator' },
+        { href: '/tools/cap-table', name: 'Cap Table Calculator', desc: 'Equity Dilution Simulator' },
+        { href: '/tools/safe-simulator', name: 'SAFE Simulator', desc: 'SAFE / Convertible Note Calculator' },
+        { href: '/tools/esop-calculator', name: 'ESOP Calculator', desc: 'Stock Option Value Calculator' },
+      ].map((tool) => (
+        <a
+          href={tool.href}
+          class="group flex items-center justify-between border border-ink/10 rounded-lg p-3 hover:border-ink/20 hover:bg-ink/[0.02] transition-all"
+        >
+          <div>
+            <h3 class="text-sm font-bold group-hover:text-accent-blue transition-colors">{tool.name}</h3>
+            <p class="text-xs text-ink/45 mt-0.5">{tool.desc}</p>
+          </div>
+          <span class="text-accent-blue text-sm group-hover:translate-x-0.5 transition-transform shrink-0 ml-3">&rarr;</span>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

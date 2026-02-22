@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { getLangFromUrl, getLangAlternates } from '../i18n/utils';
 
 interface Props {
   title?: string;
@@ -23,12 +24,17 @@ const {
   articleTags,
 } = Astro.props;
 
+const lang = getLangFromUrl(Astro.url);
+const ogLocale = lang === 'en' ? 'en_US' : 'ko_KR';
+
 const pageTitle = title === 'YoongJae' ? title : `${title} | YoongJae`;
 const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://yoongjae.com';
 const ogImageUrl = ogImage ? new URL(ogImage, siteUrl).toString() : new URL('/og/home.png', siteUrl).toString();
 const canonicalHref = canonicalUrl
   ? new URL(canonicalUrl, siteUrl).toString()
   : Astro.url.toString();
+
+const alternates = getLangAlternates(Astro.url, siteUrl);
 
 const personSchema = {
   '@context': 'https://schema.org',
@@ -49,18 +55,21 @@ const personSchema = {
 ---
 
 <!doctype html>
-<html lang="ko">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalHref} />
+    {alternates && <link rel="alternate" hreflang="ko" href={alternates.ko} />}
+    {alternates && <link rel="alternate" hreflang="en" href={alternates.en} />}
+    {alternates && <link rel="alternate" hreflang="x-default" href={alternates.ko} />}
 
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonicalHref} />
-    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:locale" content={ogLocale} />
     <meta property="og:site_name" content="YoongJae" />
     <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:width" content="1200" />

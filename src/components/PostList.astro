@@ -1,10 +1,14 @@
 ---
 import { formatDate } from '../lib/posts';
 import type { Post } from '../lib/types';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
 interface Props {
   posts: Post[];
 }
 const { posts } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 <ul class="divide-y divide-ink/8">
   {posts.map((post) => (
@@ -33,5 +37,5 @@ const { posts } = Astro.props;
   ))}
 </ul>
 {posts.length === 0 && (
-  <p class="text-center text-ink/40 py-8 text-sm">아직 글이 없습니다.</p>
+  <p class="text-center text-ink/40 py-8 text-sm">{t('postList.empty')}</p>
 )}

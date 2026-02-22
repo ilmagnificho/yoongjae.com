@@ -1,0 +1,179 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const siteUrl = Astro.site?.toString() ?? 'https://yoongjae.com';
+const aboutUrl = new URL('/en/about', siteUrl).toString();
+
+const profilePageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  url: aboutUrl,
+  name: 'About YoongJae Cho',
+  mainEntity: {
+    '@type': 'Person',
+    name: 'YoongJae Cho',
+    alternateName: 'YoongJae',
+    description:
+      'CEO at Tetra Corp and GP at 조약돌개인투자조합. Builder and investor focused on early-stage startups in Korea.',
+    jobTitle: ['CEO', 'General Partner'],
+    worksFor: [
+      { '@type': 'Organization', name: 'Tetra Corp', url: 'https://www.tetracorp.co.kr/' },
+      { '@type': 'Organization', name: '조약돌개인투자조합' },
+    ],
+    alumniOf: { '@type': 'Organization', name: 'ORIX Corporation' },
+    sameAs: [
+      'https://www.linkedin.com/in/yjcho/',
+      'https://www.threads.com/@ilmagnificho',
+    ],
+    url: siteUrl,
+  },
+};
+
+const timeline = [
+  {
+    year: '2024 –',
+    role: 'CEO',
+    org: '테트라 (Tetra)',
+    url: 'https://www.tetracorp.co.kr/',
+    description: 'Running a startup studio that helps Korean early-stage teams with incorporation, validation, and scale-up — combining legal, PR, and investment under one roof.',
+  },
+  {
+    year: '2024 –',
+    role: 'GP',
+    org: '조약돌개인투자조합',
+    description: 'General Partner at an angel investment partnership focused on early-stage Korean founding teams.',
+  },
+  {
+    year: '2020 – 2023',
+    role: 'New Business Team Lead',
+    org: 'KRAFTON Inc.',
+    description: 'Led new business initiatives and Corporate Development at KRAFTON, validating and expanding ventures at global scale.',
+  },
+  {
+    year: '2021 – 2022',
+    role: 'COO',
+    org: 'thingsflow',
+    description: 'Handled the acquisition process in 2021 and led post-acquisition integration and operations.',
+    nested: true,
+  },
+  {
+    year: '2018 – 2023',
+    role: 'CEO Staff',
+    org: 'PUBG Corporation',
+    description: "Handled CEO special assignments and cross-functional strategic projects at PUBG.",
+  },
+  {
+    year: '2014 – 2016',
+    role: 'Venture Capitalist',
+    org: 'BonAngels Venture Partners',
+    description: "Evaluated and supported early-stage Korean startups at one of Korea's leading seed-stage VCs.",
+  },
+  {
+    year: '2010 – 2014',
+    role: 'Associate',
+    org: 'ORIX Corporation (Tokyo, HQ)',
+    description: 'Developed investment judgment through global PE work at ORIX Group HQ in Tokyo, following a start in ORIX PE Korea.',
+  },
+];
+---
+
+<BaseLayout
+  title="About"
+  description="Builder and investor based in Seoul, Korea."
+  canonicalUrl="/en/about"
+  ogImage="/og/about.png"
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(profilePageSchema)} />
+  </Fragment>
+
+  <section class="py-4">
+    <h1 class="font-serif text-3xl font-bold mb-6">About</h1>
+
+    <div class="text-sm text-ink/75 leading-relaxed space-y-3 mb-10">
+      <p>
+        I'm the CEO of <a href="https://www.tetracorp.co.kr/" target="_blank" rel="noopener noreferrer" class="text-ink font-bold hover:text-accent-blue transition-colors">Tetra</a> and
+        GP of <strong class="text-ink">조약돌개인투자조합</strong>, working hands-on with early-stage Korean startups — from incorporation to early fundraising and first product validation.
+      </p>
+      <p>
+        My career started in PE at ORIX Corporation in Tokyo, moved to venture investing at BonAngels Venture Partners, one of Korea's leading early-stage VCs, then to PUBG/KRAFTON where I led Corporate Development and new business at global scale.
+      </p>
+      <p>
+        Today I bring that background directly to founders at the earliest stages — when building the first team, raising initial capital, and validating the first product matters most.
+      </p>
+      <p>
+        Through Tetra (studio), 조약돌개인투자조합 (fund), and this site (perspective), I put what I've learned into practice.
+      </p>
+    </div>
+
+    <!-- Current Roles -->
+    <h2 class="font-serif text-xl font-semibold mb-4">Now</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-10">
+      <a href="https://www.tetracorp.co.kr/" target="_blank" rel="noopener noreferrer"
+        class="block border border-ink/10 rounded-lg p-4 hover:border-accent-blue/30 hover:bg-ink/[0.015] transition-all group">
+        <p class="text-sm font-bold text-ink group-hover:text-accent-blue transition-colors">테트라 (Tetra)</p>
+        <p class="text-xs text-ink/50 mt-0.5">CEO · Startup Studio</p>
+        <p class="text-xs text-ink/60 mt-2 leading-relaxed">Helping Korean early-stage teams from inception to product-market fit — combining legal, PR, and investment in a studio model.</p>
+      </a>
+      <div class="block border border-ink/10 rounded-lg p-4">
+        <p class="text-sm font-bold text-ink">조약돌개인투자조합</p>
+        <p class="text-xs text-ink/50 mt-0.5">GP · Early-stage Fund</p>
+        <p class="text-xs text-ink/60 mt-2 leading-relaxed">Angel investment partnership investing in Korean founding teams at their very first round.</p>
+      </div>
+    </div>
+
+    <!-- Career Timeline -->
+    <h2 class="font-serif text-xl font-semibold mb-4">Career</h2>
+    <div class="space-y-4 mb-10">
+      {timeline.map((item) => (
+        <div class:list={['flex gap-3 md:gap-4', item.nested && 'ml-4 md:ml-5 border-l-2 border-ink/10 pl-3 md:pl-4']}>
+          <div class="w-24 md:w-28 shrink-0">
+            <span class="text-[11px] text-ink/40 font-mono">{item.year}</span>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-ink">
+              {item.role} <span class="text-ink/45 font-normal">@ {
+                item.url
+                  ? <a href={item.url} target="_blank" rel="noopener noreferrer" class="hover:text-accent-blue transition-colors">{item.org}</a>
+                  : item.org
+              }</span>
+            </h3>
+            <p class="text-xs text-ink/55 mt-0.5 leading-relaxed">{item.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- About This Site -->
+    <h2 class="font-serif text-xl font-semibold mb-3">About This Site</h2>
+    <div class="text-sm text-ink/65 leading-relaxed space-y-2 mb-10">
+      <p>
+        This site is a running archive of practical notes from investing and building —<br>
+        structured for founders and investors making real decisions.
+      </p>
+      <p>
+        If you find it useful, feel free to share. For collaboration or inquiries, reach out below.
+      </p>
+    </div>
+
+    <!-- Contact -->
+    <h2 class="font-serif text-xl font-semibold mb-3">Contact</h2>
+    <div class="flex flex-wrap gap-3">
+      <a href="mailto:yjcho@tetracorp.co.kr"
+        class="inline-flex items-center gap-2 text-sm text-ink/65 hover:text-accent-blue transition-colors">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        yjcho@tetracorp.co.kr
+      </a>
+      <a href="https://www.linkedin.com/in/yjcho/" target="_blank" rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 text-sm text-ink/65 hover:text-accent-blue transition-colors">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </a>
+      <a href="https://www.threads.com/@ilmagnificho" target="_blank" rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 text-sm text-ink/65 hover:text-accent-blue transition-colors">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.59 12c.025 3.086.718 5.496 2.057 7.164 1.432 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.96-.065-1.187.408-2.136 1.41-2.824.856-.588 2.053-.907 3.462-.924.992-.012 1.89.087 2.706.282-.084-1.39-.55-2.452-1.384-3.148-.96-.801-2.29-1.18-4.076-1.161l-.003-2.12c2.275-.027 4.083.546 5.373 1.7 1.27 1.134 1.952 2.78 2.029 4.893l.003.186c.857.385 1.59.912 2.174 1.564 1.063 1.186 1.63 2.77 1.566 4.37-.09 2.267-1.14 4.222-3.038 5.651C17.953 23.263 15.46 23.98 12.186 24zM10.8 14.418c-.159.012-.313.028-.462.049-.971.137-1.715.42-2.148.817-.322.296-.47.637-.442 1.014.037.544.344.948.914 1.2.57.252 1.262.37 1.932.334.97-.053 1.727-.399 2.25-1.03.424-.51.72-1.206.887-2.074-.919-.228-1.911-.34-2.931-.31z"/></svg>
+        Threads
+      </a>
+    </div>
+  </section>
+</BaseLayout>

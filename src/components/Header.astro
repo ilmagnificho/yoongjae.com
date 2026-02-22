@@ -1,17 +1,25 @@
 ---
+import { getLangFromUrl, useTranslations, getAlternateLangUrl } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const prefix = lang === 'en' ? '/en' : '';
+
 const navItems = [
-  { label: '글 Writing', href: '/writing' },
-  { label: '도구 Tools', href: '/tools' },
-  { label: '함께하는 팀 Companies', href: '/companies' },
-  { label: '소개 About', href: '/about' },
+  { label: t('nav.writing'), href: `${prefix}/writing` },
+  { label: t('nav.tools'), href: `${prefix}/tools` },
+  { label: t('nav.companies'), href: `${prefix}/companies` },
+  { label: t('nav.about'), href: `${prefix}/about` },
 ];
 
 const currentPath = Astro.url.pathname;
+const alternatePath = getAlternateLangUrl(currentPath, lang === 'ko' ? 'en' : 'ko');
 ---
 
 <header class="w-full border-b border-ink/12">
   <nav class="max-w-3xl mx-auto px-6 py-5 flex items-center justify-between gap-8">
-    <a href="/" class="font-serif text-xl font-bold text-ink hover:text-ink/70 shrink-0">
+    <a href={lang === 'en' ? '/en/' : '/'} class="font-serif text-xl font-bold text-ink hover:text-ink/70 shrink-0">
       YoongJae
     </a>
     <div class="flex items-center gap-5 md:gap-6">
@@ -20,7 +28,8 @@ const currentPath = Astro.url.pathname;
           href={item.href}
           class:list={[
             'text-xs md:text-sm font-bold transition-colors',
-            currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href))
+            currentPath === item.href || currentPath === item.href + '/' ||
+            (item.href !== '/' && item.href !== '/en/' && currentPath.startsWith(item.href))
               ? 'text-ink'
               : 'text-ink/55 hover:text-ink',
           ]}
@@ -28,6 +37,13 @@ const currentPath = Astro.url.pathname;
           {item.label}
         </a>
       ))}
+      <a
+        href={alternatePath}
+        class="text-xs font-mono font-bold text-ink/35 hover:text-ink transition-colors border border-ink/15 rounded px-1.5 py-0.5 shrink-0"
+        title={lang === 'ko' ? 'View in English' : '한국어로 보기'}
+      >
+        {lang === 'ko' ? 'EN' : 'KO'}
+      </a>
     </div>
   </nav>
 </header>

@@ -1,0 +1,103 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PostList from '../../../components/PostList.astro';
+import { getSortedPosts, filterPostsByTag } from '../../../lib/posts';
+
+const siteUrl = Astro.site?.toString() ?? 'https://yoongjae.com';
+
+const allPosts = await getSortedPosts();
+
+const filters = [
+  { key: 'all', label: 'All' },
+  { key: 'essays', label: 'Essays' },
+  { key: 'yj-letter', label: 'YJ Letter' },
+  { key: 'curated', label: 'Curated' },
+  { key: 'insights', label: 'Insights' },
+] as const;
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Writing by YoongJae',
+  itemListOrder: 'https://schema.org/ItemListOrderDescending',
+  numberOfItems: allPosts.length,
+  itemListElement: allPosts.map((post, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    url: new URL(post.url, siteUrl).toString(),
+    name: post.title,
+  })),
+};
+
+const postsByFilter = Object.fromEntries(
+  filters.map(f => [f.key, filterPostsByTag(allPosts, f.key)])
+);
+---
+
+<BaseLayout
+  title="Writing"
+  description="Essays, investor letters, and curated insights for founders and investors."
+  canonicalUrl="/en/writing"
+  ogImage="/og/writing.png"
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} />
+  </Fragment>
+  <section class="py-4">
+    <h1 class="font-serif text-3xl font-bold mb-2">Writing</h1>
+    <p class="text-sm text-ink/55 mb-6">Essays, investor letters, and curated insights for founders and investors.</p>
+
+    <!-- Filter Tabs -->
+    <div class="flex gap-1.5 mb-6 border-b border-ink/12 pb-3 overflow-x-auto -mx-6 px-6 scrollbar-hide" id="filter-tabs">
+      {filters.map((filter) => (
+        <button
+          class="filter-tab text-xs px-3 py-1 rounded-full transition-colors whitespace-nowrap shrink-0"
+          data-filter={filter.key}
+          data-active={filter.key === 'all' ? 'true' : 'false'}
+        >
+          {filter.label}
+        </button>
+      ))}
+    </div>
+
+    <!-- Post Lists (one per filter, toggle visibility) -->
+    {filters.map((filter) => (
+      <div
+        class="post-list"
+        data-filter={filter.key}
+        style={filter.key === 'all' ? '' : 'display: none;'}
+      >
+        <PostList posts={postsByFilter[filter.key]} />
+      </div>
+    ))}
+  </section>
+</BaseLayout>
+
+<style>
+  .filter-tab[data-active='true'] {
+    @apply bg-ink text-paper;
+  }
+  .filter-tab[data-active='false'] {
+    @apply bg-transparent text-ink/50 hover:text-ink hover:bg-ink/5;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tabs = document.querySelectorAll<HTMLButtonElement>('.filter-tab');
+    const lists = document.querySelectorAll<HTMLDivElement>('.post-list');
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const filter = tab.dataset.filter;
+
+        tabs.forEach((t) => (t.dataset.active = 'false'));
+        tab.dataset.active = 'true';
+
+        lists.forEach((list) => {
+          list.style.display = list.dataset.filter === filter ? '' : 'none';
+        });
+      });
+    });
+  });
+</script>
