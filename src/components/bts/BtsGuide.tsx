@@ -37,9 +37,11 @@ export default function BtsGuide() {
     <div className="min-h-screen bg-white">
       <HeroCountdown lang={lang} onLangChange={switchLang} />
 
-      {/* Coupang Partners disclosure — required by KFTC guidelines (top of page, clearly visible) */}
+      {/* Coupang Partners disclosure — KFTC required, top-of-page, clearly visible */}
       <div className="max-w-3xl mx-auto px-6 pt-4">
-        <p className="text-sm text-gray-600 text-center">{t('ad.coupang.notice')}</p>
+        <p className="text-xs text-gray-600 border border-gray-200 rounded-lg px-3 py-2 bg-gray-50 text-center">
+          {t('ad.coupang.notice')}
+        </p>
       </div>
 
       {/* Newsletter CTA #1 */}
@@ -96,7 +98,9 @@ export default function BtsGuide() {
             </a>
           ))}
         </div>
-        <p className="text-xs text-gray-500 mt-4">{t('ad.coupang.widget')}</p>
+        <p className="text-xs text-gray-600 border border-gray-200 rounded-lg px-3 py-2 mt-4 bg-gray-50">
+          {t('ad.coupang.widget')}
+        </p>
       </section>
 
       <Timeline lang={lang} />
