@@ -152,44 +152,28 @@ export default function ZoneMap({ lang }: Props) {
         />
       )}
 
-      {/* Fallback: static zone strip — shown on error or always visible alongside map */}
-      {mapError && (
-        <div className="rounded-2xl overflow-hidden border border-gray-200">
-          <div className="bg-gray-900 text-white text-center py-2 text-xs font-bold tracking-wider">
-            🎤 STAGE (North)
-          </div>
-          {ZONES_UI.map((zone) => (
-            <div
-              key={zone.key}
-              className={`${zone.bg} ${zone.height} flex items-center justify-between px-5 text-white border-b border-white/10`}
-            >
-              <div>
-                <p className="text-lg font-bold">{t(`zone.${zone.key}`)}</p>
-                <p className="text-xs text-white/70">{t(`zone.${zone.key}.area`)}</p>
-              </div>
-              <span className="text-xs bg-white/20 px-2 py-1 rounded-full whitespace-nowrap">
-                {t(`zone.${zone.key}.time`)}
-              </span>
-            </div>
-          ))}
-          <div className="bg-gray-100 text-gray-500 text-center py-2 text-xs font-bold tracking-wider">
-            🏛️ CITY HALL (South)
-          </div>
+      {/* Visual zone strip — always visible as quick reference */}
+      <div className={`rounded-2xl overflow-hidden border border-gray-200 ${!mapError ? 'mt-4' : ''}`}>
+        <div className="bg-gray-900 text-white text-center py-2 text-xs font-bold tracking-wider">
+          🎤 STAGE (North)
         </div>
-      )}
-
-      {/* Zone legend cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
         {ZONES_UI.map((zone) => (
           <div
             key={zone.key}
-            className={`${zone.bg} text-white rounded-xl p-3`}
+            className={`${zone.bg} ${zone.height} flex items-center justify-between px-5 text-white border-b border-white/10`}
           >
-            <p className="text-sm font-bold">{t(`zone.${zone.key}`)}</p>
-            <p className="text-xs text-white/70 mt-0.5">{t(`zone.${zone.key}.area`)}</p>
-            <p className="text-xs text-white/50 mt-1">{t(`zone.${zone.key}.time`)}</p>
+            <div>
+              <p className="text-lg font-bold">{t(`zone.${zone.key}`)}</p>
+              <p className="text-xs text-white/70">{t(`zone.${zone.key}.area`)}</p>
+            </div>
+            <span className="text-xs bg-white/20 px-2 py-1 rounded-full whitespace-nowrap">
+              {t(`zone.${zone.key}.time`)}
+            </span>
           </div>
         ))}
+        <div className="bg-gray-100 text-gray-500 text-center py-2 text-xs font-bold tracking-wider">
+          🏛️ CITY HALL (South)
+        </div>
       </div>
     </section>
   );

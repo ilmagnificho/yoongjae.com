@@ -94,10 +94,12 @@ export default function BtsGuide() {
               rel="noopener noreferrer sponsored"
               className="block border border-gray-200 rounded-xl p-4 hover:border-[#C39BD3] hover:shadow-md transition-all group"
             >
-              <p className="text-sm font-semibold text-gray-800 group-hover:text-[#6A0DAD] transition-colors mb-3">
+              <p className="text-sm font-semibold text-gray-800 group-hover:text-[#6A0DAD] transition-colors mb-4">
                 {product.name}
               </p>
-              <span className="text-xs font-bold text-[#6A0DAD]">{t('merch.cta')}</span>
+              <span className="block w-full text-center text-sm font-bold text-white bg-[#6A0DAD] rounded-full py-2.5 group-hover:bg-[#4A0080] transition-colors">
+                {t('merch.cta')}
+              </span>
             </a>
           ))}
         </div>

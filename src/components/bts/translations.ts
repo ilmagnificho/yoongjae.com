@@ -127,7 +127,7 @@ const t: Record<BtsLang, Record<string, string | string[]>> = {
     'merch.subtitle': 'Gear up for Gwanghwamun!',
     'merch.lightstick': 'BTS Official Light Stick Keyring SE',
     'merch.album': 'BTS 2025 FESTA Capsule Album Vol.1',
-    'merch.cta': 'View on Coupang →',
+    'merch.cta': 'Get it on Coupang →',
 
     // Monetization
     'ad.coupang.notice': 'This post is part of the Coupang Partners program, and a commission is earned from qualifying purchases.',
@@ -251,7 +251,7 @@ const t: Record<BtsLang, Record<string, string | string[]>> = {
     'merch.subtitle': '광화문 공연 준비물!',
     'merch.lightstick': '[정품] 방탄소년단 응원봉 키링 스페셜에디션',
     'merch.album': '방탄소년단 2025 BTS FESTA : CAPSULE ALBUM Vol.1',
-    'merch.cta': '쿠팡에서 보기 →',
+    'merch.cta': '쿠팡에서 준비하기 →',
 
     'ad.coupang.notice': '이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.',
     'ad.coupang.widget': '위 상품 링크는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.',
@@ -373,7 +373,7 @@ const t: Record<BtsLang, Record<string, string | string[]>> = {
     'merch.subtitle': '光化門コンサートの準備に！',
     'merch.lightstick': '[正規品] BTS公式ペンライトキーリング スペシャルエディション',
     'merch.album': 'BTS 2025 FESTA : CAPSULE ALBUM Vol.1',
-    'merch.cta': 'Coupangで見る →',
+    'merch.cta': 'Coupangで準備する →',
 
     'ad.coupang.notice': '本記事はクーパンパートナーズ活動の一環であり、これに伴い一定額の手数料を受け取っています。',
     'ad.coupang.widget': '上記の商品リンクはクーパンパートナーズ活動の一環であり、これに伴い一定額の手数料を受け取っています。',
