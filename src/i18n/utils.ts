@@ -25,6 +25,10 @@ export function getAlternateLangUrl(pathname: string, targetLang: Lang): string 
     if (KNOWN_PAGES.includes(stripped)) {
       return stripped === '/' ? '/en/' : `/en${stripped}/`;
     }
+    // Blog/writing sub-pages → English writing list
+    if (stripped.startsWith('/blog') || stripped.startsWith('/writing')) return '/en/writing/';
+    // Tool sub-pages → English tools list
+    if (stripped.startsWith('/tools')) return '/en/tools/';
     return '/en/';
   } else {
     // Korean: strip /en prefix
