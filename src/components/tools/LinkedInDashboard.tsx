@@ -50,7 +50,7 @@ export default function LinkedInDashboard() {
     setData(DEMO_DATA);
     setIsDemo(true);
     if (fileRef.current) fileRef.current.value = '';
-    showNotif('데모 데이터로 초기화되었습니다.', 'success', 2000);
+    showNotif('데모 데이터로 돌아갔습니다.', 'success', 2000);
   }, []);
 
   const onDrop = useCallback((e: React.DragEvent) => {
@@ -66,58 +66,90 @@ export default function LinkedInDashboard() {
       <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 24px 60px' }}>
 
         {/* Header */}
-        <header style={{ padding: '32px 0 24px', borderBottom: `1px solid ${V.border}`, marginBottom: 28, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+        <header style={{ padding: '32px 0 24px', borderBottom: `1px solid ${V.border}`, marginBottom: 0, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
           <div>
             <h1 style={{ fontFamily: V.fontSerif, fontWeight: 700, fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', lineHeight: 1.1, color: V.text, margin: 0 }}>
               LinkedIn Analytics
             </h1>
-            <p style={{ color: V.text2, fontSize: '0.82rem', marginTop: 4 }}>YoongJae Cho · 콘텐츠 성과 대시보드</p>
+            <p style={{ color: V.text2, fontSize: '0.82rem', marginTop: 4 }}>콘텐츠 성과 대시보드</p>
           </div>
 
-          <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
-            {/* Demo badge */}
-            {isDemo && (
-              <span style={{ fontSize: '0.72rem', padding: '3px 10px', borderRadius: 20, background: 'rgba(255,103,25,0.10)', border: '1px solid rgba(255,103,25,0.3)', color: V.accent2 }}>
-                데모 데이터
-              </span>
-            )}
-
-            {/* Reset button — only shown when custom file uploaded */}
-            {!isDemo && (
-              <button onClick={handleReset} style={{
-                padding: '8px 14px', fontSize: '0.78rem', border: `1px solid ${V.border}`,
-                borderRadius: 8, background: V.surface2, color: V.text2, cursor: 'pointer',
-              }}>
-                ↩ 초기화
-              </button>
-            )}
-
-            {/* Upload */}
-            <label htmlFor="xlsx-upload"
-              onDragOver={e => { e.preventDefault(); setDragOver(true); }}
-              onDragLeave={() => setDragOver(false)}
-              onDrop={onDrop}
-              style={{
-                padding: '8px 16px', display: 'flex', alignItems: 'center', gap: 8,
-                fontSize: '0.82rem', border: `1px dashed ${dragOver ? V.accent : V.borderStrong}`,
-                borderRadius: 8, cursor: 'pointer',
-                background: dragOver ? `rgba(37,99,235,0.05)` : V.surface,
-                color: V.text2, transition: 'all 0.2s',
-              }}>
-              📂 엑셀 업로드
-            </label>
-            <input id="xlsx-upload" ref={fileRef} type="file" accept=".xlsx,.xls" style={{ display: 'none' }}
-              onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
-
-            {/* Period badge */}
-            <div style={{ background: V.surface2, border: `1px solid ${V.border}`, borderRadius: 8, padding: '8px 14px', fontSize: '0.78rem', color: V.text2, lineHeight: 1.6 }}>
-              <strong style={{ color: V.accent, display: 'block', fontSize: '0.85rem' }}>
-                {startDate.replace(/-/g, '.')} – {endDate.slice(5).replace(/-/g, '.')}
-              </strong>
-              {data.engagement.length}일 · 포스트 {data.posts.length}개
-            </div>
+          {/* Period badge */}
+          <div style={{ background: V.surface2, border: `1px solid ${V.border}`, borderRadius: 8, padding: '8px 14px', fontSize: '0.78rem', color: V.text2, lineHeight: 1.6 }}>
+            <strong style={{ color: V.accent, display: 'block', fontSize: '0.85rem' }}>
+              {startDate.replace(/-/g, '.')} – {endDate.slice(5).replace(/-/g, '.')}
+            </strong>
+            {data.engagement.length}일 · 포스트 {data.posts.length}개
           </div>
         </header>
+
+        {/* ─── Privacy banner ─── */}
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+          padding: '10px 16px', margin: '16px 0', borderRadius: 8,
+          background: V.surface, border: `1px solid ${V.border}`,
+          fontSize: '0.78rem', color: V.text2,
+        }}>
+          <span style={{ fontSize: '1rem' }}>🔒</span>
+          <span>모든 데이터는 <strong style={{ color: V.text }}>브라우저에서만</strong> 처리됩니다. 서버에 전송되거나 저장되지 않습니다.</span>
+        </div>
+
+        {/* ─── Data source bar ─── */}
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '12px 16px', marginBottom: 24, borderRadius: 8, flexWrap: 'wrap', gap: 10,
+          background: isDemo ? 'rgba(37,99,235,0.05)' : 'rgba(22,163,74,0.06)',
+          border: `1px solid ${isDemo ? 'rgba(37,99,235,0.15)' : 'rgba(22,163,74,0.2)'}`,
+        }}>
+          {isDemo ? (
+            <>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.82rem' }}>
+                <span style={{ background: 'rgba(255,103,25,0.12)', border: '1px solid rgba(255,103,25,0.3)', color: V.accent2, padding: '2px 8px', borderRadius: 12, fontSize: '0.7rem', fontWeight: 600 }}>DEMO</span>
+                <span style={{ color: V.text2 }}>샘플 데이터로 보고 있습니다.</span>
+              </div>
+              <label htmlFor="xlsx-upload"
+                onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+                onDragLeave={() => setDragOver(false)}
+                onDrop={onDrop}
+                style={{
+                  padding: '6px 14px', display: 'inline-flex', alignItems: 'center', gap: 6,
+                  fontSize: '0.78rem', fontWeight: 500,
+                  border: `1px solid ${dragOver ? V.accent : V.borderStrong}`,
+                  borderRadius: 6, cursor: 'pointer',
+                  background: dragOver ? `rgba(37,99,235,0.08)` : V.surface,
+                  color: V.accent, transition: 'all 0.2s',
+                }}>
+                📂 내 LinkedIn 엑셀 업로드
+              </label>
+            </>
+          ) : (
+            <>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.82rem' }}>
+                <span style={{ background: 'rgba(22,163,74,0.12)', border: '1px solid rgba(22,163,74,0.3)', color: V.accent3, padding: '2px 8px', borderRadius: 12, fontSize: '0.7rem', fontWeight: 600 }}>내 데이터</span>
+                <span style={{ color: V.text2 }}>업로드한 엑셀 파일로 분석 중입니다.</span>
+              </div>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <label htmlFor="xlsx-upload" style={{
+                  padding: '6px 12px', fontSize: '0.78rem',
+                  border: `1px solid ${V.border}`, borderRadius: 6, cursor: 'pointer',
+                  background: V.surface, color: V.text2,
+                }}>
+                  다른 파일 업로드
+                </label>
+                <button onClick={handleReset} style={{
+                  padding: '6px 14px', fontSize: '0.78rem', fontWeight: 500,
+                  border: `1px solid rgba(220,38,38,0.3)`, borderRadius: 6,
+                  background: 'rgba(220,38,38,0.06)', color: V.accent4,
+                  cursor: 'pointer', transition: 'all 0.15s',
+                }}>
+                  데모 데이터로 돌아가기
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+        <input id="xlsx-upload" ref={fileRef} type="file" accept=".xlsx,.xls" style={{ display: 'none' }}
+          onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
 
         {/* Notification */}
         {notif && (
@@ -144,11 +176,6 @@ export default function LinkedInDashboard() {
               borderBottom: tab === t.id ? `2px solid ${V.accent}` : '2px solid transparent',
             }}>{t.icon} {t.label}</button>
           ))}
-        </div>
-
-        {/* Privacy note */}
-        <div style={{ fontSize: '0.7rem', color: V.text2, textAlign: 'right', marginBottom: 20, opacity: 0.6 }}>
-          🔒 모든 데이터는 브라우저에서만 처리됩니다. 서버 전송 없음.
         </div>
 
         {/* Panels */}
