@@ -49,6 +49,12 @@ const pages = [
     description: '스톡옵션의 예상 가치를 계산해보세요.',
     label: '도구 Tools',
   },
+  {
+    page: 'linkedin-analytics',
+    title: 'LinkedIn Analytics Dashboard',
+    description: '콘텐츠 성과를 분석하고 성장 전략을 수립하세요.',
+    label: '도구 Tools',
+  },
 ];
 
 export const getStaticPaths: GetStaticPaths = () => {

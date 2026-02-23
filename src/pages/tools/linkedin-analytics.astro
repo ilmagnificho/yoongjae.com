@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LinkedInDashboard from '../../components/tools/LinkedInDashboard';
+
+const title = 'LinkedIn Analytics Dashboard - 콘텐츠 성과 분석';
+const description = 'LinkedIn 엑셀 데이터를 업로드하면 노출수, 참여율, 팔로워 성장, 포스트 등급, 오디언스 분석, 주간 리포트를 한눈에 볼 수 있습니다. 100% 브라우저 처리, 서버 전송 없음.';
+const canonical = 'https://yoongjae.com/tools/linkedin-analytics';
+
+const appSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'LinkedIn Analytics Dashboard',
+  url: canonical,
+  applicationCategory: 'AnalyticsApplication',
+  operatingSystem: 'Web',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'KRW',
+  },
+  author: {
+    '@type': 'Person',
+    name: '조융재',
+    url: 'https://yoongjae.com',
+  },
+};
+---
+
+<BaseLayout title={title} description={description} ogImage="/og/linkedin-analytics.png" canonicalUrl="/tools/linkedin-analytics">
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(appSchema)} />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+  </Fragment>
+
+  <section class="py-4">
+    <div class="flex items-center gap-2 text-xs text-ink/40 mb-4">
+      <a href="/tools" class="hover:text-ink transition-colors">Tools</a>
+      <span>/</span>
+      <span>LinkedIn Analytics</span>
+    </div>
+  </section>
+
+  <section class="pb-8 -mx-4 sm:-mx-6 lg:-mx-8">
+    <LinkedInDashboard client:load />
+  </section>
+</BaseLayout>
