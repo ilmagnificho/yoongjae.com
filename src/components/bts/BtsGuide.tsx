@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import type { BtsLang } from './translations';
 import { getT } from './translations';
 import HeroCountdown from './HeroCountdown';
+import TicketCTA from './TicketCTA';
 import SubwayGuide from './SubwayGuide';
 import ZoneMap from './ZoneMap';
 import Checklist from './Checklist';
@@ -60,6 +61,9 @@ export default function BtsGuide() {
   return (
     <div className="min-h-screen bg-[#0D0520] text-white">
       <HeroCountdown lang={lang} onLangChange={switchLang} />
+
+      {/* Ticket CTA — most urgent, right below hero */}
+      <TicketCTA lang={lang} />
 
       {/* Coupang Partners disclosure — KFTC required, top-of-page, clearly visible */}
       <div className="max-w-3xl mx-auto px-6 pt-4">
