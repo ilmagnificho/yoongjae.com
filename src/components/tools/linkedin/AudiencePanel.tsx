@@ -15,7 +15,7 @@ export default function AudiencePanel({ Chart }: { Chart: any }) {
       labels: INDUSTRY_CHART_DATA.labels,
       datasets: [{
         data: INDUSTRY_CHART_DATA.data,
-        backgroundColor: ['rgba(79,140,255,0.8)', 'rgba(124,92,252,0.8)', 'rgba(0,229,160,0.8)', 'rgba(255,217,61,0.8)', 'rgba(255,107,107,0.8)', 'rgba(100,100,120,0.5)'],
+        backgroundColor: ['rgba(37,99,235,0.75)', 'rgba(255,103,25,0.75)', 'rgba(22,163,74,0.75)', 'rgba(217,119,6,0.75)', 'rgba(220,38,38,0.75)', 'rgba(100,100,120,0.4)'],
         borderWidth: 0,
       }],
     },

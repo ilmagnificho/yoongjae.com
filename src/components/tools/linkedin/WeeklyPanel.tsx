@@ -39,14 +39,14 @@ export default function WeeklyPanel({ data, Chart }: { data: DashboardData; Char
     data: {
       labels: DAY_KO,
       datasets: [
-        { label: cur.label, data: weekByDay(curData), backgroundColor: 'rgba(79,140,255,0.7)', borderRadius: 4 },
-        ...(prevData ? [{ label: prev!.label, data: weekByDay(prevData), backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 4 }] : []),
+        { label: cur.label, data: weekByDay(curData), backgroundColor: 'rgba(37,99,235,0.65)', borderRadius: 4 },
+        ...(prevData ? [{ label: prev!.label, data: weekByDay(prevData), backgroundColor: 'rgba(26,26,26,0.10)', borderRadius: 4 }] : []),
       ],
     },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: { legend: { labels: { boxWidth: 12, padding: 12 } } },
-      scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(255,255,255,0.04)' } } },
+      scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(26,26,26,0.06)' } } },
     },
   }, [weekIdx, data]);
 

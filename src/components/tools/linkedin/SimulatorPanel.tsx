@@ -28,14 +28,14 @@ export default function SimulatorPanel({ data, Chart }: { data: DashboardData; C
     data: {
       labels,
       datasets: [
-        { label: '예상 팔로워', data: projData, borderColor: V.accent3, backgroundColor: 'rgba(0,229,160,0.08)', borderWidth: 2, pointRadius: 2, fill: true, tension: 0.3 },
+        { label: '예상 팔로워', data: projData, borderColor: V.accent3, backgroundColor: 'rgba(22,163,74,0.06)', borderWidth: 2, pointRadius: 2, fill: true, tension: 0.3 },
         { label: '목표 (1,000)', data: labels.map(() => 1000), borderColor: 'rgba(255,217,61,0.5)', borderWidth: 1, borderDash: [6, 4], pointRadius: 0, fill: false },
       ],
     },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: { legend: { labels: { boxWidth: 12, padding: 12 } } },
-      scales: { x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { maxTicksLimit: 8 } }, y: { grid: { color: 'rgba(255,255,255,0.04)' }, min: 400, max: 1100 } },
+      scales: { x: { grid: { color: 'rgba(26,26,26,0.06)' }, ticks: { maxTicksLimit: 8 } }, y: { grid: { color: 'rgba(26,26,26,0.06)' }, min: 400, max: 1100 } },
     },
   }, [postsPerWeek, data]);
 

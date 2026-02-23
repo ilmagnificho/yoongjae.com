@@ -77,7 +77,7 @@ export default function CalendarPanel({ data }: { data: DashboardData }) {
                 aspectRatio: '1', borderRadius: 8, display: 'flex', flexDirection: 'column',
                 alignItems: 'center', justifyContent: 'center', fontSize: '0.72rem', gap: 2,
                 border: d.isRec ? `1px solid ${V.accent3}` : '1px solid transparent',
-                background: d.isRec ? 'rgba(0,229,160,0.08)' : V.surface2,
+                background: d.isRec ? 'rgba(22,163,74,0.08)' : V.surface2,
               }}>
                 <span style={{ fontWeight: 500, fontSize: '0.8rem' }}>{d.date}</span>
                 <div style={{ width: 6, height: 6, borderRadius: '50%', background: d.isRec ? V.accent3 : 'transparent' }} />
@@ -85,7 +85,7 @@ export default function CalendarPanel({ data }: { data: DashboardData }) {
             ) : <div key={i} />)}
           </div>
           <div style={{ marginTop: 16, display: 'flex', gap: 12, fontSize: '0.72rem' }}>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 10px', borderRadius: 20, background: 'rgba(0,229,160,0.1)', border: '1px solid rgba(0,229,160,0.3)', color: V.accent3 }}>🟢 추천 발행일</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 10px', borderRadius: 20, background: 'rgba(22,163,74,0.1)', border: '1px solid rgba(22,163,74,0.3)', color: V.accent3 }}>🟢 추천 발행일</span>
             <span style={{ color: V.text2 }}>빈 날 = 쉬는 날</span>
           </div>
         </Card>

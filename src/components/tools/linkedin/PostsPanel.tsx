@@ -1,7 +1,7 @@
 import type { DashboardData } from './data';
-import { DAY_KEYS, DAY_KO, DAY_KO_FULL, getGrade, GRADE_COLORS } from './data';
+import { DAY_KEYS, DAY_KO, DAY_KO_FULL, getGrade } from './data';
 import { useChartCanvas } from './useChart';
-import { V, Card, SectionTitle, BarFill, GradeBadge } from './ui';
+import { V, Card, SectionTitle, BarFill, GradeBadge, GRADE_COLORS_LIGHT } from './ui';
 
 export default function PostsPanel({ data, Chart }: { data: DashboardData; Chart: any }) {
   const maxImp = Math.max(...data.posts.map(p => p.impressions));
@@ -13,7 +13,7 @@ export default function PostsPanel({ data, Chart }: { data: DashboardData; Chart
     type: 'doughnut',
     data: {
       labels: ['A등급', 'B등급', 'C등급', 'D등급'],
-      datasets: [{ data: [grades.A, grades.B, grades.C, grades.D], backgroundColor: ['rgba(0,229,160,0.8)', 'rgba(79,140,255,0.8)', 'rgba(255,217,61,0.8)', 'rgba(255,107,107,0.8)'], borderWidth: 0 }],
+      datasets: [{ data: [grades.A, grades.B, grades.C, grades.D], backgroundColor: ['rgba(22,163,74,0.7)', 'rgba(37,99,235,0.7)', 'rgba(217,119,6,0.7)', 'rgba(220,38,38,0.7)'], borderWidth: 0 }],
     },
     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' as const, labels: { boxWidth: 12, padding: 12 } } }, cutout: '65%' },
   }, [data]);
@@ -27,7 +27,7 @@ export default function PostsPanel({ data, Chart }: { data: DashboardData; Chart
         data: DAY_KEYS.map(d => data.dayAvg[d]?.eng_rate ?? 0),
         backgroundColor: DAY_KEYS.map(d => {
           const r = data.dayAvg[d]?.eng_rate ?? 0;
-          return r >= 2.5 ? 'rgba(0,229,160,0.7)' : r >= 1.5 ? 'rgba(79,140,255,0.7)' : 'rgba(255,107,107,0.5)';
+          return r >= 2.5 ? 'rgba(22,163,74,0.7)' : r >= 1.5 ? 'rgba(37,99,235,0.7)' : 'rgba(220,38,38,0.5)';
         }),
         borderRadius: 6,
       }],
@@ -35,7 +35,7 @@ export default function PostsPanel({ data, Chart }: { data: DashboardData; Chart
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: { legend: { display: false } },
-      scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(255,255,255,0.04)' }, title: { display: true, text: '참여율 (%)' } } },
+      scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(26,26,26,0.06)' }, title: { display: true, text: '참여율 (%)' } } },
     },
   }, [data]);
 
@@ -46,7 +46,7 @@ export default function PostsPanel({ data, Chart }: { data: DashboardData; Chart
       <Card>
         <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 16 }}>
           {(['A', 'B', 'C', 'D'] as const).map(g => (
-            <div key={g} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px', background: GRADE_COLORS[g].bg.replace('0.2', '0.1'), borderRadius: 8, fontSize: '0.8rem' }}>
+            <div key={g} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px', background: GRADE_COLORS_LIGHT[g].bg.replace('0.2', '0.1'), borderRadius: 8, fontSize: '0.8rem' }}>
               <GradeBadge grade={g} />
               <span>{g === 'A' ? '참여율 ≥ 2.5%' : g === 'B' ? '1.5% - 2.49%' : g === 'C' ? '0.8% - 1.49%' : '0.8% 미만'}</span>
             </div>
@@ -72,7 +72,7 @@ export default function PostsPanel({ data, Chart }: { data: DashboardData; Chart
                     <td style={tdStyle}>{DAY_KO_FULL[p.dayname] || p.dayname}</td>
                     <td style={tdStyle}>{p.impressions.toLocaleString()}</td>
                     <td style={tdStyle}>{p.engagement}</td>
-                    <td style={{ ...tdStyle, color: GRADE_COLORS[grade].text, fontWeight: 500 }}>{p.eng_rate}%</td>
+                    <td style={{ ...tdStyle, color: GRADE_COLORS_LIGHT[grade].text, fontWeight: 500 }}>{p.eng_rate}%</td>
                     <td style={{ ...tdStyle, width: 120 }}><BarFill width={barW} gradient={`linear-gradient(90deg,${V.accent},${V.accent2})`} /></td>
                     <td style={tdStyle}>
                       {p.short_url && <a href={`https://www.linkedin.com/feed/update/urn:li:activity:${p.short_url}`} target="_blank" rel="noopener noreferrer" style={{ color: V.accent2, fontSize: '0.72rem', textDecoration: 'none' }}>🔗 보기</a>}
