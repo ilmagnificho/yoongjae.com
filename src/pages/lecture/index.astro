@@ -7,6 +7,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   description="투자자의 언어로 배우는 스타트업 생존 전략 - 사전 등록"
   canonicalUrl="/lecture"
 >
+  <Fragment slot="head">
+    <link rel="stylesheet" href="https://resource.stibee.com/subscribe/stb_subscribe_form_style.css">
+  </Fragment>
+
   <section class="py-4">
     <!-- Coming Soon Badge -->
     <span class="inline-block text-xs font-semibold px-3 py-1 rounded-full bg-accent-orange/10 text-accent-orange mb-6">
@@ -34,45 +38,43 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       </p>
     </div>
 
-    <!-- Email Form (Stibee — direct POST) -->
-    <div class="border border-ink/10 rounded-lg p-6 mb-10">
-      <form
-        action="https://stibee.com/api/v1.0/lists/b-u-zuAfT1K6CYLofSqcWz4JC2OSSg==/public/subscribers"
-        method="POST"
-        class="space-y-3"
-      >
-        <div class="flex flex-col sm:flex-row gap-3">
-          <input
-            type="email"
-            name="email"
-            required
-            placeholder="이메일 주소"
-            class="flex-1 bg-transparent border border-ink/15 rounded-lg px-4 py-2.5 text-sm placeholder:text-ink/30 focus:outline-none focus:border-ink/40"
-          />
-          <input
-            type="text"
-            name="name"
-            required
-            placeholder="이름"
-            class="sm:w-32 bg-transparent border border-ink/15 rounded-lg px-4 py-2.5 text-sm placeholder:text-ink/30 focus:outline-none focus:border-ink/40"
-          />
-        </div>
-        <label class="flex items-start gap-1.5 cursor-pointer">
-          <input type="checkbox" name="agree_privacy" required class="mt-0.5 accent-ink" />
-          <span class="text-[10px] text-ink/40 leading-tight">
-            <a href="/privacy" class="underline hover:text-ink/60">개인정보 수집 및 이용</a>에 동의합니다.
-          </span>
-        </label>
-        <button
-          type="submit"
-          class="w-full sm:w-auto px-6 py-2.5 bg-ink text-paper text-sm font-medium rounded-lg hover:bg-ink/80 transition-colors"
-        >
-          알림 받기
-        </button>
-      </form>
-      <p class="text-xs text-ink/40 mt-3">
-        구독 확인 이메일이 발송됩니다. 스팸 폴더도 확인해 주세요.
-      </p>
+    <!-- Stibee Official Subscription Form -->
+    <div class="mb-10">
+      <div id="stb_subscribe">
+        <form action="https://stibee.com/api/v1.0/lists/1geU6LTMo4iF9W0Nid12rIAf6TG6ng==/public/subscribers" method="POST" target="_blank" accept-charset="utf-8" class="stb_form" name="stb_subscribe_form" id="stb_subscribe_form" novalidate>
+          <h1 class="stb_form_title">IF 강의 신청 구독하기</h1>
+          <fieldset class="stb_form_set">
+            <label for="stb_email" class="stb_form_set_label">
+              이메일 주소<span class="stb_asterisk">*</span>
+            </label>
+            <input type="text" class="stb_form_set_input" id="stb_email" name="email" required="required">
+            <div class="stb_form_msg_error" id="stb_email_error"></div>
+          </fieldset>
+          <div class="stb_form_policy">
+            <label>
+              <input type="checkbox" id="stb_policy" value="stb_policy_true">
+              <span>(필수)</span>
+              <button id="stb_form_modal_open" data-modal="stb_form_policy_modal" class="stb_form_modal_open_btn" type="button">개인정보 수집 및 이용</button>에 동의합니다.
+            </label>
+            <div class="stb_form_msg_error" id="stb_policy_error"></div>
+            <div class="stb_form_modal stb_form_policy_text blind" id="stb_form_policy_modal">
+              <div class="stb_form_modal_body">
+                <h1 class="stb_form_modal_title">개인정보 수집 및 이용</h1>
+                <div class="stb_form_modal_text">뉴스레터 발송을 위한 최소한의 개인정보를 수집하고 이용합니다. 수집된 정보는 발송 외 다른 목적으로 이용되지 않으며, 서비스가 종료되거나 구독을 해지할 경우 즉시 파기됩니다.</div>
+                <div class="stb_form_modal_btn">
+                  <button id="stb_form_modal_close" class="stb_form_modal_close_btn" data-modal="stb_form_policy_modal" type="button">닫기</button>
+                </div>
+              </div>
+              <div class="stb_form_modal_bg" id="stb_form_modal_bg"></div>
+            </div>
+          </div>
+          <div class="stb_form_result" id="stb_form_result"></div>
+          <fieldset class="stb_form_set_submit">
+            <button type="submit" class="stb_form_submit_button" id="stb_form_submit_button" style="background-color: #FF6464; color: #ffffff;">구독하기</button>
+          </fieldset>
+        </form>
+      </div>
+      <script is:inline type="text/javascript" src="https://resource.stibee.com/subscribe/stb_subscribe_form.js"></script>
     </div>
 
     <!-- Instructor -->

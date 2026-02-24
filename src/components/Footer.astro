@@ -22,8 +22,9 @@ const year = new Date().getFullYear();
           {t('footer.newsletter.description')}
         </p>
         <form
-          action="https://stibee.com/api/v1.0/lists/b-u-zuAfT1K6CYLofSqcWz4JC2OSSg==/public/subscribers"
+          action="https://stibee.com/api/v1.0/lists/FPtktD6uOmYxjdvwSIaGCPwM3px-iA==/public/subscribers"
           method="POST"
+          target="_blank"
           class="space-y-2"
         >
           <input
@@ -44,7 +45,6 @@ const year = new Date().getFullYear();
             <input
               type="text"
               name="phone_number"
-              required
               placeholder={t('footer.phone.placeholder')}
               class="flex-1 bg-transparent border border-ink/15 rounded-lg px-3 py-1.5 text-xs placeholder:text-ink/30 focus:outline-none focus:border-ink/40"
             />

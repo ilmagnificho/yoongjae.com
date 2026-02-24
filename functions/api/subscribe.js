@@ -1,11 +1,10 @@
 export async function onRequestPost(context) {
   const { request } = context;
 
-  let email, name;
+  let email;
   try {
     const body = await request.formData();
     email = body.get('email');
-    name = body.get('name') || '';
   } catch {
     return new Response(JSON.stringify({ ok: false, message: '잘못된 요청입니다.' }), {
       status: 400,
@@ -20,22 +19,15 @@ export async function onRequestPost(context) {
     });
   }
 
-  const params = new URLSearchParams({ email });
-  if (name) params.set('name', name);
-
   const stibeeRes = await fetch(
-    'https://stibee.com/api/v1.0/lists/b-u-zuAfT1K6CYLofSqcWz4JC2OSSg==/public/subscribers',
+    'https://stibee.com/api/v1.0/lists/1geU6LTMo4iF9W0Nid12rIAf6TG6ng==/public/subscribers',
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: params.toString(),
+      body: new URLSearchParams({ email }).toString(),
     }
   );
 
-  const text = await stibeeRes.text();
-  console.log('Stibee status:', stibeeRes.status, 'response:', text.slice(0, 200));
-
-  // Stibee returns HTML; a true success contains a confirmation message
   if (stibeeRes.ok) {
     return new Response(JSON.stringify({ ok: true }), {
       headers: { 'Content-Type': 'application/json' },
