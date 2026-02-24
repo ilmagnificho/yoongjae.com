@@ -70,32 +70,23 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         msg.classList.add('hidden');
 
         try {
-          const res = await fetch('https://stibee.com/api/v1.0/lists/474769/public/subscribers', {
+          const res = await fetch('/api/subscribe', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: new URLSearchParams({ email }),
           });
 
-          if (res.ok) {
+          const data = await res.json();
+
+          if (data.ok) {
             msg.textContent = '등록되었습니다. 일정이 확정되면 안내드리겠습니다.';
             msg.className = 'text-sm mt-3 text-green-600';
             form.email.value = '';
           } else {
-            throw new Error();
+            throw new Error(data.message || '등록에 실패했습니다.');
           }
-        } catch {
-          // fetch 실패 시 (CORS 등) 기본 폼 제출로 폴백
-          const fallback = document.createElement('form');
-          fallback.method = 'POST';
-          fallback.action = 'https://stibee.com/api/v1.0/lists/474769/public/subscribers';
-          const input = document.createElement('input');
-          input.type = 'hidden';
-          input.name = 'email';
-          input.value = email;
-          fallback.appendChild(input);
-          document.body.appendChild(fallback);
-          fallback.submit();
-          return;
+        } catch (err) {
+          msg.textContent = err.message || '오류가 발생했습니다. 다시 시도해주세요.';
+          msg.className = 'text-sm mt-3 text-red-500';
         }
 
         btn.disabled = false;
