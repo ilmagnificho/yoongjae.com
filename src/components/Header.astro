@@ -8,6 +8,7 @@ const prefix = lang === 'en' ? '/en' : '';
 
 const navItems = [
   { label: t('nav.writing'), href: `${prefix}/writing` },
+  { label: t('nav.lecture'), href: `${prefix}/lecture`, isNew: true },
   { label: t('nav.tools'), href: `${prefix}/tools` },
   { label: t('nav.companies'), href: `${prefix}/companies` },
   { label: t('nav.about'), href: `${prefix}/about` },
@@ -27,7 +28,7 @@ const alternatePath = getAlternateLangUrl(currentPath, lang === 'ko' ? 'en' : 'k
         <a
           href={item.href}
           class:list={[
-            'text-xs md:text-sm font-bold transition-colors',
+            'text-xs md:text-sm font-bold transition-colors relative',
             currentPath === item.href || currentPath === item.href + '/' ||
             (item.href !== '/' && item.href !== '/en/' && currentPath.startsWith(item.href))
               ? 'text-ink'
@@ -35,6 +36,7 @@ const alternatePath = getAlternateLangUrl(currentPath, lang === 'ko' ? 'en' : 'k
           ]}
         >
           {item.label}
+          {item.isNew && <span class="absolute -top-1 -right-2 w-1.5 h-1.5 rounded-full bg-accent-orange" />}
         </a>
       ))}
       <a
