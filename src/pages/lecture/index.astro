@@ -37,9 +37,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     <!-- Email Form (Stibee) -->
     <div class="border border-ink/10 rounded-lg p-6 mb-10">
       <form
-        action="https://stibee.com/api/v1.0/lists/STIBEE_LIST_ID/public/subscribers"
-        method="POST"
-        target="_blank"
+        id="stibee-form"
         class="flex flex-col sm:flex-row gap-3"
       >
         <input
@@ -56,7 +54,54 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           알림 받기
         </button>
       </form>
+      <p id="stibee-msg" class="text-sm mt-3 hidden"></p>
     </div>
+
+    <script>
+      const form = document.getElementById('stibee-form');
+      const msg = document.getElementById('stibee-msg');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = form.email.value;
+        const btn = form.querySelector('button');
+        btn.disabled = true;
+        btn.textContent = '등록 중...';
+        msg.classList.add('hidden');
+
+        try {
+          const res = await fetch('https://stibee.com/api/v1.0/lists/474769/public/subscribers', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ email }),
+          });
+
+          if (res.ok) {
+            msg.textContent = '등록되었습니다. 일정이 확정되면 안내드리겠습니다.';
+            msg.className = 'text-sm mt-3 text-green-600';
+            form.email.value = '';
+          } else {
+            throw new Error();
+          }
+        } catch {
+          // fetch 실패 시 (CORS 등) 기본 폼 제출로 폴백
+          const fallback = document.createElement('form');
+          fallback.method = 'POST';
+          fallback.action = 'https://stibee.com/api/v1.0/lists/474769/public/subscribers';
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = 'email';
+          input.value = email;
+          fallback.appendChild(input);
+          document.body.appendChild(fallback);
+          fallback.submit();
+          return;
+        }
+
+        btn.disabled = false;
+        btn.textContent = '알림 받기';
+      });
+    </script>
 
     <!-- Instructor -->
     <div class="text-sm text-ink/65 leading-relaxed mb-10">
