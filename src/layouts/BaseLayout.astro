@@ -105,5 +105,39 @@ const personSchema = {
       <slot />
     </main>
     <Footer />
+    <script is:inline>
+      // Stibee subscription form handler — inline submit with feedback
+      document.addEventListener('submit', function(e) {
+        var form = e.target;
+        if (!form.action || form.action.indexOf('stibee.com') === -1) return;
+        e.preventDefault();
+        var btn = form.querySelector('button[type="submit"]');
+        if (!btn || btn.disabled) return;
+        var orig = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = '구독 중...';
+        var msg = form.parentElement.querySelector('.stibee-msg');
+        if (msg) msg.remove();
+        fetch(form.action, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: new URLSearchParams(new FormData(form)),
+        }).then(function() {
+          btn.textContent = '구독 완료!';
+          btn.style.background = '#16a34a';
+          form.reset();
+          var el = document.createElement('p');
+          el.className = 'stibee-msg';
+          el.style.cssText = 'font-size:0.75rem;color:#16a34a;margin-top:8px;';
+          el.textContent = '구독 확인 이메일을 확인해 주세요. 스팸 폴더도 확인해 보세요.';
+          form.parentElement.appendChild(el);
+          setTimeout(function() { btn.textContent = orig; btn.disabled = false; btn.style.background = ''; }, 4000);
+        }).catch(function() {
+          btn.textContent = '오류 발생';
+          btn.style.background = '#dc2626';
+          setTimeout(function() { btn.textContent = orig; btn.disabled = false; btn.style.background = ''; }, 3000);
+        });
+      });
+    </script>
   </body>
 </html>

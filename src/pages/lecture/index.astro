@@ -34,65 +34,46 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       </p>
     </div>
 
-    <!-- Email Form (Stibee) -->
+    <!-- Email Form (Stibee — direct POST) -->
     <div class="border border-ink/10 rounded-lg p-6 mb-10">
       <form
-        id="stibee-form"
-        class="flex flex-col sm:flex-row gap-3"
+        action="https://stibee.com/api/v1.0/lists/b-u-zuAfT1K6CYLofSqcWz4JC2OSSg==/public/subscribers"
+        method="POST"
+        class="space-y-3"
       >
-        <input
-          type="email"
-          name="email"
-          required
-          placeholder="이메일 주소"
-          class="flex-1 bg-transparent border border-ink/15 rounded-lg px-4 py-2.5 text-sm placeholder:text-ink/30 focus:outline-none focus:border-ink/40"
-        />
+        <div class="flex flex-col sm:flex-row gap-3">
+          <input
+            type="email"
+            name="email"
+            required
+            placeholder="이메일 주소"
+            class="flex-1 bg-transparent border border-ink/15 rounded-lg px-4 py-2.5 text-sm placeholder:text-ink/30 focus:outline-none focus:border-ink/40"
+          />
+          <input
+            type="text"
+            name="name"
+            required
+            placeholder="이름"
+            class="sm:w-32 bg-transparent border border-ink/15 rounded-lg px-4 py-2.5 text-sm placeholder:text-ink/30 focus:outline-none focus:border-ink/40"
+          />
+        </div>
+        <label class="flex items-start gap-1.5 cursor-pointer">
+          <input type="checkbox" name="agree_privacy" required class="mt-0.5 accent-ink" />
+          <span class="text-[10px] text-ink/40 leading-tight">
+            <a href="/privacy" class="underline hover:text-ink/60">개인정보 수집 및 이용</a>에 동의합니다.
+          </span>
+        </label>
         <button
           type="submit"
-          class="px-6 py-2.5 bg-ink text-paper text-sm font-medium rounded-lg hover:bg-ink/80 transition-colors shrink-0"
+          class="w-full sm:w-auto px-6 py-2.5 bg-ink text-paper text-sm font-medium rounded-lg hover:bg-ink/80 transition-colors"
         >
           알림 받기
         </button>
       </form>
-      <p id="stibee-msg" class="text-sm mt-3 hidden"></p>
+      <p class="text-xs text-ink/40 mt-3">
+        구독 확인 이메일이 발송됩니다. 스팸 폴더도 확인해 주세요.
+      </p>
     </div>
-
-    <script>
-      const form = document.getElementById('stibee-form');
-      const msg = document.getElementById('stibee-msg');
-
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = form.email.value;
-        const btn = form.querySelector('button');
-        btn.disabled = true;
-        btn.textContent = '등록 중...';
-        msg.classList.add('hidden');
-
-        try {
-          const res = await fetch('/api/subscribe', {
-            method: 'POST',
-            body: new URLSearchParams({ email }),
-          });
-
-          const data = await res.json();
-
-          if (data.ok) {
-            msg.textContent = '등록되었습니다. 일정이 확정되면 안내드리겠습니다.';
-            msg.className = 'text-sm mt-3 text-green-600';
-            form.email.value = '';
-          } else {
-            throw new Error(data.message || '등록에 실패했습니다.');
-          }
-        } catch (err) {
-          msg.textContent = err.message || '오류가 발생했습니다. 다시 시도해주세요.';
-          msg.className = 'text-sm mt-3 text-red-500';
-        }
-
-        btn.disabled = false;
-        btn.textContent = '알림 받기';
-      });
-    </script>
 
     <!-- Instructor -->
     <div class="text-sm text-ink/65 leading-relaxed mb-10">

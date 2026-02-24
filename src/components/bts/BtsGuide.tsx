@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import type { BtsLang } from './translations';
 import { getT } from './translations';
 import HeroCountdown from './HeroCountdown';
@@ -12,8 +12,35 @@ import FoodStrategy from './FoodStrategy';
 import ForInternational from './ForInternational';
 import ShareFloat from './ShareFloat';
 
+const STIBEE_URL = 'https://stibee.com/api/v1.0/lists/b-u-zuAfT1K6CYLofSqcWz4JC2OSSg==/public/subscribers';
+
+function useStibeeForm() {
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    setStatus('loading');
+    try {
+      await fetch(STIBEE_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: new URLSearchParams(new FormData(form) as any),
+      });
+      setStatus('success');
+      form.reset();
+      setTimeout(() => setStatus('idle'), 5000);
+    } catch {
+      setStatus('error');
+      setTimeout(() => setStatus('idle'), 3000);
+    }
+  }, []);
+  return { status, handleSubmit };
+}
+
 export default function BtsGuide() {
   const [lang, setLang] = useState<BtsLang>('en');
+  const form1 = useStibeeForm();
+  const form2 = useStibeeForm();
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -77,9 +104,7 @@ export default function BtsGuide() {
         <div className="bg-[#A855F7]/10 border border-[#A855F7]/30 rounded-xl p-5 text-center">
           <p className="text-sm font-bold text-[#A855F7] mb-3">{t('ad.newsletter.cta')}</p>
           <form
-            action="https://stibee.com/api/v1.0/lists/b-u-zuAfT1K6CYLofSqcWz4JC2OSSg==/public/subscribers"
-            method="POST"
-            target="_blank"
+            onSubmit={form1.handleSubmit}
             className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto"
           >
             <input
@@ -91,11 +116,13 @@ export default function BtsGuide() {
             />
             <button
               type="submit"
-              className="bg-[#6A0DAD] text-white text-sm font-bold px-5 py-2 rounded-lg hover:bg-[#4A0080] transition-colors"
+              disabled={form1.status === 'loading'}
+              className="bg-[#6A0DAD] text-white text-sm font-bold px-5 py-2 rounded-lg hover:bg-[#4A0080] transition-colors disabled:opacity-50"
             >
-              {lang === 'ko' ? '구독하기' : lang === 'ja' ? '購読する' : 'Subscribe'}
+              {form1.status === 'loading' ? '...' : form1.status === 'success' ? '✓' : form1.status === 'error' ? '!' : (lang === 'ko' ? '구독하기' : lang === 'ja' ? '購読する' : 'Subscribe')}
             </button>
           </form>
+          {form1.status === 'success' && <p className="text-xs text-green-300 mt-2">{lang === 'ko' ? '구독 확인 이메일을 확인해 주세요.' : lang === 'ja' ? '確認メールをご確認ください。' : 'Check your email for confirmation.'}</p>}
         </div>
       </div>
 
@@ -144,9 +171,7 @@ export default function BtsGuide() {
         <div className="bg-gradient-to-br from-[#4A0080] to-[#6A0DAD] rounded-xl p-6 text-center text-white">
           <p className="text-lg font-bold mb-3">{t('ad.newsletter.cta')}</p>
           <form
-            action="https://stibee.com/api/v1.0/lists/b-u-zuAfT1K6CYLofSqcWz4JC2OSSg==/public/subscribers"
-            method="POST"
-            target="_blank"
+            onSubmit={form2.handleSubmit}
             className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto"
           >
             <input
@@ -158,11 +183,13 @@ export default function BtsGuide() {
             />
             <button
               type="submit"
-              className="bg-white text-[#4A0080] text-sm font-bold px-5 py-2 rounded-lg hover:bg-white/90 transition-colors"
+              disabled={form2.status === 'loading'}
+              className="bg-white text-[#4A0080] text-sm font-bold px-5 py-2 rounded-lg hover:bg-white/90 transition-colors disabled:opacity-50"
             >
-              {lang === 'ko' ? '구독하기' : lang === 'ja' ? '購読する' : 'Subscribe'}
+              {form2.status === 'loading' ? '...' : form2.status === 'success' ? '✓' : form2.status === 'error' ? '!' : (lang === 'ko' ? '구독하기' : lang === 'ja' ? '購読する' : 'Subscribe')}
             </button>
           </form>
+          {form2.status === 'success' && <p className="text-xs text-green-300 mt-2">{lang === 'ko' ? '구독 확인 이메일을 확인해 주세요.' : lang === 'ja' ? '確認メールをご確認ください。' : 'Check your email for confirmation.'}</p>}
         </div>
 
         {/* Disclaimers */}

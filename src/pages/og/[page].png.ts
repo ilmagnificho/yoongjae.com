@@ -55,6 +55,12 @@ const pages = [
     description: '콘텐츠 성과를 분석하고 성장 전략을 수립하세요.',
     label: '도구 Tools',
   },
+  {
+    page: 'lecture',
+    title: '강의 알림 신청',
+    description: '투자·창업 실전 강의 알림을 가장 먼저 받아보세요.',
+    label: 'Lecture',
+  },
 ];
 
 export const getStaticPaths: GetStaticPaths = () => {

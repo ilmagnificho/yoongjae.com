@@ -101,22 +101,30 @@ const blogPostingSchema = {
       <form
         action="https://stibee.com/api/v1.0/lists/b-u-zuAfT1K6CYLofSqcWz4JC2OSSg==/public/subscribers"
         method="POST"
-        target="_blank"
-        class="flex gap-2"
+        class="space-y-2"
       >
-        <input
-          type="email"
-          name="email"
-          required
-          placeholder="이메일 주소"
-          class="flex-1 bg-transparent border border-ink/15 rounded-lg px-3 py-1.5 text-xs placeholder:text-ink/30 focus:outline-none focus:border-ink/40"
-        />
-        <button
-          type="submit"
-          class="px-4 py-1.5 bg-ink text-paper text-xs font-medium rounded-lg hover:bg-ink/80 transition-colors shrink-0"
-        >
-          구독
-        </button>
+        <div class="flex gap-2">
+          <input
+            type="email"
+            name="email"
+            required
+            placeholder="이메일 주소"
+            class="flex-1 bg-transparent border border-ink/15 rounded-lg px-3 py-1.5 text-xs placeholder:text-ink/30 focus:outline-none focus:border-ink/40"
+          />
+          <input
+            type="text"
+            name="name"
+            required
+            placeholder="이름"
+            class="w-24 bg-transparent border border-ink/15 rounded-lg px-3 py-1.5 text-xs placeholder:text-ink/30 focus:outline-none focus:border-ink/40"
+          />
+          <button
+            type="submit"
+            class="px-4 py-1.5 bg-ink text-paper text-xs font-medium rounded-lg hover:bg-ink/80 transition-colors shrink-0"
+          >
+            구독
+          </button>
+        </div>
       </form>
     </aside>
 
