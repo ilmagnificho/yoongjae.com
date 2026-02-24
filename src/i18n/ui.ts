@@ -61,7 +61,7 @@ export const ui = {
     'footer.newsletter.description': '투자·빌딩 인사이트 — 한국 창업자와 투자자를 위한 실전 메모를 전합니다.',
     'footer.email.placeholder': '이메일 주소',
     'footer.name.placeholder': '이름',
-    'footer.phone.placeholder': '연락처',
+    'footer.phone.placeholder': '연락처 (선택사항)',
     'footer.privacy': '개인정보 수집 및 이용에 동의합니다.',
     'footer.subscribe': '구독하기',
 
@@ -122,7 +122,7 @@ export const ui = {
     'footer.newsletter.description': 'Investment & building insights — practical notes for founders and investors.',
     'footer.email.placeholder': 'Email address',
     'footer.name.placeholder': 'Name',
-    'footer.phone.placeholder': 'Phone',
+    'footer.phone.placeholder': 'Phone (optional)',
     'footer.privacy': 'I agree to the collection and use of personal information.',
     'footer.subscribe': 'Subscribe',
 
