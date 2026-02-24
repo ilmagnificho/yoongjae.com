@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="강의"
+  description="투자자의 언어로 배우는 스타트업 생존 전략 - 사전 등록"
+  canonicalUrl="/lecture"
+>
+  <section class="py-4">
+    <!-- Coming Soon Badge -->
+    <span class="inline-block text-xs font-semibold px-3 py-1 rounded-full bg-accent-orange/10 text-accent-orange mb-6">
+      Coming Soon
+    </span>
+
+    <!-- Title -->
+    <h1 class="font-serif text-3xl font-bold mb-3">투자자의 언어로 배우는<br>스타트업 생존 전략</h1>
+    <p class="text-sm text-ink/65 leading-relaxed mb-10">
+      VC, M&A, 스타트업 운영을 모두 경험한 시각으로 —<br>
+      교과서가 아닌 실전 판단력을 다룹니다.
+    </p>
+
+    <!-- Description -->
+    <div class="text-sm text-ink/65 leading-relaxed space-y-1 mb-10">
+      <p>
+        세쿼이아 캐피탈의 투자 체크리스트부터 실제 투심위 사례 분석,
+        그리고 AI 시대의 창업 방정식까지.
+      </p>
+      <p>
+        오프라인 소규모 강의로 준비하고 있습니다.
+      </p>
+      <p>
+        일정과 상세 내용이 확정되면 가장 먼저 안내드리겠습니다.
+      </p>
+    </div>
+
+    <!-- Email Form (Stibee) -->
+    <div class="border border-ink/10 rounded-lg p-6 mb-10">
+      <form
+        action="https://stibee.com/api/v1.0/lists/STIBEE_LIST_ID/public/subscribers"
+        method="POST"
+        target="_blank"
+        class="flex flex-col sm:flex-row gap-3"
+      >
+        <input
+          type="email"
+          name="email"
+          required
+          placeholder="이메일 주소"
+          class="flex-1 bg-transparent border border-ink/15 rounded-lg px-4 py-2.5 text-sm placeholder:text-ink/30 focus:outline-none focus:border-ink/40"
+        />
+        <button
+          type="submit"
+          class="px-6 py-2.5 bg-ink text-paper text-sm font-medium rounded-lg hover:bg-ink/80 transition-colors shrink-0"
+        >
+          알림 받기
+        </button>
+      </form>
+    </div>
+
+    <!-- Instructor -->
+    <div class="text-sm text-ink/65 leading-relaxed mb-10">
+      <p class="font-bold text-ink mb-1">조융재</p>
+      <p>테트라㈜ 대표 · 개인투자조합 GP</p>
+      <p class="text-xs text-ink/45 mt-1">전: 본엔젤스 벤처파트너스 VC · KRAFTON M&A · thingsflow COO</p>
+    </div>
+
+    <!-- Contact -->
+    <p class="text-xs text-ink/45">
+      궁금한 점이 있으면 <a href="mailto:yjcho@tetracorp.co.kr" class="text-ink/65 hover:text-accent-blue transition-colors underline underline-offset-2">yjcho@tetracorp.co.kr</a>로 연락주세요.
+    </p>
+  </section>
+</BaseLayout>

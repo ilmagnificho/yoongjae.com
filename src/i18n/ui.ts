@@ -10,6 +10,7 @@ export const ui = {
   ko: {
     // Nav
     'nav.writing': '글 Writing',
+    'nav.lecture': '강의 Lecture',
     'nav.tools': '도구 Tools',
     'nav.companies': '함께하는 팀 Companies',
     'nav.about': '소개 About',
@@ -70,6 +71,7 @@ export const ui = {
   en: {
     // Nav
     'nav.writing': 'Writing',
+    'nav.lecture': 'Lecture',
     'nav.tools': 'Tools',
     'nav.companies': 'Companies',
     'nav.about': 'About',
