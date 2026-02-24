@@ -57,8 +57,8 @@ const pages = [
   },
   {
     page: 'lecture',
-    title: '강의 알림 신청',
-    description: '투자·창업 실전 강의 알림을 가장 먼저 받아보세요.',
+    title: '투심위의 블랙박스',
+    description: 'Sequoia 프레임으로 내 사업 설계하기 · 사전 대기 신청',
     label: 'Lecture',
   },
 ];

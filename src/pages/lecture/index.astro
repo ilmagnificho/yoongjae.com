@@ -3,46 +3,88 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
-  title="강의"
-  description="투자자의 언어로 배우는 스타트업 생존 전략 - 사전 등록"
+  title="투심위의 블랙박스 — 사전 대기 신청"
+  description="Sequoia 프레임으로 내 사업을 설계하는 소규모 집중 강의. 사전 대기 신청 시 얼리버드 혜택을 드립니다."
   canonicalUrl="/lecture"
+  ogImage="/og/lecture.png"
 >
   <Fragment slot="head">
     <link rel="stylesheet" href="https://resource.stibee.com/subscribe/stb_subscribe_form_style.css">
   </Fragment>
 
-  <section class="py-4">
-    <!-- Coming Soon Badge -->
-    <span class="inline-block text-xs font-semibold px-3 py-1 rounded-full bg-accent-orange/10 text-accent-orange mb-6">
-      Coming Soon
-    </span>
+  <section class="py-6">
+    <!-- Badge row -->
+    <div class="flex items-center gap-2 mb-6">
+      <span class="inline-block text-xs font-semibold px-3 py-1 rounded-full bg-accent-orange/10 text-accent-orange">
+        사전 대기 신청 중
+      </span>
+      <span id="earlybird-badge" class="hidden text-xs font-semibold px-3 py-1 rounded-full bg-accent-blue/10 text-accent-blue">
+        얼리버드
+      </span>
+    </div>
 
-    <!-- Title -->
-    <h1 class="font-serif text-3xl font-bold mb-3">투자자의 언어로 배우는<br>스타트업 생존 전략</h1>
-    <p class="text-sm text-ink/65 leading-relaxed mb-10">
-      VC, M&A, 스타트업 운영을 모두 경험한 시각으로 —<br>
-      교과서가 아닌 실전 판단력을 다룹니다.
+    <!-- Hero -->
+    <h1 class="font-serif text-4xl md:text-5xl font-bold leading-[1.15] mb-4">
+      투심위의 블랙박스
+    </h1>
+    <p class="text-lg text-ink/70 font-serif leading-relaxed mb-2">
+      Sequoia 프레임으로 내 사업 설계하기
+    </p>
+    <p class="text-sm text-ink/40 font-mono mb-10">
+      서울 · 2026년 3월 · 온/오프라인 · 소규모 집중 강의
     </p>
 
-    <!-- Description -->
-    <div class="text-sm text-ink/65 leading-relaxed space-y-1 mb-10">
-      <p>
-        Sequoia Capital의 투자 체크리스트부터 실제 투심위 사례 분석,
-        그리고 AI 시대의 창업 방정식까지.
-      </p>
-      <p>
-        온라인 & 오프라인 소규모 강의로 준비하고 있습니다.
-      </p>
-      <p>
-        일정과 상세 내용이 확정되면 가장 먼저 안내드리겠습니다.
+    <!-- Problem statement -->
+    <div class="border-l-2 border-accent-orange pl-5 mb-10">
+      <p class="text-sm text-ink/70 leading-relaxed">
+        투자심의위원회에서 심사역들은 무엇을 보고, 어떤 기준으로 판단할까?<br>
+        통과하는 팀과 탈락하는 팀의 차이는 무엇일까?<br>
+        <span class="font-semibold text-ink">그 블랙박스를 열어봅니다.</span>
       </p>
     </div>
 
-    <!-- Stibee Official Subscription Form -->
+    <!-- Curriculum -->
     <div class="mb-10">
+      <h2 class="font-serif text-lg font-semibold mb-4">다루는 내용</h2>
+      <div class="grid gap-3">
+        <div class="flex items-start gap-3 border border-ink/8 rounded-lg p-4">
+          <span class="text-accent-blue font-mono text-xs font-bold mt-0.5 shrink-0">01</span>
+          <div>
+            <p class="text-sm font-semibold text-ink">Sequoia Capital의 10가지 투자 기준</p>
+            <p class="text-xs text-ink/45 mt-0.5">글로벌 탑 VC가 실제로 사용하는 체크리스트</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 border border-ink/8 rounded-lg p-4">
+          <span class="text-accent-blue font-mono text-xs font-bold mt-0.5 shrink-0">02</span>
+          <div>
+            <p class="text-sm font-semibold text-ink">실제 투심위 통과/탈락 사례 분석</p>
+            <p class="text-xs text-ink/45 mt-0.5">같은 시장, 비슷한 팀 — 갈린 이유를 해부합니다</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 border border-ink/8 rounded-lg p-4">
+          <span class="text-accent-blue font-mono text-xs font-bold mt-0.5 shrink-0">03</span>
+          <div>
+            <p class="text-sm font-semibold text-ink">내 사업의 Input/Output 방정식</p>
+            <p class="text-xs text-ink/45 mt-0.5">AI 시대의 창업 방정식을 직접 설계합니다</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3 border border-ink/8 rounded-lg p-4">
+          <span class="text-accent-blue font-mono text-xs font-bold mt-0.5 shrink-0">04</span>
+          <div>
+            <p class="text-sm font-semibold text-ink">심사역 관점 즉석 피드백</p>
+            <p class="text-xs text-ink/45 mt-0.5">참가자 아이디어에 대한 실전 투자 심사 시뮬레이션</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Waitlist CTA -->
+    <div class="border border-ink/10 rounded-xl p-6 mb-10 bg-ink/[0.015]">
+      <p class="text-sm font-semibold text-ink mb-1">사전 대기 신청</p>
+      <p class="text-xs text-ink/45 mb-4">일정과 상세 내용이 확정되면 가장 먼저 안내드립니다.</p>
       <div id="stb_subscribe">
         <form action="https://stibee.com/api/v1.0/lists/1geU6LTMo4iF9W0Nid12rIAf6TG6ng==/public/subscribers" method="POST" target="_blank" accept-charset="utf-8" class="stb_form" name="stb_subscribe_form" id="stb_subscribe_form" novalidate>
-          <h1 class="stb_form_title">IF 강의 신청 구독하기</h1>
+          <h1 class="stb_form_title">강의 사전 대기 신청</h1>
           <fieldset class="stb_form_set">
             <label for="stb_email" class="stb_form_set_label">
               이메일 주소<span class="stb_asterisk">*</span>
@@ -70,7 +112,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           </div>
           <div class="stb_form_result" id="stb_form_result"></div>
           <fieldset class="stb_form_set_submit">
-            <button type="submit" class="stb_form_submit_button" id="stb_form_submit_button" style="background-color: #FF6464; color: #ffffff;">구독하기</button>
+            <button type="submit" class="stb_form_submit_button" id="stb_form_submit_button" style="background-color: #1A1A1A; color: #F5F0EB;">사전 대기 신청하기</button>
           </fieldset>
         </form>
       </div>
@@ -78,15 +120,31 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     </div>
 
     <!-- Instructor -->
-    <div class="text-sm text-ink/65 leading-relaxed mb-10">
-      <p class="font-bold text-ink mb-1">조융재</p>
-      <p>테트라(주) 대표 · 조약돌개인투자조합 GP</p>
-      <p class="text-xs text-ink/45 mt-1">전: 본엔젤스 벤처파트너스 VC · KRAFTON CEO Staff · thingsflow COO</p>
+    <div class="flex items-start gap-4 border border-ink/8 rounded-lg p-5 mb-10">
+      <div class="w-10 h-10 rounded-full bg-ink/8 flex items-center justify-center shrink-0">
+        <span class="text-sm font-bold text-ink/50">YJ</span>
+      </div>
+      <div>
+        <p class="text-sm font-bold text-ink">조융재</p>
+        <p class="text-xs text-ink/55">테트라(주) 대표 · 조약돌개인투자조합 GP</p>
+        <p class="text-xs text-ink/35 mt-1">전: 본엔젤스 벤처파트너스 VC · KRAFTON CEO Staff · thingsflow COO</p>
+      </div>
     </div>
 
     <!-- Contact -->
-    <p class="text-xs text-ink/45">
-      궁금한 점이 있으면 <a href="mailto:cho@yoongjae.com" class="text-ink/65 hover:text-accent-blue transition-colors underline underline-offset-2">cho@yoongjae.com</a>으로 연락주세요.
+    <p class="text-xs text-ink/35">
+      궁금한 점이 있으면 <a href="mailto:cho@yoongjae.com" class="text-ink/55 hover:text-accent-blue transition-colors underline underline-offset-2">cho@yoongjae.com</a>으로 연락주세요.
     </p>
   </section>
+
+  <!-- Earlybird badge logic -->
+  <script is:inline>
+    (function() {
+      var p = new URLSearchParams(window.location.search);
+      if (p.get('ref') || p.get('eb')) {
+        var badge = document.getElementById('earlybird-badge');
+        if (badge) badge.classList.remove('hidden');
+      }
+    })();
+  </script>
 </BaseLayout>
