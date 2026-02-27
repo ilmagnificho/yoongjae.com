@@ -13,8 +13,10 @@ const eventSchema = {
   '@type': 'Event',
   name: 'BTS 광화문 콘서트 2026',
   alternateName: 'BTS Gwanghwamun Concert 2026',
-  startDate: '2026-03-21',
-  endDate: '2026-03-21',
+  description: 'BTS 완전체 무료 콘서트. 2026년 3월 21일 서울 광화문 광장. 26만 관객 예상. 교통통제, 구역지도, 생존 체크리스트 등 완벽 가이드.',
+  image: ogImage,
+  startDate: '2026-03-21T17:00:00+09:00',
+  endDate: '2026-03-21T22:00:00+09:00',
   eventStatus: 'https://schema.org/EventScheduled',
   eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
   location: {
@@ -35,12 +37,15 @@ const eventSchema = {
   organizer: {
     '@type': 'Organization',
     name: 'HYBE / BigHit Music',
+    url: 'https://www.hybecorp.com/',
   },
   offers: {
     '@type': 'Offer',
     price: '0',
     priceCurrency: 'KRW',
     availability: 'https://schema.org/InStock',
+    url: `${siteUrl}/bts`,
+    validFrom: '2026-02-01',
   },
   audience: {
     '@type': 'Audience',
