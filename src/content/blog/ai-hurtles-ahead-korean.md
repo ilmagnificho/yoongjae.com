@@ -5,7 +5,7 @@ description: "Oaktree Capital의 Howard Marks가 2026년 2월 메모에서 AI의
 tags: [Curated]
 isDraft: false
 author: "Howard Marks"
-translator: "조용재"
+translator: "Claude - Opus 4.6"
 ---
 
 > 📝 이 글은 Oaktree Capital의 Howard Marks가 2026년 2월 26일에 발행한 메모 **["AI Hurtles Ahead"](https://www.oaktreecapital.com/insights/memo/ai-hurtles-ahead)**의 핵심 내용을 한국어로 요약·정리한 큐레이션입니다.
