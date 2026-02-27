@@ -40,7 +40,7 @@ const blogPostingSchema = {
   datePublished: post.data.date.toISOString(),
   author: {
     '@type': 'Person',
-    name: 'YoongJae Cho',
+    name: post.data.author ?? 'YoongJae Cho',
     url: siteUrl,
   },
   publisher: {
@@ -48,6 +48,7 @@ const blogPostingSchema = {
     name: 'YoongJae Cho',
     url: siteUrl,
   },
+  ...(post.data.translator ? { translator: { '@type': 'Person', name: post.data.translator } } : {}),
   mainEntityOfPage: {
     '@type': 'WebPage',
     '@id': new URL(postUrl, siteUrl).toString(),
@@ -85,6 +86,13 @@ const blogPostingSchema = {
         </div>
       </div>
       <h1 class="font-serif text-3xl md:text-4xl font-bold leading-tight">{post.data.title}</h1>
+      {(post.data.author || post.data.translator) && (
+        <p class="text-xs text-ink/40 mt-2">
+          {post.data.author && <span>저자: {post.data.author}</span>}
+          {post.data.author && post.data.translator && <span class="mx-1">·</span>}
+          {post.data.translator && <span>번역: {post.data.translator}</span>}
+        </p>
+      )}
       {post.data.description && (
         <p class="text-base text-ink/50 mt-3">{post.data.description}</p>
       )}
