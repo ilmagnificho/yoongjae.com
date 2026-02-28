@@ -87,6 +87,14 @@ const personSchema = {
     <meta name="generator" content={Astro.generator} />
     <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
     <slot name="head" />
+    <!-- Google tag (gtag.js) -->
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-MPY1QKT15E"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MPY1QKT15E');
+    </script>
     <!-- Google AdSense -->
     <script is:inline async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2021805347195633" crossorigin="anonymous"></script>
 <script is:inline>
