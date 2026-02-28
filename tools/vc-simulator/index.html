@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>투자 못 받는 시뮬레이터 - EP.1 Pre-A 라운드</title>
+
+  <!-- OG Tags -->
+  <meta property="og:title" content="투자 못 받는 시뮬레이터 - 클리어율 3.4%">
+  <meta property="og:description" content="갖은 이유와 예상치 못한 상황이 자꾸 발생해서 투자를 못 받는 창업자 시뮬레이터. 극악의 난이도를 뚫어보세요!">
+  <meta property="og:type" content="website">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="game-container">
+    <!-- Title Screen -->
+    <div id="screen-title" class="screen active">
+      <div class="title-header">
+        <div class="title-ep">EP.1 - Pre-A 라운드</div>
+        <div class="pixel-art-title">
+          <div class="pixel-char pixel-founder">👨‍💻</div>
+          <div class="pixel-vs">⚔</div>
+          <div class="pixel-char pixel-vc">🧑‍💼</div>
+        </div>
+        <h1 class="title-main">투자 못 받는<br>시뮬레이터</h1>
+        <div class="title-sub">극악 난이도 | 클리어율 3.4%</div>
+        <div class="title-warning">⚠ 대부분 챕터 2에서 사망합니다 ⚠</div>
+      </div>
+      <button class="btn-start" id="btn-start">도전하기</button>
+      <div class="title-footer">
+        <span class="blink">▶</span> 5-10분 플레이 | 모바일 최적화
+      </div>
+    </div>
+
+    <!-- Role Select Screen -->
+    <div id="screen-select" class="screen">
+      <h2 class="select-title">역할을 선택하세요</h2>
+      <div class="role-cards">
+        <button class="role-card" id="role-founder">
+          <div class="role-emoji">
+            <div class="pixel-sprite founder-sprite"></div>
+          </div>
+          <div class="role-name">창업자</div>
+          <div class="role-quote">"투자 좀 해주세요-<br>아니, 투자 기회를 드리는 겁니다"</div>
+          <div class="role-difficulty">난이도: ★★★★★ (극악)</div>
+          <div class="role-clear-rate">클리어율: 3.4%</div>
+        </button>
+        <div class="role-vs">VS</div>
+        <button class="role-card" id="role-vc">
+          <div class="role-emoji">
+            <div class="pixel-sprite vc-sprite"></div>
+          </div>
+          <div class="role-name">VC</div>
+          <div class="role-quote">"좋은 사업이시네요.<br>(= 투자 안 합니다)"</div>
+          <div class="role-difficulty">난이도: ★★★☆☆ (어려움)</div>
+          <div class="role-clear-rate">클리어율: 18.2%</div>
+        </button>
+      </div>
+      <button class="btn-leaderboard" id="btn-leaderboard-select">☠ 사망 통계 보기</button>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="screen-game" class="screen">
+      <div class="game-hud">
+        <div class="hud-top">
+          <div class="hud-chapter" id="hud-chapter">챕터 1</div>
+          <div class="hud-disaster-count" id="hud-disaster-count"></div>
+        </div>
+        <div class="hud-stats" id="hud-stats"></div>
+      </div>
+      <div class="game-content">
+        <div class="narration-box" id="narration-box"></div>
+        <div class="dialogue-box" id="dialogue-box">
+          <div class="speaker" id="speaker"></div>
+          <div class="dialogue-text" id="dialogue-text"></div>
+        </div>
+        <div class="info-box" id="info-box"></div>
+      </div>
+      <div class="game-choices" id="game-choices"></div>
+      <div class="stat-popup-container" id="stat-popup-container"></div>
+    </div>
+
+    <!-- Disaster Screen (flash overlay) -->
+    <div id="screen-disaster" class="screen disaster-screen">
+      <div class="disaster-box" id="disaster-box"></div>
+    </div>
+
+    <!-- Result Screen -->
+    <div id="screen-result" class="screen">
+      <div class="result-box" id="result-box"></div>
+    </div>
+
+    <!-- Ending Screen -->
+    <div id="screen-ending" class="screen">
+      <div class="ending-card" id="ending-card"></div>
+      <div class="ending-actions" id="ending-actions"></div>
+    </div>
+
+    <!-- Leaderboard Screen -->
+    <div id="screen-leaderboard" class="screen">
+      <div class="leaderboard-content" id="leaderboard-content"></div>
+      <button class="action-btn replay-btn" id="btn-lb-back">돌아가기</button>
+    </div>
+  </div>
+
+  <canvas id="share-canvas" style="display:none;"></canvas>
+
+  <script src="js/founder.js"></script>
+  <script src="js/vc.js"></script>
+  <script src="js/endings.js"></script>
+  <script src="js/leaderboard.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/share.js"></script>
+</body>
+</html>
