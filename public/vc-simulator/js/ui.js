@@ -1,29 +1,34 @@
 /**
  * UI Rendering - Screen management, typing effects, animations
- * v2: Disaster system, leaderboard, extreme difficulty framing
+ * v3: Multi-difficulty system (Easy/Normal/Hard)
  */
 const GameUI = (() => {
   let typingTimeout = null;
   let isTyping = false;
   let skipTyping = false;
+  let lastEndingScore = 0;
+  let lastEndingGrade = null;
 
   const screens = {
-    title: () => document.getElementById('screen-title'),
-    select: () => document.getElementById('screen-select'),
-    game: () => document.getElementById('screen-game'),
-    disaster: () => document.getElementById('screen-disaster'),
-    result: () => document.getElementById('screen-result'),
-    ending: () => document.getElementById('screen-ending'),
-    leaderboard: () => document.getElementById('screen-leaderboard'),
+    title:      () => document.getElementById('screen-title'),
+    select:     () => document.getElementById('screen-select'),
+    difficulty: () => document.getElementById('screen-difficulty'),
+    game:       () => document.getElementById('screen-game'),
+    disaster:   () => document.getElementById('screen-disaster'),
+    result:     () => document.getElementById('screen-result'),
+    ending:     () => document.getElementById('screen-ending'),
+    leaderboard:() => document.getElementById('screen-leaderboard'),
   };
 
   function init() {
     document.getElementById('btn-start').addEventListener('click', () => showScreen('select'));
 
-    document.getElementById('role-founder').addEventListener('click', () => startGame('founder'));
-    document.getElementById('role-vc').addEventListener('click', () => startGame('vc'));
+    document.getElementById('role-founder').addEventListener('click', () => showDifficultyScreen());
+    document.getElementById('role-vc').addEventListener('click', () => startGame('vc', null));
 
-    document.getElementById('btn-leaderboard-select').addEventListener('click', () => showLeaderboard(null));
+    document.getElementById('btn-difficulty-back').addEventListener('click', () => showScreen('select'));
+
+    document.getElementById('btn-leaderboard-select').addEventListener('click', () => showLeaderboard('founder'));
     document.getElementById('btn-lb-back').addEventListener('click', () => showScreen('select'));
 
     document.getElementById('screen-game').addEventListener('click', (e) => {
@@ -43,22 +48,130 @@ const GameUI = (() => {
     if (screen) screen.classList.add('active');
   }
 
-  function startGame(role) {
-    GameEngine.init(role);
+  // ===== DIFFICULTY SELECT SCREEN =====
+  function showDifficultyScreen() {
+    showScreen('difficulty');
+
+    const cardsEl = document.getElementById('difficulty-cards');
+    const recordEl = document.getElementById('difficulty-my-record');
+
+    const difficulties = [
+      {
+        id: 'easy',
+        icon: '🌱',
+        name: 'Seed Round',
+        label: 'EASY',
+        stars: '★☆☆',
+        desc: '투자 기회를 드리는 겁니다 (아니, 투자 해주세요)',
+        stats: '런웨이 6개월 · 멘탈 100 · 설득력 60',
+      },
+      {
+        id: 'normal',
+        icon: '🚀',
+        name: 'Series A',
+        label: 'NORMAL',
+        stars: '★★★',
+        desc: 'DD가 시작됐다. 숫자가 다 까발려진다.',
+        stats: '런웨이 5개월 · 멘탈 80 · 설득력 50',
+      },
+      {
+        id: 'hard',
+        icon: '🌍',
+        name: 'Series B',
+        label: 'HARD',
+        stars: '★★★★★',
+        desc: '글로벌 VC. 영어. 크로스보더. 살아남아라.',
+        stats: '런웨이 4개월 · 멘탈 70 · 설득력 40',
+      },
+    ];
+
+    cardsEl.innerHTML = '';
+
+    difficulties.forEach(diff => {
+      const unlocked = LeaderboardSystem.isUnlocked(diff.id);
+      const cleared  = LeaderboardSystem.isCleared(diff.id);
+      const bestScore = LeaderboardSystem.getBestScore(diff.id);
+
+      const card = document.createElement('button');
+      card.className = `difficulty-card${!unlocked ? ' locked' : ''}${cleared ? ' cleared' : ''}`;
+      card.disabled = !unlocked;
+
+      let badgeHtml = '';
+      if (!unlocked) {
+        badgeHtml = '<span class="diff-badge diff-locked">🔒 잠금</span>';
+      } else if (cleared) {
+        badgeHtml = '<span class="diff-badge diff-cleared">✅ CLEARED</span>';
+      }
+
+      let scoreHtml = '';
+      if (cleared && bestScore > 0) {
+        const grade = GameEngine.getPercentileLabel(bestScore, diff.id);
+        scoreHtml = `<div class="diff-best-score">${grade.badge} 최고 ${bestScore.toLocaleString()}점 &middot; ${grade.label}</div>`;
+      }
+
+      card.innerHTML = `
+        <div class="diff-card-top">
+          <span class="diff-icon">${diff.icon}</span>
+          <div class="diff-card-info">
+            <div class="diff-name">${diff.name} <span class="diff-label">[${diff.label}]</span></div>
+            <div class="diff-stars">${diff.stars}</div>
+          </div>
+          ${badgeHtml}
+        </div>
+        <div class="diff-desc">${diff.desc}</div>
+        <div class="diff-stats-info">${diff.stats}</div>
+        ${scoreHtml}
+      `;
+
+      if (unlocked) {
+        card.addEventListener('click', () => startGame('founder', diff.id));
+      }
+
+      cardsEl.appendChild(card);
+    });
+
+    recordEl.innerHTML = LeaderboardSystem.renderMyRecord();
+  }
+
+  // ===== GAME START =====
+  function startGame(role, difficulty) {
+    GameEngine.init(role, difficulty || null);
+    lastEndingScore = 0;
+    lastEndingGrade = null;
     showScreen('game');
     updateHUD();
     playCurrentEvent();
   }
 
+  // ===== HUD =====
   function updateHUD() {
     const state = GameEngine.getState();
     const stats = GameEngine.getStats();
-    const scenarios = state.role === 'founder' ? FounderScenarios : VCScenarios;
-    const chapter = scenarios.find(ch => ch.chapter === state.chapter);
 
+    // Pick scenarios for chapter title
+    let scenariosForTitle;
+    if (state.role === 'founder') {
+      if (state.difficulty === 'normal')      scenariosForTitle = FounderNormalScenarios;
+      else if (state.difficulty === 'hard')   scenariosForTitle = FounderHardScenarios;
+      else                                    scenariosForTitle = FounderEasyScenarios;
+    } else {
+      scenariosForTitle = VCScenarios;
+    }
+
+    const chapter = scenariosForTitle.find(ch => ch.chapter === state.chapter);
     document.getElementById('hud-chapter').textContent = chapter
-      ? `CH${state.chapter}: ${chapter.title}`
+      ? chapter.title
       : `챕터 ${state.chapter}`;
+
+    // Difficulty label
+    const diffEl = document.getElementById('hud-difficulty');
+    if (state.role === 'founder' && state.difficulty) {
+      const diffLabels = { easy: 'EASY', normal: 'NORMAL', hard: 'HARD' };
+      diffEl.textContent = diffLabels[state.difficulty] || '';
+      diffEl.style.display = 'block';
+    } else {
+      diffEl.style.display = 'none';
+    }
 
     // Disaster counter
     const disasterEl = document.getElementById('hud-disaster-count');
@@ -83,7 +196,9 @@ const GameUI = (() => {
       else if (pct <= 30) barClass += ' bar-danger';
       else if (pct <= 50) barClass += ' bar-warning';
 
-      const displayVal = s.unit === '개월' ? s.value + s.unit : s.unit === '억' ? s.value + s.unit : s.value + (s.unit || '');
+      const displayVal = s.unit === '개월' ? s.value + s.unit
+        : s.unit === '억' ? s.value + s.unit
+        : s.value + (s.unit || '');
 
       statDiv.innerHTML = `
         <span class="stat-icon">${s.icon}</span>
@@ -102,11 +217,10 @@ const GameUI = (() => {
       return;
     }
 
-    // Clear previous content
     const narrationBox = document.getElementById('narration-box');
-    const dialogueBox = document.getElementById('dialogue-box');
-    const infoBox = document.getElementById('info-box');
-    const choicesEl = document.getElementById('game-choices');
+    const dialogueBox  = document.getElementById('dialogue-box');
+    const infoBox      = document.getElementById('info-box');
+    const choicesEl    = document.getElementById('game-choices');
 
     narrationBox.innerHTML = '';
     narrationBox.style.display = 'none';
@@ -274,13 +388,12 @@ const GameUI = (() => {
       return;
     }
 
-    // Roll for random disaster (the core of extreme difficulty!)
+    // Roll for random disaster
     const disaster = GameEngine.rollDisaster();
     if (disaster) {
       await showDisasterScreen(disaster);
       updateHUD();
 
-      // Check game over after disaster
       const postDisasterGameOver = GameEngine.checkGameOver();
       if (postDisasterGameOver) {
         GameEngine.setDeathStage(`CH${state.chapter} - 재난: ${disaster.id}`);
@@ -298,8 +411,6 @@ const GameUI = (() => {
     showScreen('disaster');
     const box = document.getElementById('disaster-box');
     box.innerHTML = '';
-
-    // Flash effect
     box.className = 'disaster-box disaster-flash';
 
     const emoji = document.createElement('div');
@@ -312,8 +423,6 @@ const GameUI = (() => {
     box.appendChild(textEl);
 
     await typeText(textEl, disaster.text, 'disaster-content');
-
-    // Show effects
     showStatEffects(disaster.effects);
 
     return new Promise((resolve) => {
@@ -344,6 +453,11 @@ const GameUI = (() => {
         ? '대표가 불만이지만 수용했다. 강한 보호조항이 붙은 텀시트에 사인했다.'
         : '대표가 거부했다. "이 조건으로는 못 합니다."\n\n딜이 깨졌다.';
     }
+    if (choice.flags && choice.flags.includes('bridge_attempt')) {
+      return succeeded
+        ? '브릿지 라운드가 성사됐다! 국내 VC가 팔로온으로 참여했다.\n\n크로스보더 딜은 다른 형태로 클로징됐다.'
+        : '브릿지 라운드도 실패했다. 런웨이가 끝났다.\n\n해외 VC가 조용히 연락을 끊었다. 이메일 답장이 72시간째 없다.';
+    }
     return succeeded ? '성공... 인가?' : '실패. 역시나.';
   }
 
@@ -351,6 +465,23 @@ const GameUI = (() => {
     const state = GameEngine.getState();
 
     if (state.role === 'founder') {
+      if (state.difficulty === 'hard') {
+        if (passed) {
+          return '파트너가 이메일을 보냈다.\n\n"조건을 검토했습니다. 진행하겠습니다."\n\n크로스보더 딜이 성사됐다. 이제 마지막 계약 조건을 정리해야 한다.';
+        } else {
+          return '파트너가 이메일을 보냈다.\n\n"솔직히 말씀드리면, 이번 라운드에서 저희가 참여하기 어려울 것 같습니다."\n\n영어로 된 거절은 한국어보다 더 차갑게 느껴졌다.';
+        }
+      }
+      if (state.difficulty === 'normal') {
+        if (passed) {
+          return '파트너들이 서로를 봤다. 그리고 고개를 끄덕였다.\n\n"좋습니다. 투심위 통과입니다. 텀시트 보내드리겠습니다."\n\n...하지만 아직 끝이 아니다. 텀시트라는 마지막 관문이 남아있다.';
+        } else {
+          if (choice.flags && choice.flags.includes('emotional_close')) {
+            return '감동적이었다. 하지만 파트너들은 팀이 아닌 스프레드시트를 믿는다.\n\n"좋은데- 좀 더 봐야 할 것 같아요"';
+          }
+          return '"좋은데- 좀 더 봐야 할 것 같아요"\n\n그 \'좋은데-\'가 거절의 시작이라는 걸, 이제 50번째 듣고 나서야 안다.';
+        }
+      }
       if (passed) {
         return '파트너들의 표정이 바뀌었다. 고개를 끄덕이기 시작한다.\n\n"좋습니다. 내부적으로 진행해보죠."\n\n투심위 통과! ...하지만 아직 끝이 아니다. 텀시트라는 마지막 관문이 남아있다.';
       } else {
@@ -423,36 +554,71 @@ const GameUI = (() => {
     }
   }
 
+  // ===== FINISH GAME =====
   function finishGame() {
     const ending = GameEngine.evaluateEnding();
-    const state = GameEngine.getState();
+    const state  = GameEngine.getState();
+
+    const isSuccess = GameEngine.isSuccessEnding(ending.id);
+    if (isSuccess) {
+      lastEndingScore = GameEngine.calculateScore(ending.id);
+      lastEndingGrade = GameEngine.getPercentileLabel(lastEndingScore, state.difficulty);
+    } else {
+      lastEndingScore = 0;
+      lastEndingGrade = null;
+    }
+
     LeaderboardSystem.recordDeath(state, ending);
-    showEndingScreen(ending);
+    showEndingScreen(ending, state);
   }
 
-  function showEndingScreen(ending) {
+  // ===== ENDING SCREEN =====
+  function showEndingScreen(ending, state) {
     showScreen('ending');
-    const card = document.getElementById('ending-card');
+    const card    = document.getElementById('ending-card');
     const actions = document.getElementById('ending-actions');
+
+    if (!state) state = GameEngine.getState();
 
     const stats = ending.stats;
     let statsHtml = '';
     for (const key in stats) {
       const s = stats[key];
       const pct = Math.round(s.value / s.max * 100);
-      const displayValue = s.unit === '개월' ? `${s.value}${s.unit}` : s.unit === '억' ? `${s.value}${s.unit}` : `${s.value}${s.unit || ''}`;
-      const statusLabel = pct <= 15 ? ' <span class="stat-critical-label">(위험!)</span>' : pct <= 30 ? ' <span class="stat-warning-label">(주의)</span>' : '';
+      const displayValue = s.unit === '개월' ? `${s.value}${s.unit}`
+        : s.unit === '억' ? `${s.value}${s.unit}`
+        : `${s.value}${s.unit || ''}`;
+      const statusLabel = pct <= 15 ? ' <span class="stat-critical-label">(위험!)</span>'
+        : pct <= 30 ? ' <span class="stat-warning-label">(주의)</span>' : '';
       statsHtml += `<div class="ending-stat">${s.icon} ${s.label}: ${displayValue}${statusLabel}</div>`;
     }
 
-    const roleLabel = ending.role === 'founder' ? '창업자' : 'VC';
-    const oppositeLabel = ending.role === 'founder' ? 'VC' : '창업자';
-    const isSuccess = ending.id === 'smart_survivor' || ending.id === 'star_analyst';
+    const roleLabel     = ending.role === 'founder' ? '창업자' : 'VC';
+    const isSuccess     = GameEngine.isSuccessEnding(ending.id);
+    const diffLabels    = { easy: 'Seed Round [EASY]', normal: 'Series A [NORMAL]', hard: 'Series B [HARD]' };
+    const diffLabel     = (ending.role === 'founder' && state.difficulty) ? diffLabels[state.difficulty] || '' : '';
+
+    // Score/grade block for success
+    let scoreHtml = '';
+    if (isSuccess && lastEndingScore > 0 && lastEndingGrade) {
+      scoreHtml = `
+        <div class="ending-score-block">
+          <div class="ending-score-label">최종 점수</div>
+          <div class="ending-score-value">${lastEndingScore.toLocaleString()}점</div>
+          <div class="ending-grade">${lastEndingGrade.badge} ${lastEndingGrade.label}</div>
+        </div>
+      `;
+    }
+
+    // Status message
+    const statusMsg = isSuccess
+      ? '<div class="ending-success-msg">✨ 클리어! 당신은 소수입니다.</div>'
+      : '<div class="ending-fail-msg">당신은 다수의 편에 섰습니다.</div>';
 
     card.innerHTML = `
       <div class="ending-header">
         <div class="ending-game-title">투자 못 받는 시뮬레이터</div>
-        <div class="ending-ep">EP.1 - Pre-A 라운드</div>
+        <div class="ending-ep">EP.1 · Pre-A 라운드${diffLabel ? ' · ' + diffLabel : ''}</div>
       </div>
       <div class="ending-divider"></div>
       <div class="ending-role">${roleLabel} 루트</div>
@@ -460,10 +626,11 @@ const GameUI = (() => {
       <div class="ending-title">${ending.title}</div>
       <div class="ending-subtitle">"${ending.subtitle}"</div>
       <div class="ending-description">${ending.description}</div>
+      ${scoreHtml}
       <div class="ending-stats">${statsHtml}</div>
       <div class="ending-divider"></div>
       <div class="ending-quote">"${ending.quote}"</div>
-      ${!isSuccess ? '<div class="ending-fail-msg">당신은 다수의 편에 섰습니다. 96.6%의 창업자가 여기서 쓰러졌습니다.</div>' : '<div class="ending-success-msg">✨ 당신은 상위 3.4%입니다. 실화입니까?</div>'}
+      ${statusMsg}
     `;
 
     actions.innerHTML = '';
@@ -472,7 +639,7 @@ const GameUI = (() => {
     const shareBtn = document.createElement('button');
     shareBtn.className = 'action-btn share-btn';
     shareBtn.textContent = '📸 결과 카드 저장하기';
-    shareBtn.addEventListener('click', () => ShareSystem.generateCard(ending));
+    shareBtn.addEventListener('click', () => ShareSystem.generateCard(ending, lastEndingScore, lastEndingGrade));
     actions.appendChild(shareBtn);
 
     // SNS share
@@ -486,7 +653,24 @@ const GameUI = (() => {
     `;
     actions.appendChild(snsDiv);
 
-    // Leaderboard
+    // Next difficulty CTA (founder success only)
+    if (ending.role === 'founder' && isSuccess) {
+      if (state.difficulty === 'easy') {
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'action-btn next-diff-btn';
+        nextBtn.textContent = '🚀 Series A 도전하기 (NORMAL)';
+        nextBtn.addEventListener('click', () => startGame('founder', 'normal'));
+        actions.appendChild(nextBtn);
+      } else if (state.difficulty === 'normal') {
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'action-btn next-diff-btn';
+        nextBtn.textContent = '🌍 Series B 도전하기 (HARD)';
+        nextBtn.addEventListener('click', () => startGame('founder', 'hard'));
+        actions.appendChild(nextBtn);
+      }
+    }
+
+    // Leaderboard button
     const lbBtn = document.createElement('button');
     lbBtn.className = 'action-btn leaderboard-btn';
     lbBtn.textContent = '☠ 사망 통계 보기';
@@ -496,31 +680,37 @@ const GameUI = (() => {
     // Other route
     const otherBtn = document.createElement('button');
     otherBtn.className = 'action-btn other-route-btn';
-    otherBtn.textContent = `${oppositeLabel} 시점으로 도전하기`;
-    otherBtn.addEventListener('click', () => startGame(ending.role === 'founder' ? 'vc' : 'founder'));
+    if (ending.role === 'founder') {
+      otherBtn.textContent = 'VC 시점으로 도전하기';
+      otherBtn.addEventListener('click', () => startGame('vc', null));
+    } else {
+      otherBtn.textContent = '창업자 시점으로 도전하기';
+      otherBtn.addEventListener('click', () => showDifficultyScreen());
+    }
     actions.appendChild(otherBtn);
 
-    // Replay
+    // Replay same difficulty
     const replayBtn = document.createElement('button');
     replayBtn.className = 'action-btn replay-btn';
-    replayBtn.textContent = '🔄 다시 도전하기';
-    replayBtn.addEventListener('click', () => startGame(ending.role));
+    if (ending.role === 'founder') {
+      const diffShort = { easy: 'EASY', normal: 'NORMAL', hard: 'HARD' };
+      replayBtn.textContent = `🔄 같은 난이도 다시 도전 (${diffShort[state.difficulty] || 'EASY'})`;
+      replayBtn.addEventListener('click', () => startGame('founder', state.difficulty));
+    } else {
+      replayBtn.textContent = '🔄 다시 도전하기';
+      replayBtn.addEventListener('click', () => startGame('vc', null));
+    }
     actions.appendChild(replayBtn);
-
-    // EP.2
-    const teaserDiv = document.createElement('div');
-    teaserDiv.className = 'ep2-teaser';
-    teaserDiv.innerHTML = 'EP.2 - 시리즈A 편 Coming Soon...<br><span class="teaser-sub">기대된다면 공유해주세요!</span>';
-    actions.appendChild(teaserDiv);
   }
 
+  // ===== LEADERBOARD =====
   function showLeaderboard(role) {
     showScreen('leaderboard');
     const content = document.getElementById('leaderboard-content');
-    content.innerHTML = LeaderboardSystem.renderLeaderboard(role || 'founder');
+    content.innerHTML = LeaderboardSystem.renderDeathStats(role || 'founder');
   }
 
-  // === Typing Effect ===
+  // ===== TYPING EFFECT =====
   function typeText(element, text, className) {
     return new Promise((resolve) => {
       skipTyping = false;
@@ -531,7 +721,8 @@ const GameUI = (() => {
       element.appendChild(span);
 
       let i = 0;
-      const speed = className === 'narration' ? 28 : className === 'disaster-content' ? 20 : 22;
+      const speed = className === 'narration' ? 28
+        : className === 'disaster-content' ? 20 : 22;
 
       function type() {
         if (skipTyping) {
@@ -563,5 +754,5 @@ const GameUI = (() => {
     init();
   }
 
-  return { showScreen, startGame, updateHUD, showEndingScreen, showLeaderboard };
+  return { showScreen, startGame, showDifficultyScreen, updateHUD, showEndingScreen, showLeaderboard };
 })();
