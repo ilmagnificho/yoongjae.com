@@ -18,7 +18,7 @@ const GameEngine = (() => {
   const FOUNDER_STATS = {
     runway: { value: 8, icon: '💰', label: '런웨이', unit: '개월', max: 12 },
     mental: { value: 80, icon: '🧠', label: '멘탈', unit: '%', max: 100 },
-    persuasion: { value: 40, icon: '💬', label: '설득력', unit: '', max: 100 },
+    persuasion: { value: 35, icon: '💬', label: '설득력', unit: '', max: 100 },
   };
 
   const VC_STATS = {
@@ -213,7 +213,7 @@ const GameEngine = (() => {
   // Roll for random disaster (founder only, ~20% chance per event transition)
   function rollDisaster() {
     if (state.role !== 'founder') return null;
-    if (Math.random() > 0.20) return null;
+    if (Math.random() > 0.25) return null;
 
     // Pick a random disaster not yet triggered
     const used = state.flags.filter(f => f.startsWith('disaster_'));
