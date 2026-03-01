@@ -10,7 +10,7 @@ const ShareSystem = (() => {
     const ctx = canvas.getContext('2d');
 
     const W = 600;
-    const H = 1000;
+    const H = 880;
     canvas.width = W;
     canvas.height = H;
 
@@ -26,55 +26,75 @@ const ShareSystem = (() => {
     ctx.lineWidth = 3;
     ctx.strokeRect(10, 10, W - 20, H - 20);
 
-    // Inner glow border
-    ctx.strokeStyle = isSuccess ? 'rgba(0, 184, 148, 0.3)' : 'rgba(108, 92, 231, 0.3)';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(16, 16, W - 32, H - 32);
-
-    // Title
-    ctx.fillStyle = accentColor;
-    ctx.font = 'bold 22px "Noto Sans KR", sans-serif';
+    // === HEADER: small, compact ===
+    ctx.fillStyle = '#666';
+    ctx.font = '13px "Noto Sans KR", sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('투자 못 받는 시뮬레이터', W / 2, 55);
+    ctx.fillText('투자 못 받는 시뮬레이터  |  EP.1 Pre-A', W / 2, 42);
 
+    // Role + Emoji + Title in one compact block
+    const roleLabel = ending.role === 'founder' ? '창업자 루트' : 'VC 루트';
     ctx.fillStyle = '#888';
     ctx.font = '14px "Noto Sans KR", sans-serif';
-    ctx.fillText('EP.1 - Pre-A 라운드', W / 2, 80);
+    ctx.fillText(roleLabel, W / 2, 72);
 
-    // Divider
-    drawDivider(ctx, 98, W);
+    ctx.font = '48px serif';
+    ctx.fillText(ending.emoji, W / 2, 130);
 
-    // Role
-    const roleLabel = ending.role === 'founder' ? '창업자 루트' : 'VC 루트';
-    ctx.fillStyle = '#aaa';
-    ctx.font = '16px "Noto Sans KR", sans-serif';
-    ctx.fillText(roleLabel, W / 2, 126);
-
-    // Ending emoji (large)
-    ctx.font = '72px serif';
-    ctx.fillText(ending.emoji, W / 2, 206);
-
-    // Ending title
     ctx.fillStyle = '#fff';
-    ctx.font = 'bold 32px "Noto Sans KR", sans-serif';
-    ctx.fillText(ending.title, W / 2, 258);
+    ctx.font = 'bold 26px "Noto Sans KR", sans-serif';
+    ctx.fillText(ending.title, W / 2, 170);
 
-    // Subtitle
     ctx.fillStyle = accentColor;
-    ctx.font = '18px "Noto Sans KR", sans-serif';
-    ctx.fillText(`"${ending.subtitle}"`, W / 2, 292);
+    ctx.font = '16px "Noto Sans KR", sans-serif';
+    ctx.fillText(`"${ending.subtitle}"`, W / 2, 198);
 
-    // Description
-    ctx.fillStyle = '#bbb';
-    ctx.font = '15px "Noto Sans KR", sans-serif';
-    const descLines = wrapText(ctx, ending.description, W / 2, 335, W - 120, 24);
-    let y = 335 + descLines * 24 + 16;
+    // Thin divider
+    drawDivider(ctx, 218, W);
 
-    // Divider
+    // === QUOTE: THE HERO ===
+    const quoteY = 240;
+    const quoteText = ending.quote;
+
+    // Full-width tinted background
+    ctx.fillStyle = '#120f24';
+    ctx.fillRect(20, quoteY - 10, W - 40, 1); // placeholder, will size after measuring
+
+    // Measure first
+    ctx.font = 'bold 22px "Noto Sans KR", sans-serif';
+    const qLines = measureWrap(ctx, quoteText, W - 120);
+    const quoteBlockH = qLines * 34 + 60;
+
+    // Quote background
+    ctx.fillStyle = '#120f24';
+    roundRect(ctx, 26, quoteY - 14, W - 52, quoteBlockH, 16);
+    ctx.fill();
+
+    // Pink accent border on left
+    ctx.fillStyle = '#fd79a8';
+    ctx.fillRect(26, quoteY + 6, 4, quoteBlockH - 40);
+
+    // Big decorative quote marks
+    ctx.fillStyle = 'rgba(253, 121, 168, 0.15)';
+    ctx.font = 'bold 80px serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('\u201C', 38, quoteY + 58);
+    ctx.textAlign = 'right';
+    ctx.fillText('\u201D', W - 38, quoteY + quoteBlockH - 30);
+
+    // The quote itself — big, bold, pink
+    ctx.fillStyle = '#fd79a8';
+    ctx.font = 'bold 22px "Noto Sans KR", sans-serif';
+    ctx.textAlign = 'center';
+    wrapText(ctx, quoteText, W / 2, quoteY + 30, W - 130, 34);
+
+    let y = quoteY + quoteBlockH + 16;
+
+    // Thin divider
     drawDivider(ctx, y, W);
-    y += 30;
+    y += 24;
 
-    // Stats (text-based, matching the ending screen)
+    // === STATS: compact single-line style ===
     ctx.textAlign = 'left';
     const stats = ending.stats;
     for (const key in stats) {
@@ -84,77 +104,88 @@ const ShareSystem = (() => {
         : s.unit === '억' ? `${s.value}${s.unit}`
         : `${s.value}${s.unit || ''}`;
 
+      let statColor = '#999';
       let statusLabel = '';
-      let statColor = '#ccc';
       if (pct <= 0.15) { statusLabel = ' (위험!)'; statColor = '#ff3838'; }
       else if (pct <= 0.3) { statusLabel = ' (주의)'; statColor = '#fdcb6e'; }
 
       ctx.fillStyle = statColor;
-      ctx.font = '17px "Noto Sans KR", sans-serif';
+      ctx.font = '15px "Noto Sans KR", sans-serif';
       ctx.fillText(`${s.icon} ${s.label}: ${displayValue}${statusLabel}`, 60, y);
-      y += 32;
+      y += 26;
     }
 
-    y += 8;
+    y += 12;
 
-    // Divider
-    drawDivider(ctx, y, W);
-    y += 28;
-
-    // Quote
+    // === FOOTER ===
     ctx.textAlign = 'center';
-    ctx.fillStyle = '#fd79a8';
-    ctx.font = 'italic 14px "Noto Sans KR", sans-serif';
-    const quoteLines = wrapText(ctx, `"${ending.quote}"`, W / 2, y, W - 100, 22);
-    y += quoteLines * 22 + 20;
-
-    // Failure/Success message
     if (!isSuccess) {
-      // Failure box
-      ctx.strokeStyle = '#e17055';
-      ctx.lineWidth = 1;
-      ctx.setLineDash([6, 4]);
-      ctx.strokeRect(50, y - 4, W - 100, 44);
-      ctx.setLineDash([]);
-
       ctx.fillStyle = '#e17055';
-      ctx.font = '14px "Noto Sans KR", sans-serif';
-      ctx.fillText('당신은 다수의 편에 섰습니다.', W / 2, y + 17);
-      ctx.fillText('96.6%의 창업자가 여기서 쓰러졌습니다.', W / 2, y + 36);
-      y += 60;
+      ctx.font = '13px "Noto Sans KR", sans-serif';
+      ctx.fillText('96.6%의 창업자가 여기서 쓰러졌습니다', W / 2, y);
+      y += 26;
     } else {
-      ctx.strokeStyle = '#00b894';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(50, y - 4, W - 100, 34);
-
       ctx.fillStyle = '#00b894';
       ctx.font = 'bold 14px "Noto Sans KR", sans-serif';
-      ctx.fillText('✨ 당신은 상위 3.4%입니다. 실화입니까?', W / 2, y + 20);
-      y += 50;
+      ctx.fillText('상위 3.4% 클리어', W / 2, y);
+      y += 26;
     }
 
-    // CTA
     ctx.fillStyle = accentColor;
-    ctx.font = 'bold 16px "Noto Sans KR", sans-serif';
-    ctx.fillText('나도 도전하기 →', W / 2, Math.min(y + 10, H - 30));
+    ctx.font = 'bold 15px "Noto Sans KR", sans-serif';
+    ctx.fillText('나도 도전하기 →', W / 2, y);
+    y += 20;
 
-    // Resize canvas to actual content height if needed
-    const actualH = Math.min(y + 40, H);
-    if (actualH < H) {
-      const imgData = ctx.getImageData(0, 0, W, actualH);
-      canvas.height = actualH;
-      ctx.putImageData(imgData, 0, 0);
-      // Redraw bottom border
-      ctx.strokeStyle = accentColor;
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.moveTo(10, actualH - 10);
-      ctx.lineTo(W - 10, actualH - 10);
-      ctx.stroke();
-    }
+    // Resize canvas to actual content
+    const actualH = y + 20;
+    const imgData = ctx.getImageData(0, 0, W, actualH);
+    canvas.height = actualH;
+    ctx.putImageData(imgData, 0, 0);
+    // Redraw bottom border
+    ctx.strokeStyle = accentColor;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(10, actualH - 10);
+    ctx.lineTo(W - 10, actualH - 10);
+    ctx.lineTo(W - 10, 10);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(10, actualH - 10);
+    ctx.lineTo(10, 10);
+    ctx.stroke();
 
     // Download
     downloadCanvas(canvas);
+  }
+
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  function measureWrap(ctx, text, maxWidth) {
+    const chars = text.split('');
+    let line = '';
+    let count = 1;
+    for (let i = 0; i < chars.length; i++) {
+      const testLine = line + chars[i];
+      if (ctx.measureText(testLine).width > maxWidth && line.length > 0) {
+        count++;
+        line = chars[i];
+      } else {
+        line = testLine;
+      }
+    }
+    return count;
   }
 
   function drawDivider(ctx, y, W) {
