@@ -1,11 +1,18 @@
 /**
  * Share System - Result card canvas generation + SNS sharing
- * v2: Difficulty / score / grade support
+ * v3: Difficulty / score / grade support + UTM tracking
  */
 const ShareSystem = (() => {
+  const BASE_URL = 'https://yoongjae.com/tools/vc-simulator/';
+
   let lastEnding = null;
   let lastScore  = 0;
   let lastGrade  = null;
+
+  function getShareUrl(platform) {
+    const endingId = lastEnding ? lastEnding.id : '';
+    return `${BASE_URL}?utm_source=${platform}&utm_medium=share&utm_campaign=ep1&utm_content=${endingId}`;
+  }
 
   function generateCard(ending, score, grade) {
     lastEnding = ending;
@@ -144,7 +151,7 @@ const ShareSystem = (() => {
 
     ctx.fillStyle = accentColor;
     ctx.font      = 'bold 15px "Noto Sans KR", sans-serif';
-    ctx.fillText('나도 도전하기 → vc-vs-founder.vercel.app', W / 2, y);
+    ctx.fillText('나도 도전하기 → yoongjae.com/tools/vc-simulator', W / 2, y);
     y += 20;
 
     // Resize canvas to actual content
@@ -248,13 +255,16 @@ const ShareSystem = (() => {
   }
 
   function shareToX() {
+    Tracking.shareClick('x');
+    const url  = getShareUrl('x');
     const text = encodeURIComponent(getShareText());
-    const url  = encodeURIComponent(window.location.href);
-    window.open(`https://x.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+    window.open(`https://x.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}`, '_blank');
   }
 
   function shareToKakao() {
-    const text = getShareText() + '\n' + window.location.href;
+    Tracking.shareClick('kakao');
+    const url  = getShareUrl('kakao');
+    const text = getShareText() + '\n' + url;
     navigator.clipboard.writeText(text).then(() => {
       alert('클립보드에 복사되었습니다! 카카오톡에 붙여넣기 해주세요.');
     }).catch(() => {
@@ -263,15 +273,18 @@ const ShareSystem = (() => {
   }
 
   function shareToLinkedIn() {
-    const url = encodeURIComponent(window.location.href);
-    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    Tracking.shareClick('linkedin');
+    const url = getShareUrl('linkedin');
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
   }
 
   function copyLink() {
-    navigator.clipboard.writeText(window.location.href).then(() => {
+    Tracking.shareClick('link_copy');
+    const url = getShareUrl('link_copy');
+    navigator.clipboard.writeText(url).then(() => {
       alert('링크가 복사되었습니다!');
     }).catch(() => {
-      prompt('아래 링크를 복사해주세요:', window.location.href);
+      prompt('아래 링크를 복사해주세요:', url);
     });
   }
 

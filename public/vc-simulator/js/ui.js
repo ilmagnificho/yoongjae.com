@@ -138,6 +138,8 @@ const GameUI = (() => {
     GameEngine.init(role, difficulty || null);
     lastEndingScore = 0;
     lastEndingGrade = null;
+    Tracking.gameStart(role, difficulty || null);
+    Tracking.chapterEnter(1);
     showScreen('game');
     updateHUD();
     playCurrentEvent();
@@ -331,6 +333,8 @@ const GameUI = (() => {
       else GameEngine.addFlag(choice.probabilityCheck.failFlag);
     }
 
+    Tracking.choiceMade(event.chapter, event.id, choiceIndex);
+
     const outcome = GameEngine.applyChoice(choiceIndex);
     if (!outcome) return;
 
@@ -376,6 +380,7 @@ const GameUI = (() => {
     const state = GameEngine.getState();
     const prevChapter = event.chapter;
     if (state.chapter !== prevChapter) {
+      Tracking.chapterEnter(state.chapter);
       GameEngine.applyChapterDecay();
       updateHUD();
     }
@@ -559,6 +564,14 @@ const GameUI = (() => {
     const ending = GameEngine.evaluateEnding();
     const state  = GameEngine.getState();
 
+    // GA4: game_over vs ending_reached
+    const gameOverCause = state.deathStage ? mapGameOverCause(state) : null;
+    if (gameOverCause) {
+      Tracking.gameOver(state.chapter, gameOverCause);
+    } else {
+      Tracking.endingReached(ending, state.stats);
+    }
+
     const isSuccess = GameEngine.isSuccessEnding(ending.id);
     if (isSuccess) {
       lastEndingScore = GameEngine.calculateScore(ending.id);
@@ -570,6 +583,16 @@ const GameUI = (() => {
 
     LeaderboardSystem.recordDeath(state, ending);
     showEndingScreen(ending, state);
+  }
+
+  function mapGameOverCause(state) {
+    if (state.role === 'founder') {
+      if (state.stats.runway && state.stats.runway.value <= 0) return 'runway';
+      if (state.stats.mental && state.stats.mental.value <= 0) return 'mental';
+    } else {
+      if (state.stats.bossGaze && state.stats.bossGaze.value <= 0) return 'boss_trust';
+    }
+    return null;
   }
 
   // ===== ENDING SCREEN =====
@@ -659,13 +682,19 @@ const GameUI = (() => {
         const nextBtn = document.createElement('button');
         nextBtn.className = 'action-btn next-diff-btn';
         nextBtn.textContent = '🚀 Series A 도전하기 (NORMAL)';
-        nextBtn.addEventListener('click', () => startGame('founder', 'normal'));
+        nextBtn.addEventListener('click', () => {
+          Tracking.replayClick(ending.id);
+          startGame('founder', 'normal');
+        });
         actions.appendChild(nextBtn);
       } else if (state.difficulty === 'normal') {
         const nextBtn = document.createElement('button');
         nextBtn.className = 'action-btn next-diff-btn';
         nextBtn.textContent = '🌍 Series B 도전하기 (HARD)';
-        nextBtn.addEventListener('click', () => startGame('founder', 'hard'));
+        nextBtn.addEventListener('click', () => {
+          Tracking.replayClick(ending.id);
+          startGame('founder', 'hard');
+        });
         actions.appendChild(nextBtn);
       }
     }
@@ -682,10 +711,16 @@ const GameUI = (() => {
     otherBtn.className = 'action-btn other-route-btn';
     if (ending.role === 'founder') {
       otherBtn.textContent = 'VC 시점으로 도전하기';
-      otherBtn.addEventListener('click', () => startGame('vc', null));
+      otherBtn.addEventListener('click', () => {
+        Tracking.crossRouteClick('founder', 'vc');
+        startGame('vc', null);
+      });
     } else {
       otherBtn.textContent = '창업자 시점으로 도전하기';
-      otherBtn.addEventListener('click', () => showDifficultyScreen());
+      otherBtn.addEventListener('click', () => {
+        Tracking.crossRouteClick('vc', 'founder');
+        showDifficultyScreen();
+      });
     }
     actions.appendChild(otherBtn);
 
@@ -695,10 +730,16 @@ const GameUI = (() => {
     if (ending.role === 'founder') {
       const diffShort = { easy: 'EASY', normal: 'NORMAL', hard: 'HARD' };
       replayBtn.textContent = `🔄 같은 난이도 다시 도전 (${diffShort[state.difficulty] || 'EASY'})`;
-      replayBtn.addEventListener('click', () => startGame('founder', state.difficulty));
+      replayBtn.addEventListener('click', () => {
+        Tracking.replayClick(ending.id);
+        startGame('founder', state.difficulty);
+      });
     } else {
       replayBtn.textContent = '🔄 다시 도전하기';
-      replayBtn.addEventListener('click', () => startGame('vc', null));
+      replayBtn.addEventListener('click', () => {
+        Tracking.replayClick(ending.id);
+        startGame('vc', null);
+      });
     }
     actions.appendChild(replayBtn);
   }
