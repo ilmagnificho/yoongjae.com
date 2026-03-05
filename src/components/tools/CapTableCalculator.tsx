@@ -1,6 +1,8 @@
 import { useState, useMemo } from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend, type PieLabelRenderProps } from 'recharts';
 
+declare global { interface Window { __ga4?: { trackToolUse: (tool: string, action: string, params?: Record<string, unknown>) => void } } }
+
 // ─── Types ──────────────────────────────────────────────────────
 
 interface Shareholder {
@@ -261,6 +263,7 @@ export default function CapTableCalculator() {
         esopTiming: 'pre',
       },
     ]);
+    window.__ga4?.trackToolUse('cap-table', 'add_round', { round_label: label, total_rounds: rounds.length + 1 });
   };
 
   const updateRound = (id: string, field: keyof InvestmentRound, value: unknown) => {

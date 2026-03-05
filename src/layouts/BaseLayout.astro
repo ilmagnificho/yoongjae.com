@@ -93,8 +93,12 @@ const personSchema = {
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-MPY1QKT15E');
+      gtag('config', 'G-MPY1QKT15E', {
+        send_page_view: true,
+        cookie_flags: 'SameSite=None;Secure',
+      });
     </script>
+    <script is:inline defer src="/js/analytics.js"></script>
     <!-- Google AdSense -->
     <script is:inline async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2021805347195633" crossorigin="anonymous"></script>
 <script is:inline>

@@ -1,4 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
+
+declare global { interface Window { __ga4?: { trackToolUse: (tool: string, action: string, params?: Record<string, unknown>) => void } } }
 import { DEMO_DATA, type DashboardData } from './linkedin/data';
 import { parseLinkedInXlsx } from './linkedin/parseXlsx';
 import { useChart } from './linkedin/useChart';
@@ -41,8 +43,13 @@ export default function LinkedInDashboard() {
       setData(parsed);
       setIsDemo(false);
       showNotif('✅ 파일이 업로드되었습니다.', 'success', 3000);
+      window.__ga4?.trackToolUse('linkedin-analytics', 'file_upload', {
+        post_count: parsed.posts.length,
+        date_range_days: parsed.engagement.length,
+      });
     } else {
       showNotif('⚠️ 파일 형식을 인식할 수 없습니다.', 'warn', 5000);
+      window.__ga4?.trackToolUse('linkedin-analytics', 'file_upload_fail');
     }
   }, []);
 
@@ -164,7 +171,7 @@ export default function LinkedInDashboard() {
         {/* Tabs */}
         <div style={{ display: 'flex', gap: 2, marginBottom: 28, background: V.surface2, border: `1px solid ${V.border}`, borderRadius: 10, padding: 4, overflowX: 'auto' }}>
           {TABS.map(t => (
-            <button key={t.id} onClick={() => setTab(t.id)} style={{
+            <button key={t.id} onClick={() => { setTab(t.id); window.__ga4?.trackToolUse('linkedin-analytics', 'tab_switch', { tab_id: t.id }); }} style={{
               flex: 1, minWidth: 100, padding: '8px 12px', border: 'none', borderRadius: 7,
               background: tab === t.id ? V.surface : 'transparent',
               color: tab === t.id ? V.text : V.text2,

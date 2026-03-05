@@ -1,4 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
+
+declare global { interface Window { __ga4?: { trackToolUse: (tool: string, action: string, params?: Record<string, unknown>) => void } } }
 
 // ─── Types ──────────────────────────────────────────────────────
 
@@ -109,6 +111,19 @@ export default function SafeSimulator() {
 
   const pricePerShare = totalShares > 0 ? (preMoneyValuation * 1e8) / totalShares : 0;
   const maxPrice = Math.max(pricePerShare, result.capPrice || 0, result.discountPrice || 0, 1);
+
+  // Track simulation usage (debounced)
+  const simTimer = useRef<ReturnType<typeof setTimeout>>();
+  useEffect(() => {
+    clearTimeout(simTimer.current);
+    simTimer.current = setTimeout(() => {
+      window.__ga4?.trackToolUse('safe-simulator', 'simulate', {
+        safe_type: safeType,
+        ownership_pct: Math.round(result.ownershipPercent * 10) / 10,
+      });
+    }, 2000);
+    return () => clearTimeout(simTimer.current);
+  }, [safeType, investmentAmount, valuationCap, discountRate, preMoneyValuation, totalShares]);
 
   return (
     <div className="mt-6 space-y-8">

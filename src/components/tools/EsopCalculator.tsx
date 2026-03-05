@@ -1,4 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
+
+declare global { interface Window { __ga4?: { trackToolUse: (tool: string, action: string, params?: Record<string, unknown>) => void } } }
 
 // ─── Fun "what can I buy" thresholds ────────────────────────────
 
@@ -76,6 +78,19 @@ export default function EsopCalculator() {
     : 0;
 
   const whatCanIBuy = useMemo(() => getWhatCanIBuy(result.netProfit), [result.netProfit]);
+
+  // Track calculation usage (debounced)
+  const calcTimer = useRef<ReturnType<typeof setTimeout>>();
+  useEffect(() => {
+    clearTimeout(calcTimer.current);
+    calcTimer.current = setTimeout(() => {
+      window.__ga4?.trackToolUse('esop-calculator', 'calculate', {
+        exit_valuation_billion: exitValuation,
+        net_profit_range: result.netProfit >= 1e9 ? '1B+' : result.netProfit >= 1e8 ? '100M+' : result.netProfit >= 1e7 ? '10M+' : '<10M',
+      });
+    }, 2000);
+    return () => clearTimeout(calcTimer.current);
+  }, [exitValuation, optionsGranted, strikePrice, totalShares]);
 
   return (
     <div className="mt-6 space-y-8">

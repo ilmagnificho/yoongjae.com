@@ -1,5 +1,7 @@
 import { useState, useMemo } from 'react';
 
+declare global { interface Window { __ga4?: { trackToolUse: (tool: string, action: string, params?: Record<string, unknown>) => void } } }
+
 type PlatformId = 'claude' | 'gemini';
 type ScreenId = 'home' | 'template-list' | 'customize' | 'output';
 type CategoryId = 'business' | 'development' | 'content' | 'education' | 'data' | 'creative';
@@ -303,6 +305,11 @@ export default function PromptForge() {
     const prompt = selectedTemplate.generate(formValues, platform);
     setGeneratedPrompt(prompt); setCopied(false); setAutoCopied(false);
     navigate('output');
+    window.__ga4?.trackToolUse('promptforge', 'generate', {
+      template_id: selectedTemplate.id,
+      template_category: selectedTemplate.category,
+      platform,
+    });
     setTimeout(async () => { try { await navigator.clipboard.writeText(prompt); setAutoCopied(true); setTimeout(() => setAutoCopied(false), 3000); } catch { /* silent */ } }, 150);
   };
 
