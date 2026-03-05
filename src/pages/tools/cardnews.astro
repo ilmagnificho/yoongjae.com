@@ -2,7 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const title = 'CardNews Studio - AI 카드뉴스 생성기';
-const description = 'AI로 카드뉴스를 자동 생성하세요. 주제를 입력하면 디자인된 카드뉴스가 완성됩니다. OpenAI API 키 필요.';
+const description = 'AI로 카드뉴스를 자동 생성하세요. 주제를 입력하면 디자인된 카드뉴스가 완성됩니다. Anthropic API 키 필요.';
 
 const appSchema = {
   '@context': 'https://schema.org',
@@ -80,10 +80,10 @@ const appSchema = {
         <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
       </svg>
       <div>
-        <strong>OpenAI API 키가 필요합니다.</strong><br />
-        AI 카드뉴스 생성을 위해 본인의 OpenAI API 키를 입력해야 합니다.
+        <strong>Anthropic API 키가 필요합니다.</strong><br />
+        AI 카드뉴스 생성을 위해 본인의 Anthropic API 키를 입력해야 합니다.
         키는 브라우저에만 저장되며 서버로 전송되지 않습니다.
-        아직 키가 없다면 <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer">OpenAI에서 발급</a>받으세요.
+        아직 키가 없다면 <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer">Anthropic Console에서 발급</a>받으세요.
       </div>
       <button class="api-dismiss" onclick="document.getElementById('apiNotice').style.display='none'" aria-label="닫기">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
