@@ -5,10 +5,15 @@ const siteUrl = Astro.site?.toString() ?? 'https://yoongjae.com';
 
 const tools = [
   {
+    name: 'CardNews Studio',
+    description: 'AI로 카드뉴스를 자동 생성하세요. 주제를 입력하면 디자인된 카드뉴스가 완성됩니다. (OpenAI API 키 필요)',
+    href: '/tools/cardnews',
+    badge: 'New',
+  },
+  {
     name: '투자 못 받는 시뮬레이터',
     description: '클리어율 3.4%의 극악 난이도 창업 RPG. 갖은 이유로 투자를 못 받는 창업자 시뮬레이터를 플레이하세요!',
     href: '/tools/vc-simulator',
-    badge: 'New',
   },
   {
     name: 'LinkedIn Analytics Dashboard',
