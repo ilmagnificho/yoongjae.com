@@ -20,16 +20,24 @@ const appSchema = {
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(appSchema)} />
     <style>
-      .cardnews-wrap { margin: 0 -1rem; }
-      @media (min-width: 640px) { .cardnews-wrap { margin: 0 -2rem; } }
+      /* Break out of max-w-3xl container */
+      .cardnews-page {
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 0 1.5rem;
+        box-sizing: border-box;
+        max-width: 1400px;
+      }
       .cardnews-frame {
         width: 100%;
         height: 100dvh;
-        max-height: calc(100dvh - 120px);
-        min-height: 600px;
+        max-height: calc(100dvh - 160px);
+        min-height: 700px;
         border: none;
         border-radius: 8px;
-        background: #fff;
+        background: #0f0f14;
       }
       .api-notice {
         display: flex;
@@ -68,8 +76,8 @@ const appSchema = {
     </style>
   </Fragment>
 
-  <section class="py-4">
-    <div class="flex items-center gap-2 text-xs text-ink/40 mb-4">
+  <div class="cardnews-page">
+    <div class="flex items-center gap-2 text-xs text-ink/40 mb-4 pt-4">
       <a href="/tools" class="hover:text-ink transition-colors">Tools</a>
       <span>/</span>
       <span>CardNews Studio</span>
@@ -90,13 +98,11 @@ const appSchema = {
       </button>
     </div>
 
-    <div class="cardnews-wrap">
-      <iframe
-        src="/tools/cardnews/app.html"
-        class="cardnews-frame"
-        title="CardNews Studio"
-        loading="lazy"
-      ></iframe>
-    </div>
-  </section>
+    <iframe
+      src="/tools/cardnews/app.html"
+      class="cardnews-frame"
+      title="CardNews Studio"
+      loading="lazy"
+    ></iframe>
+  </div>
 </BaseLayout>
