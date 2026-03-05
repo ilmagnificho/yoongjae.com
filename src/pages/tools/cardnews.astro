@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const title = 'CardNews Studio - AI 카드뉴스 생성기';
+const description = 'AI로 카드뉴스를 자동 생성하세요. 주제를 입력하면 디자인된 카드뉴스가 완성됩니다. OpenAI API 키 필요.';
+
+const appSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'CardNews Studio',
+  url: 'https://yoongjae.com/tools/cardnews',
+  applicationCategory: 'DesignApplication',
+  operatingSystem: 'Web',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+  author: { '@type': 'Person', name: '조융재', url: 'https://yoongjae.com' },
+};
+---
+
+<BaseLayout title={title} description={description} canonicalUrl="/tools/cardnews">
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(appSchema)} />
+    <style>
+      .cardnews-wrap { margin: 0 -1rem; }
+      @media (min-width: 640px) { .cardnews-wrap { margin: 0 -2rem; } }
+      .cardnews-frame {
+        width: 100%;
+        height: 100dvh;
+        max-height: calc(100dvh - 120px);
+        min-height: 600px;
+        border: none;
+        border-radius: 8px;
+        background: #fff;
+      }
+      .api-notice {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.625rem;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid rgb(59 130 246 / 0.3);
+        background: rgb(239 246 255);
+        margin-bottom: 1rem;
+        font-size: 0.8125rem;
+        line-height: 1.5;
+        color: rgb(30 64 175);
+      }
+      .api-notice-icon {
+        flex-shrink: 0;
+        margin-top: 0.125rem;
+      }
+      .api-notice a {
+        color: rgb(37 99 235);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+      .api-notice a:hover { color: rgb(29 78 216); }
+      .api-dismiss {
+        flex-shrink: 0;
+        margin-left: auto;
+        padding: 0.125rem;
+        color: rgb(96 165 250);
+        cursor: pointer;
+        background: none;
+        border: none;
+        line-height: 1;
+      }
+      .api-dismiss:hover { color: rgb(30 64 175); }
+    </style>
+  </Fragment>
+
+  <section class="py-4">
+    <div class="flex items-center gap-2 text-xs text-ink/40 mb-4">
+      <a href="/tools" class="hover:text-ink transition-colors">Tools</a>
+      <span>/</span>
+      <span>CardNews Studio</span>
+    </div>
+
+    <div class="api-notice" id="apiNotice">
+      <svg class="api-notice-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+      </svg>
+      <div>
+        <strong>OpenAI API 키가 필요합니다.</strong><br />
+        AI 카드뉴스 생성을 위해 본인의 OpenAI API 키를 입력해야 합니다.
+        키는 브라우저에만 저장되며 서버로 전송되지 않습니다.
+        아직 키가 없다면 <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer">OpenAI에서 발급</a>받으세요.
+      </div>
+      <button class="api-dismiss" onclick="document.getElementById('apiNotice').style.display='none'" aria-label="닫기">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="cardnews-wrap">
+      <iframe
+        src="/tools/cardnews/index.html"
+        class="cardnews-frame"
+        title="CardNews Studio"
+        loading="lazy"
+      ></iframe>
+    </div>
+  </section>
+</BaseLayout>
