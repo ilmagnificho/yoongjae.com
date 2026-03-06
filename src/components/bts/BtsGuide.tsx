@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import type { BtsLang } from './translations';
 import { getT } from './translations';
+
+declare global { interface Window { __ga4?: { trackEvent: (event: string, params?: Record<string, unknown>) => void } } }
 import HeroCountdown from './HeroCountdown';
 import TicketCTA from './TicketCTA';
 import SubwayGuide from './SubwayGuide';
@@ -32,6 +34,7 @@ export default function BtsGuide() {
       url.searchParams.set('lang', newLang);
     }
     window.history.replaceState({}, '', url.toString());
+    window.__ga4?.trackEvent('bts_lang_switch', { language: newLang });
   };
 
   // Scroll fade-in animation

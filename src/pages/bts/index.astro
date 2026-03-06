@@ -109,6 +109,19 @@ const eventSchema = {
     <!-- JSON-LD -->
     <script type="application/ld+json" set:html={JSON.stringify(eventSchema)} />
 
+    <!-- Google tag (gtag.js) -->
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-MPY1QKT15E"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MPY1QKT15E', {
+        send_page_view: true,
+        cookie_flags: 'SameSite=None;Secure',
+      });
+    </script>
+    <script is:inline defer src="/js/analytics.js"></script>
+
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2021805347195633" crossorigin="anonymous"></script>
 

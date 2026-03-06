@@ -33,6 +33,7 @@ export default function Checklist({ lang }: Props) {
     }
   }, [items.length]);
 
+  const checkMilestones = useRef<Record<number, boolean>>({});
   const toggle = (i: number) => {
     const next = [...checked];
     next[i] = !next[i];
@@ -40,6 +41,15 @@ export default function Checklist({ lang }: Props) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
     } catch { /* noop */ }
+    // Track checklist progress milestones
+    const done = next.filter(Boolean).length;
+    const pct = items.length > 0 ? Math.round((done / items.length) * 100) : 0;
+    [25, 50, 75].forEach((m) => {
+      if (pct >= m && !checkMilestones.current[m]) {
+        checkMilestones.current[m] = true;
+        (window as any).__ga4?.trackEvent('bts_checklist_progress', { percent: m, language: lang });
+      }
+    });
   };
 
   const allDone = checked.length > 0 && checked.every(Boolean);
@@ -55,6 +65,7 @@ export default function Checklist({ lang }: Props) {
         colors: ['#7B2FBE', '#A855F7', '#F5C842', '#FFFFFF'],
         origin: { y: 0.6 },
       });
+      (window as any).__ga4?.trackEvent('bts_checklist_complete', { language: lang, items_count: items.length });
     }
     if (!allDone) {
       firedConfetti.current = false;

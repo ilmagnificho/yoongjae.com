@@ -18,6 +18,7 @@ export default function ShareFloat({ lang }: Props) {
       `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,
       '_blank'
     );
+    (window as any).__ga4?.trackEvent('share_click', { method: 'twitter', page_path: '/bts', content_group: 'bts', language: lang });
   };
 
   const copyLink = () => {
@@ -25,6 +26,7 @@ export default function ShareFloat({ lang }: Props) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
+    (window as any).__ga4?.trackEvent('share_click', { method: 'copy', page_path: '/bts', content_group: 'bts', language: lang });
   };
 
   return (
