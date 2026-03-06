@@ -12,6 +12,7 @@ interface Props {
   ogType?: 'website' | 'article';
   articleDate?: Date;
   articleTags?: string[];
+  hideFooter?: boolean;
 }
 
 const {
@@ -22,6 +23,7 @@ const {
   ogType = 'website',
   articleDate,
   articleTags,
+  hideFooter = false,
 } = Astro.props;
 
 const lang = getLangFromUrl(Astro.url);
@@ -116,6 +118,6 @@ const personSchema = {
     <main class="flex-1 w-full max-w-3xl mx-auto px-6 py-6">
       <slot />
     </main>
-    <Footer />
+    {!hideFooter && <Footer />}
   </body>
 </html>

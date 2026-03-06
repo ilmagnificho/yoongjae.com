@@ -16,16 +16,17 @@ const appSchema = {
 };
 ---
 
-<BaseLayout title={title} description={description} canonicalUrl="/tools/cardnews">
+<BaseLayout title={title} description={description} canonicalUrl="/tools/cardnews" hideFooter>
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(appSchema)} />
     <style>
-      /* Full-width layout */
+      /* Full-width: override main container constraints */
+      main {
+        max-width: none !important;
+        padding: 0 !important;
+      }
       .cardnews-page {
-        width: 100vw;
-        position: relative;
-        left: 50%;
-        transform: translateX(-50%);
+        width: 100%;
         padding: 0;
         box-sizing: border-box;
       }
