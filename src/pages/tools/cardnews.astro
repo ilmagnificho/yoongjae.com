@@ -20,24 +20,23 @@ const appSchema = {
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(appSchema)} />
     <style>
-      /* Break out of max-w-3xl container */
+      /* Full-width layout */
       .cardnews-page {
         width: 100vw;
         position: relative;
         left: 50%;
         transform: translateX(-50%);
-        padding: 0 1.5rem;
+        padding: 0;
         box-sizing: border-box;
-        max-width: 1400px;
       }
       .cardnews-frame {
         width: 100%;
         height: 100dvh;
-        max-height: calc(100dvh - 160px);
+        max-height: calc(100dvh - 120px);
         min-height: 700px;
         border: none;
-        border-radius: 8px;
-        background: #0f0f14;
+        border-radius: 0;
+        background: #111113;
       }
       .api-notice {
         display: flex;
@@ -77,13 +76,13 @@ const appSchema = {
   </Fragment>
 
   <div class="cardnews-page">
-    <div class="flex items-center gap-2 text-xs text-ink/40 mb-4 pt-4">
+    <div class="flex items-center gap-2 text-xs text-ink/40 mb-3 pt-3 px-6">
       <a href="/tools" class="hover:text-ink transition-colors">Tools</a>
       <span>/</span>
       <span>CardNews Studio</span>
     </div>
 
-    <div class="api-notice" id="apiNotice">
+    <div class="api-notice mx-6" id="apiNotice">
       <svg class="api-notice-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
       </svg>
