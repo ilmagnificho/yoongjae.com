@@ -64,6 +64,8 @@ export const ui = {
     'footer.phone.placeholder': '연락처 (선택사항)',
     'footer.privacy': '개인정보 수집 및 이용에 동의합니다.',
     'footer.subscribe': '구독하기',
+    'footer.bts': 'BTS 광화문 가이드 →',
+    'footer.privacyLink': '개인정보 처리방침',
 
     // PostList
     'postList.empty': '아직 글이 없습니다.',
@@ -125,6 +127,8 @@ export const ui = {
     'footer.phone.placeholder': 'Phone (optional)',
     'footer.privacy': 'I agree to the collection and use of personal information.',
     'footer.subscribe': 'Subscribe',
+    'footer.bts': 'BTS Gwanghwamun Guide →',
+    'footer.privacyLink': 'Privacy Policy',
 
     // PostList
     'postList.empty': 'No posts yet.',
