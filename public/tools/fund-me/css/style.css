@@ -90,8 +90,8 @@ body {
 
 .title-sub {
   font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  color: #b0b0b0;
+  font-size: 13px;
+  color: #d0d0d0;
   line-height: 1.8;
   letter-spacing: 1px;
 }
@@ -182,11 +182,15 @@ body {
 
 /* ===== DISCLAIMER ===== */
 .disclaimer {
-  font-size: 11px;
-  color: #666;
-  max-width: 340px;
-  line-height: 1.5;
-  margin-top: 8px;
+  font-size: 12px;
+  color: #999;
+  max-width: 380px;
+  line-height: 1.7;
+  margin-top: 12px;
+  padding: 10px 14px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px;
+  background: rgba(255,255,255,0.03);
 }
 
 /* ===== GAME SCREEN ===== */
@@ -296,8 +300,8 @@ body {
 
 .scene-label {
   font-family: 'Press Start 2P', monospace;
-  font-size: 8px;
-  color: rgba(255,255,255,0.3);
+  font-size: 9px;
+  color: rgba(255,255,255,0.45);
   position: absolute;
   bottom: 6px;
   right: 8px;
@@ -330,32 +334,43 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 500;
-  animation: chapterFade 2.5s ease forwards;
+  animation: chapterFadeIn 0.6s ease forwards;
+  cursor: pointer;
 }
 
 .chapter-title-text {
   font-family: 'Press Start 2P', monospace;
-  font-size: 12px;
+  font-size: 16px;
   color: var(--accent);
   text-align: center;
   line-height: 2.2;
-  text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.5), 0 0 20px rgba(255,68,68,0.3);
   padding: 0 20px;
 }
 
 .chapter-number {
   font-family: 'Press Start 2P', monospace;
-  font-size: 9px;
-  color: var(--text-dim);
-  margin-bottom: 12px;
+  font-size: 12px;
+  color: #c0c0c0;
+  margin-bottom: 16px;
   letter-spacing: 2px;
 }
 
-@keyframes chapterFade {
-  0% { opacity: 0; }
-  15% { opacity: 1; }
-  80% { opacity: 1; }
-  100% { opacity: 0; }
+.chapter-continue-hint {
+  font-size: 14px;
+  color: #888;
+  margin-top: 32px;
+  animation: chapterHintBlink 1.5s ease infinite;
+}
+
+@keyframes chapterFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes chapterHintBlink {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
 }
 
 /* ===== EVENT AREA ===== */
@@ -368,11 +383,11 @@ body {
 
 /* ===== NARRATION (pixel RPG style) ===== */
 .narration-box {
-  font-size: 12px;
-  color: var(--text-dim);
+  font-size: 14px;
+  color: #c0c0c0;
   font-style: italic;
   line-height: 1.8;
-  padding: 12px 16px;
+  padding: 14px 16px;
   background: rgba(0, 0, 0, 0.4);
   border-bottom: 2px solid var(--pixel-border-dark);
   cursor: pointer;
@@ -415,14 +430,14 @@ body {
 
 .dialogue-speaker {
   font-family: 'Press Start 2P', monospace;
-  font-size: 9px;
+  font-size: 11px;
   color: var(--accent);
   margin-bottom: 6px;
   text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
 }
 
 .dialogue-text {
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.8;
   color: var(--text);
 }
@@ -455,7 +470,7 @@ body {
   border: 3px solid var(--border);
   padding: 12px 14px;
   color: var(--text);
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.6;
   text-align: left;
   cursor: pointer;
@@ -494,14 +509,14 @@ body {
 
 .result-speaker {
   font-family: 'Press Start 2P', monospace;
-  font-size: 9px;
+  font-size: 11px;
   color: var(--accent);
   margin-bottom: 6px;
   text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
 }
 
 .result-text {
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.8;
 }
 

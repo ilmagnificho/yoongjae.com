@@ -36,7 +36,7 @@ const GameUI = (() => {
             <div class="role-difficulty">★★★☆☆ 남의 돈이니까</div>
           </button>
         </div>
-        <div class="disclaimer">이 게임은 픽션이며, 실제 인물/기업/사건과 무관합니다.</div>
+        <div class="disclaimer">이 게임은 픽션이며, 실제 인물/기업/사건과 무관합니다.<br>어떤 사건이 상상되어도 그것은 독자의 해석입니다.</div>
       </div>
     `;
 
@@ -91,13 +91,19 @@ const GameUI = (() => {
     overlay.innerHTML = `
       <div class="chapter-number">${chapterNum}</div>
       <div class="chapter-title-text">${chapterName || chapterNum}</div>
+      <div class="chapter-continue-hint">클릭하여 계속</div>
     `;
     document.body.appendChild(overlay);
 
-    setTimeout(() => {
-      overlay.remove();
-      if (callback) callback();
-    }, 2500);
+    overlay.addEventListener('click', () => {
+      GameAudio.confirm();
+      overlay.style.transition = 'opacity 0.3s';
+      overlay.style.opacity = '0';
+      setTimeout(() => {
+        overlay.remove();
+        if (callback) callback();
+      }, 300);
+    });
   }
 
   // ===== GAME SCREEN =====
@@ -389,7 +395,7 @@ const GameUI = (() => {
           <button class="ending-btn primary" id="btn-retry">▶ 다시 도전하기</button>
           <button class="ending-btn" id="btn-title">타이틀로 돌아가기</button>
         </div>
-        <div class="disclaimer" style="margin-top:12px">이 게임은 픽션이며, 실제 인물/기업/사건과 무관합니다.</div>
+        <div class="disclaimer" style="margin-top:12px">이 게임은 픽션이며, 실제 인물/기업/사건과 무관합니다.<br>어떤 사건이 상상되어도 그것은 독자의 해석입니다.</div>
       </div>
     `;
 
@@ -448,7 +454,7 @@ const GameUI = (() => {
           <button class="ending-btn" id="btn-title">타이틀로</button>
           <button class="ending-btn" id="btn-vc-sim">한국 스타트업 버전 → VC Simulator</button>
         </div>
-        <div class="disclaimer" style="margin-top:12px">이 게임은 픽션이며, 실제 인물/기업/사건과 무관합니다.</div>
+        <div class="disclaimer" style="margin-top:12px">이 게임은 픽션이며, 실제 인물/기업/사건과 무관합니다.<br>어떤 사건이 상상되어도 그것은 독자의 해석입니다.</div>
       </div>
     `;
 
