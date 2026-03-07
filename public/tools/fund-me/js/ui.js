@@ -20,7 +20,7 @@ const GameUI = (() => {
       <div class="title-screen fade-in">
         <div class="title-main">FUND ME<br>IF YOU CAN</div>
         <div class="title-sub">실패하면 사기, 성공하면 비전</div>
-        <div class="title-tagline">실리콘밸리 최대 논란 AI 스타트업의<br>실화 기반 풍자 텍스트 RPG</div>
+        <div class="title-tagline">2026년 초 실리콘밸리 최대 핫 이슈<br>AI 스타트업 RPG</div>
         <div class="role-select">
           <button class="role-card founder" id="btn-founder">
             <div class="role-emoji">🧑‍💻</div>
