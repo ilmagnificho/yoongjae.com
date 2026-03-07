@@ -185,7 +185,7 @@ const GameEngine = (() => {
 
     return {
       resultText,
-      resultSpeaker: choice.resultSpeaker || { name: '\uB098\uB808\uC774\uD130', emoji: '\uD83C\uDFAD' },
+      resultSpeaker: choice.resultSpeaker || { name: '\uD574\uC124', emoji: '\uD83C\uDFAD' },
       effects: changes,
       probabilityResult,
     };
