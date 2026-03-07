@@ -1,6 +1,6 @@
 /**
  * Fund Me If You Can - UI Rendering
- * Title screen, role selection, event display, typing effect, stat bars
+ * Pokemon-style RPG layout with backgrounds, dialogue boxes, pixel stat bars
  */
 const GameUI = (() => {
   const container = document.getElementById('game-container');
@@ -25,14 +25,15 @@ const GameUI = (() => {
           <button class="role-card founder" id="btn-founder">
             <div class="role-emoji">🧑‍💻</div>
             <div class="role-name">Founder: Roi Kim</div>
-            <div class="role-quote">"세상은 규칙을 깨는 사람이 바꾼다. 아니면 감옥에 간다."</div>
-            <div class="role-difficulty">난이도: ★★★★★ (줄타기)</div>
+            <div class="role-quote">"세상은 규칙을 깨는 사람이 바꾼다.<br>아니면 감옥에 간다."</div>
+            <div class="role-difficulty">★★★★★ 줄타기</div>
           </button>
+          <div class="title-vs">VS</div>
           <button class="role-card vc" id="btn-vc">
             <div class="role-emoji">🧑‍💼</div>
             <div class="role-name">VC: Byron Park</div>
-            <div class="role-quote">"모멘텀이 해자다. 다만 해자 안에 뭐가 있는지는 나중에 안다."</div>
-            <div class="role-difficulty">난이도: ★★★☆☆ (남의 돈이니까)</div>
+            <div class="role-quote">"모멘텀이 해자다. 다만 해자 안에<br>뭐가 있는지는 나중에 안다."</div>
+            <div class="role-difficulty">★★★☆☆ 남의 돈이니까</div>
           </button>
         </div>
         <div class="disclaimer">이 게임은 픽션이며, 실제 인물/기업/사건과 무관합니다.</div>
@@ -45,7 +46,6 @@ const GameUI = (() => {
 
   // ===== START GAME =====
   function startGame(role) {
-    // Set CSS accent based on role
     const root = document.documentElement;
     if (role === 'founder') {
       root.style.setProperty('--accent', 'var(--founder-main)');
@@ -71,7 +71,15 @@ const GameUI = (() => {
     lastChapter = chapter;
     const overlay = document.createElement('div');
     overlay.className = 'chapter-title-overlay';
-    overlay.innerHTML = `<div class="chapter-title-text">${title || '챕터 ' + chapter}</div>`;
+
+    const parts = (title || '').split(' - ');
+    const chapterNum = parts[0] || ('챕터 ' + chapter);
+    const chapterName = parts[1] || '';
+
+    overlay.innerHTML = `
+      <div class="chapter-number">${chapterNum}</div>
+      <div class="chapter-title-text">${chapterName || chapterNum}</div>
+    `;
     document.body.appendChild(overlay);
 
     setTimeout(() => {
@@ -93,13 +101,44 @@ const GameUI = (() => {
     container.innerHTML = `
       <div class="game-screen">
         <div class="stat-bar-container" id="stat-bars"></div>
+        <div class="scene-area" id="scene-area">
+          <div class="scene-elements" id="scene-elements"></div>
+          <div class="scene-character" id="scene-character"></div>
+          <div class="scene-label" id="scene-label"></div>
+        </div>
         <div class="event-area" id="event-area"></div>
         <div class="choices-container" id="choices-area"></div>
       </div>
     `;
 
     renderStatBars();
+    renderScene(event);
     playEvent(event);
+  }
+
+  // ===== RENDER SCENE BACKGROUND =====
+  function renderScene(event) {
+    const sceneArea = document.getElementById('scene-area');
+    const elementsEl = document.getElementById('scene-elements');
+    const charEl = document.getElementById('scene-character');
+    const labelEl = document.getElementById('scene-label');
+    if (!sceneArea) return;
+
+    const sceneKey = event.background || 'sf_office';
+    const scene = Backgrounds.getScene(sceneKey);
+
+    sceneArea.style.background = scene.gradient;
+    elementsEl.textContent = scene.elements;
+    labelEl.textContent = scene.label;
+
+    // Show speaker character emoji
+    if (event.speaker && event.speaker.emoji) {
+      charEl.textContent = event.speaker.emoji;
+      charEl.style.display = 'block';
+    } else {
+      charEl.textContent = '🎭';
+      charEl.style.display = 'block';
+    }
   }
 
   // ===== STAT BARS =====
@@ -135,17 +174,17 @@ const GameUI = (() => {
     if (!area) return;
     area.innerHTML = '';
 
-    // Show narration
+    // Narration
     if (event.narration) {
       const narBox = document.createElement('div');
       narBox.className = 'narration-box fade-in';
       narBox.addEventListener('click', () => { if (isTyping) skipTyping = true; });
       area.appendChild(narBox);
       await typeText(narBox, event.narration);
-      await delay(300);
+      await delay(200);
     }
 
-    // Show dialogue
+    // Dialogue
     if (event.speaker && event.text) {
       const dBox = document.createElement('div');
       dBox.className = 'dialogue-box fade-in';
@@ -157,18 +196,13 @@ const GameUI = (() => {
         </div>
       `;
       area.appendChild(dBox);
-
-      // Click to skip typing
-      dBox.addEventListener('click', () => {
-        if (isTyping) skipTyping = true;
-      });
+      dBox.addEventListener('click', () => { if (isTyping) skipTyping = true; });
 
       const textEl = dBox.querySelector('#dialogue-text');
       await typeText(textEl, event.text);
-      await delay(300);
+      await delay(200);
     }
 
-    // Show choices
     showChoices(event);
   }
 
@@ -182,7 +216,6 @@ const GameUI = (() => {
 
     let visibleIdx = 0;
     event.choices.forEach((choice, actualIdx) => {
-      // Check choice-level conditions
       if (choice.condition) {
         const hasFlag = state.flags.includes(choice.condition.flag);
         const pass = choice.condition.negate ? !hasFlag : hasFlag;
@@ -191,7 +224,7 @@ const GameUI = (() => {
 
       const btn = document.createElement('button');
       btn.className = 'choice-btn fade-in';
-      btn.style.animationDelay = `${visibleIdx * 0.08}s`;
+      btn.style.animationDelay = `${visibleIdx * 0.06}s`;
 
       const label = String.fromCharCode(65 + visibleIdx);
       btn.textContent = `${label}) ${choice.text}`;
@@ -206,22 +239,18 @@ const GameUI = (() => {
     const outcome = GameEngine.makeChoice(choiceIndex);
     if (!outcome) return;
 
-    // Hide choices
     const choicesArea = document.getElementById('choices-area');
     if (choicesArea) choicesArea.innerHTML = '';
 
-    // Show stat effects
     if (outcome.effects && Object.keys(outcome.effects).length > 0) {
       showStatEffects(outcome.effects);
       renderStatBars();
     }
 
-    // Show result text
     if (outcome.resultText) {
       await showResult(outcome.resultText, outcome.resultSpeaker);
     }
 
-    // Proceed
     const next = GameEngine.proceedAfterResult();
 
     if (next.type === 'gameover') {
@@ -243,7 +272,6 @@ const GameUI = (() => {
       return;
     }
 
-    // Continue to next event
     renderGameScreen();
   }
 
@@ -260,25 +288,21 @@ const GameUI = (() => {
         <div class="result-text" id="result-text"></div>
       `;
       area.appendChild(box);
-
-      // Click to skip typing on the result box
-      box.addEventListener('click', () => {
-        if (isTyping) skipTyping = true;
-      });
+      box.addEventListener('click', () => { if (isTyping) skipTyping = true; });
 
       const textEl = box.querySelector('#result-text');
 
       typeText(textEl, text).then(() => {
         const btn = document.createElement('button');
         btn.className = 'continue-btn fade-in';
-        btn.textContent = '계속...';
+        btn.textContent = '▶ 계속';
         btn.addEventListener('click', () => resolve());
         area.appendChild(btn);
       });
     });
   }
 
-  // ===== STAT EFFECTS POPUP =====
+  // ===== STAT EFFECTS =====
   function showStatEffects(effects) {
     const statDefs = GameEngine.getStatDefs();
 
@@ -299,20 +323,7 @@ const GameUI = (() => {
     }
   }
 
-  // ===== SHOW RESULT EFFECTS TEXT =====
-  function formatEffectsText(effects) {
-    const statDefs = GameEngine.getStatDefs();
-    const parts = [];
-    for (const [key, delta] of Object.entries(effects)) {
-      if (delta === 0) continue;
-      const def = statDefs.find(s => s.key === key);
-      if (!def) continue;
-      parts.push(`${def.emoji} ${delta > 0 ? '+' : ''}${delta}`);
-    }
-    return parts.join('  ');
-  }
-
-  // ===== GAME OVER SCREEN =====
+  // ===== GAME OVER =====
   function showGameOverScreen(stat) {
     const statDefs = GameEngine.getStatDefs();
     const def = statDefs.find(s => s.key === stat);
@@ -327,10 +338,10 @@ const GameUI = (() => {
           "${EndingsEngine.QUOTES[Math.floor(Math.random() * EndingsEngine.QUOTES.length)]}"
         </div>
         <div class="ending-actions">
-          <button class="ending-btn primary" id="btn-retry">다시 도전하기</button>
+          <button class="ending-btn primary" id="btn-retry">▶ 다시 도전하기</button>
           <button class="ending-btn" id="btn-title">타이틀로 돌아가기</button>
         </div>
-        <div class="disclaimer" style="margin-top:16px">이 게임은 픽션이며, 실제 인물/기업/사건과 무관합니다.</div>
+        <div class="disclaimer" style="margin-top:12px">이 게임은 픽션이며, 실제 인물/기업/사건과 무관합니다.</div>
       </div>
     `;
 
@@ -350,8 +361,8 @@ const GameUI = (() => {
     const statDefs = GameEngine.getStatDefs();
     const otherRole = state.role === 'founder' ? 'vc' : 'founder';
     const otherLabel = state.role === 'founder'
-      ? '투자자는 당신을 어떻게 봤을까? → VC 루트 도전하기'
-      : '창업자에게도 사정이 있었다면? → Founder 루트 도전하기';
+      ? '투자자는 당신을 어떻게 봤을까? → VC 루트'
+      : '창업자에게도 사정이 있었다면? → Founder 루트';
 
     let statsHtml = '';
     statDefs.forEach(def => {
@@ -370,20 +381,21 @@ const GameUI = (() => {
 
     container.innerHTML = `
       <div class="ending-screen fade-in">
+        <div class="ending-header">FUND ME IF YOU CAN</div>
         <div class="ending-emoji">${ending.emoji}</div>
         <div class="ending-name">${ending.name}</div>
-        <div class="ending-description">${ending.description}</div>
+        <div class="ending-description">"${ending.description}"</div>
         <div class="ending-stats">${statsHtml}</div>
         <div class="ending-quote" style="border-left-color:var(--accent)">
           "${ending.quote}"
         </div>
         <div class="ending-actions">
           <button class="ending-btn primary" id="btn-other-route">${otherLabel}</button>
-          <button class="ending-btn" id="btn-retry">같은 루트 다시 도전하기</button>
-          <button class="ending-btn" id="btn-title">타이틀로 돌아가기</button>
-          <button class="ending-btn" id="btn-vc-sim">한국 스타트업 버전도 있습니다 → VC Simulator</button>
+          <button class="ending-btn" id="btn-retry">같은 루트 다시 도전</button>
+          <button class="ending-btn" id="btn-title">타이틀로</button>
+          <button class="ending-btn" id="btn-vc-sim">한국 스타트업 버전 → VC Simulator</button>
         </div>
-        <div class="disclaimer" style="margin-top:16px">이 게임은 픽션이며, 실제 인물/기업/사건과 무관합니다.</div>
+        <div class="disclaimer" style="margin-top:12px">이 게임은 픽션이며, 실제 인물/기업/사건과 무관합니다.</div>
       </div>
     `;
 
@@ -402,7 +414,7 @@ const GameUI = (() => {
       isTyping = true;
 
       let i = 0;
-      const speed = 25;
+      const speed = 22;
 
       function type() {
         if (skipTyping) {
@@ -428,7 +440,7 @@ const GameUI = (() => {
     return new Promise(r => setTimeout(r, ms));
   }
 
-  // ===== INIT ON LOAD =====
+  // ===== INIT =====
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
