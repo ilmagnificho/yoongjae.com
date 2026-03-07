@@ -31,7 +31,7 @@
   var path = location.pathname.replace(/\/$/, '') || '/';
   var contentGroup = 'other';
   if (path === '/' || path === '/en') contentGroup = 'home';
-  else if (path.startsWith('/blog') || path.startsWith('/writing') || path.startsWith('/en/writing')) contentGroup = 'writing';
+  else if (path.startsWith('/writing') || path.startsWith('/en/writing')) contentGroup = 'writing';
   else if (path.startsWith('/tools') || path.startsWith('/en/tools')) contentGroup = 'tools';
   else if (path.startsWith('/companies') || path.startsWith('/en/companies')) contentGroup = 'companies';
   else if (path.startsWith('/about') || path.startsWith('/en/about')) contentGroup = 'about';
@@ -144,7 +144,7 @@
       }
 
       // Related post clicks (blog pages)
-      if (contentGroup === 'writing' && link.closest('section') && href.startsWith('/blog/')) {
+      if (contentGroup === 'writing' && link.closest('section') && href.startsWith('/writing/')) {
         var isRelated = link.closest('section')?.querySelector('h2');
         if (isRelated && (isRelated.textContent || '').includes('관련')) {
           track('related_post_click', {

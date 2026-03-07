@@ -26,7 +26,7 @@ export function getAlternateLangUrl(pathname: string, targetLang: Lang): string 
       return stripped === '/' ? '/en/' : `/en${stripped}/`;
     }
     // Blog/writing sub-pages → English writing list
-    if (stripped.startsWith('/blog') || stripped.startsWith('/writing')) return '/en/writing/';
+    if (stripped.startsWith('/writing')) return '/en/writing/';
     // Tool sub-pages → English tools list
     if (stripped.startsWith('/tools')) return '/en/tools/';
     return '/en/';
