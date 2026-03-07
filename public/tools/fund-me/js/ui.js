@@ -40,8 +40,19 @@ const GameUI = (() => {
       </div>
     `;
 
-    document.getElementById('btn-founder').addEventListener('click', () => startGame('founder'));
-    document.getElementById('btn-vc').addEventListener('click', () => startGame('vc'));
+    document.getElementById('btn-founder').addEventListener('click', () => { GameAudio.resume(); startGame('founder'); });
+    document.getElementById('btn-vc').addEventListener('click', () => { GameAudio.resume(); startGame('vc'); });
+  }
+
+  function renderSoundToggle() {
+    const btn = document.createElement('button');
+    btn.className = 'sound-toggle';
+    btn.textContent = GameAudio.isEnabled() ? '🔊' : '🔇';
+    btn.addEventListener('click', () => {
+      const on = GameAudio.toggle();
+      btn.textContent = on ? '🔊' : '🔇';
+    });
+    return btn;
   }
 
   // ===== START GAME =====
@@ -68,6 +79,7 @@ const GameUI = (() => {
 
   // ===== CHAPTER TITLE =====
   function showChapterTitle(chapter, title, callback) {
+    GameAudio.chapterStart();
     lastChapter = chapter;
     const overlay = document.createElement('div');
     overlay.className = 'chapter-title-overlay';
@@ -113,6 +125,7 @@ const GameUI = (() => {
 
     renderStatBars();
     renderScene(event);
+    document.querySelector('.game-screen').appendChild(renderSoundToggle());
     playEvent(event);
   }
 
@@ -245,7 +258,7 @@ const GameUI = (() => {
 
       const label = String.fromCharCode(65 + visibleIdx);
       btn.textContent = `${label}) ${choice.text}`;
-      btn.addEventListener('click', () => handleChoice(actualIdx));
+      btn.addEventListener('click', () => { GameAudio.select(); handleChoice(actualIdx); });
       choicesArea.appendChild(btn);
       visibleIdx++;
     });
@@ -260,6 +273,10 @@ const GameUI = (() => {
     if (choicesArea) choicesArea.innerHTML = '';
 
     if (outcome.effects && Object.keys(outcome.effects).length > 0) {
+      const hasPositive = Object.values(outcome.effects).some(v => v > 0);
+      const hasNegative = Object.values(outcome.effects).some(v => v < 0);
+      if (hasNegative) GameAudio.statDown();
+      else if (hasPositive) GameAudio.statUp();
       showStatEffects(outcome.effects);
       renderStatBars();
     }
@@ -272,12 +289,14 @@ const GameUI = (() => {
 
     if (next.type === 'gameover') {
       await delay(300);
+      GameAudio.gameOver();
       showGameOverScreen(next.stat);
       return;
     }
 
     if (next.type === 'ending') {
       await delay(300);
+      GameAudio.ending();
       showEndingScreen();
       return;
     }
@@ -325,7 +344,7 @@ const GameUI = (() => {
         const btn = document.createElement('button');
         btn.className = 'continue-btn fade-in';
         btn.textContent = '▶ 계속';
-        btn.addEventListener('click', () => resolve());
+        btn.addEventListener('click', () => { GameAudio.confirm(); resolve(); });
         area.appendChild(btn);
       });
     });
@@ -460,6 +479,7 @@ const GameUI = (() => {
         }
         if (i < text.length) {
           element.textContent = text.substring(0, i + 1);
+          if (i % 3 === 0) GameAudio.typing();
           i++;
           typingTimeout = setTimeout(type, speed);
         } else {
