@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const title = 'Fund Me If You Can - 실패하면 사기, 성공하면 비전';
+const description = '실리콘밸리 최대 논란 AI 스타트업의 실화 기반 RPG. 창업자 또는 VC 시점을 선택해 플레이하세요.';
+
+const appSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Fund Me If You Can',
+  url: 'https://yoongjae.com/tools/fund-me',
+  applicationCategory: 'GameApplication',
+  operatingSystem: 'Web',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+  author: { '@type': 'Person', name: '조융재', url: 'https://yoongjae.com' },
+};
+---
+
+<BaseLayout title={title} description={description} canonicalUrl="/tools/fund-me" ogImage="/tools/fund-me/og-image.png">
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(appSchema)} />
+    <style>
+      .fund-me-wrap { margin: 0 -1rem; }
+      @media (min-width: 640px) { .fund-me-wrap { margin: 0 -2rem; } }
+      .fund-me-frame {
+        width: 100%;
+        height: 100dvh;
+        max-height: calc(100dvh - 60px);
+        min-height: 600px;
+        border: none;
+        border-radius: 8px;
+        background: #0a0a0f;
+      }
+    </style>
+  </Fragment>
+
+  <section class="py-4">
+    <div class="flex items-center gap-2 text-xs text-ink/40 mb-4">
+      <a href="/tools" class="hover:text-ink transition-colors">Tools</a>
+      <span>/</span>
+      <span>Fund Me If You Can</span>
+    </div>
+
+    <div class="fund-me-wrap">
+      <iframe
+        src="/tools/fund-me/index.html"
+        class="fund-me-frame"
+        title="Fund Me If You Can"
+        loading="lazy"
+      ></iframe>
+    </div>
+  </section>
+</BaseLayout>
