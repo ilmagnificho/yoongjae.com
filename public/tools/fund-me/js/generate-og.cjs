@@ -82,28 +82,28 @@ ctx.fillRect(0, H - 6, W, 6);
 
 // ── 3. Title: "Fund Me If You Can" ──
 ctx.fillStyle = '#ffffff';
-ctx.font = 'bold 72px "Arial Black", "Helvetica Neue", Arial, sans-serif';
+ctx.font = 'bold 96px "Arial Black", "Helvetica Neue", Arial, sans-serif';
 ctx.textAlign = 'center';
 ctx.textBaseline = 'middle';
-ctx.fillText('Fund Me If You Can', W / 2, 75);
+ctx.fillText('Fund Me If You Can', W / 2, 155);
 
 // ── 4. Subtitle: "실패하면 사기, 성공하면 비전" ──
 ctx.fillStyle = '#ffffff';
-ctx.font = 'bold 36px "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif';
-ctx.fillText('실패하면 사기, 성공하면 비전', W / 2, 145);
+ctx.font = 'bold 52px "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif';
+ctx.fillText('실패하면 사기, 성공하면 비전', W / 2, 245);
 
 // ── 5. "BLUFF ON EVERYTHING" ──
 ctx.fillStyle = '#f5c518';
-ctx.font = 'bold 22px "Courier New", monospace';
-ctx.fillText('BLUFF ON EVERYTHING', W / 2, 200);
+ctx.font = 'bold 30px "Courier New", monospace';
+ctx.fillText('BLUFF ON EVERYTHING', W / 2, 315);
 
 // Red underline
 const bluffW = ctx.measureText('BLUFF ON EVERYTHING').width;
 ctx.strokeStyle = '#c0392b';
 ctx.lineWidth = 3;
 ctx.beginPath();
-ctx.moveTo((W - bluffW) / 2, 215);
-ctx.lineTo((W + bluffW) / 2, 215);
+ctx.moveTo((W - bluffW) / 2, 335);
+ctx.lineTo((W + bluffW) / 2, 335);
 ctx.stroke();
 
 // ── 6. Render sprites ──
@@ -120,44 +120,42 @@ function drawSprite(pixels, cx, cy, scale) {
   });
 }
 
-const spriteScale = 7;
+const spriteScale = 6;
 const spriteW = 16 * spriteScale;
 const spriteH = 16 * spriteScale;
-const founderX = 340 - spriteW / 2;
-const investorX = 860 - spriteW / 2;
-const spriteY = 270;
+const founderX = 300 - spriteW / 2;
+const investorX = 900 - spriteW / 2;
+const spriteY = 380;
 
 // Yellow pedestal under founder
 ctx.fillStyle = '#f5c518';
-ctx.fillRect(founderX + 10, spriteY + spriteH - 10, spriteW - 20, 14);
+ctx.fillRect(founderX + 8, spriteY + spriteH - 8, spriteW - 16, 12);
 
 drawSprite(roiPixels, founderX, spriteY, spriteScale);
 drawSprite(byronPixels, investorX, spriteY, spriteScale);
 
 // ── 7. VS text ──
 ctx.fillStyle = '#7ec850';
-ctx.font = 'bold 48px "Arial Black", "Helvetica Neue", Arial, sans-serif';
+ctx.font = 'bold 44px "Arial Black", "Helvetica Neue", Arial, sans-serif';
 ctx.textAlign = 'center';
-ctx.fillText('VS', W / 2, 350);
+ctx.fillText('VS', W / 2, 460);
 
 // ── 8. Role labels ──
-ctx.font = 'bold 20px "Courier New", monospace';
+ctx.font = 'bold 18px "Courier New", monospace';
 ctx.fillStyle = '#f5c518';
-ctx.fillText('FOUNDER', 340, spriteY + spriteH + 30);
+ctx.fillText('FOUNDER', 300, spriteY + spriteH + 26);
 ctx.fillStyle = '#aabbcc';
-ctx.fillText('INVESTOR', 860, spriteY + spriteH + 30);
+ctx.fillText('INVESTOR', 900, spriteY + spriteH + 26);
 
 // ── 9. Purple/blue dots on sides ──
 const dotColor = '#5544cc';
 const dotR = 4;
-for (let i = 0; i < 9; i++) {
-  const dy = 250 + i * 30;
-  // Left dots
+for (let i = 0; i < 7; i++) {
+  const dy = 370 + i * 30;
   ctx.fillStyle = dotColor;
   ctx.beginPath();
   ctx.arc(40, dy, dotR, 0, Math.PI * 2);
   ctx.fill();
-  // Right dots
   ctx.beginPath();
   ctx.arc(W - 40, dy, dotR, 0, Math.PI * 2);
   ctx.fill();
@@ -167,12 +165,12 @@ for (let i = 0; i < 9; i++) {
 ctx.fillStyle = '#999999';
 ctx.font = '18px "Courier New", monospace';
 ctx.textAlign = 'center';
-ctx.fillText('yoongjae.com/tools/fund-me', W / 2, 555);
+ctx.fillText('yoongjae.com/tools/fund-me', W / 2, 575);
 
 // ── 11. Disclaimer ──
 ctx.fillStyle = '#555555';
 ctx.font = '12px sans-serif';
-ctx.fillText('* 이 게임은 픽션이며 실제 인물/기업/사건과 무관합니다.', W / 2, 590);
+ctx.fillText('* 이 게임은 픽션이며 실제 인물/기업/사건과 무관합니다.', W / 2, 600);
 
 // ── Save ──
 const out = path.join(__dirname, '..', 'og-image.png');
