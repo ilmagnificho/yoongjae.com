@@ -310,6 +310,11 @@ body {
   animation: charBounce 2s ease infinite;
 }
 
+.scene-character canvas {
+  image-rendering: pixelated;
+  display: block;
+}
+
 @keyframes charBounce {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-4px); }
@@ -400,6 +405,10 @@ body {
   background: #0a0a1e;
   border: 2px solid var(--pixel-border-dark);
   box-shadow: inset 1px 1px 0 rgba(0,0,0,0.5);
+}
+
+.dialogue-portrait canvas {
+  image-rendering: pixelated;
 }
 
 .dialogue-content { flex: 1; min-width: 0; }

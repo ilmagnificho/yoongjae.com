@@ -131,12 +131,17 @@ const GameUI = (() => {
     elementsEl.textContent = scene.elements;
     labelEl.textContent = scene.label;
 
-    // Show speaker character emoji
-    if (event.speaker && event.speaker.emoji) {
-      charEl.textContent = event.speaker.emoji;
-      charEl.style.display = 'block';
+    // Show speaker character as pixel sprite or emoji fallback
+    charEl.innerHTML = '';
+    const spriteKey = (event.speaker && event.speaker.spriteKey) || 'narrator';
+    if (Sprites.has(spriteKey)) {
+      const canvas = Sprites.render(spriteKey);
+      if (canvas) {
+        charEl.appendChild(canvas);
+        charEl.style.display = 'block';
+      }
     } else {
-      charEl.textContent = '🎭';
+      charEl.textContent = (event.speaker && event.speaker.emoji) || '🎭';
       charEl.style.display = 'block';
     }
   }
@@ -188,13 +193,25 @@ const GameUI = (() => {
     if (event.speaker && event.text) {
       const dBox = document.createElement('div');
       dBox.className = 'dialogue-box fade-in';
+      const portraitHtml = renderPortraitHtml(event.speaker);
       dBox.innerHTML = `
-        <div class="dialogue-portrait">${event.speaker.emoji}</div>
+        <div class="dialogue-portrait" id="dialogue-portrait">${portraitHtml}</div>
         <div class="dialogue-content">
           <div class="dialogue-speaker">${event.speaker.name}</div>
           <div class="dialogue-text" id="dialogue-text"></div>
         </div>
       `;
+      // Replace portrait with canvas sprite if available
+      const portraitEl = dBox.querySelector('#dialogue-portrait');
+      if (event.speaker.spriteKey && Sprites.has(event.speaker.spriteKey)) {
+        const canvas = Sprites.render(event.speaker.spriteKey);
+        if (canvas) {
+          portraitEl.innerHTML = '';
+          canvas.style.width = '48px';
+          canvas.style.height = '48px';
+          portraitEl.appendChild(canvas);
+        }
+      }
       area.appendChild(dBox);
       dBox.addEventListener('click', () => { if (isTyping) skipTyping = true; });
 
@@ -284,9 +301,21 @@ const GameUI = (() => {
       const box = document.createElement('div');
       box.className = 'result-box fade-in';
       box.innerHTML = `
-        <div class="result-speaker">${speaker.emoji} ${speaker.name}</div>
+        <div class="result-speaker" id="result-speaker">${speaker.emoji} ${speaker.name}</div>
         <div class="result-text" id="result-text"></div>
       `;
+      // Add sprite to result speaker if available
+      if (speaker.spriteKey && Sprites.has(speaker.spriteKey)) {
+        const speakerEl = box.querySelector('#result-speaker');
+        const canvas = Sprites.render(speaker.spriteKey);
+        if (canvas) {
+          canvas.style.width = '24px';
+          canvas.style.height = '24px';
+          canvas.style.verticalAlign = 'middle';
+          canvas.style.marginRight = '6px';
+          speakerEl.insertBefore(canvas, speakerEl.firstChild);
+        }
+      }
       area.appendChild(box);
       box.addEventListener('click', () => { if (isTyping) skipTyping = true; });
 
@@ -405,6 +434,12 @@ const GameUI = (() => {
     document.getElementById('btn-vc-sim').addEventListener('click', () => {
       window.location.href = '/vc-simulator/';
     });
+  }
+
+  // ===== PORTRAIT HELPER =====
+  function renderPortraitHtml(speaker) {
+    if (!speaker) return '🎭';
+    return speaker.emoji || '🎭';
   }
 
   // ===== TYPING EFFECT =====
