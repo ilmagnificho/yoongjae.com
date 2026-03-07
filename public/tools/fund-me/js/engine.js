@@ -46,8 +46,8 @@ const GameEngine = (() => {
   }
 
   function getScenario() {
-    if (state.role === 'founder') return window.FounderScenario || [];
-    if (state.role === 'vc') return window.VCScenario || [];
+    if (state.role === 'founder') return FounderScenario;
+    if (state.role === 'vc') return VCScenario;
     return [];
   }
 
@@ -236,9 +236,7 @@ const GameEngine = (() => {
 
   function triggerEnding() {
     state.phase = 'ending';
-    const ending = window.EndingsEngine
-      ? window.EndingsEngine.determine(state.role, state.stats, state.flags)
-      : { name: 'Unknown', emoji: '?', description: '' };
+    const ending = EndingsEngine.determine(state.role, state.stats, state.flags);
     state.ending = ending;
   }
 
