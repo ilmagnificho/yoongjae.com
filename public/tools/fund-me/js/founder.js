@@ -127,7 +127,7 @@ const FounderScenario = [
         effects: { hype: 10 },
         result: 'DD 없이 $5M이 들어왔다. VC가 DD를 스킵했는지, 아니면 DD를 할 게 없었는지는 논쟁의 여지가 있다.',
         resultSpeaker: { name: '해설', emoji: '🎭', spriteKey: 'narrator' },
-        flags: [],
+        flags: ['seed_full'],
         nextEvent: null,
       },
       {
@@ -142,19 +142,21 @@ const FounderScenario = [
           success: {
             effects: { hype: 5 },
             result: 'FOMO는 VC의 유일한 약점이다. 쓸 줄 아는 자가 승리한다. 밸류 $30M에 $5M 확보.',
+            flags: ['seed_full'],
           },
           failure: {
             effects: { hype: -10, credibility: -5 },
-            result: '"그 밸류에는 어렵습니다." 블러핑이 통하지 않았다. 결국 다른 VC에서 밸류 $15M, $3.3M으로 시드를 겨우 마감했다. FOMO를 만들려면 먼저 진짜 경쟁이 있어야 한다.',
+            result: '"그 밸류에는 어렵습니다." Seed Capital이 떠났다. 2주간 다른 VC 8곳을 만났다. 대부분 "너무 이르다"고 했다. 결국 밸류 $15M에 $3.3M으로 시드를 겨우 마감했다. 블러핑의 대가다.',
+            flags: ['seed_small'],
           },
         },
       },
       {
         text: '"프로덕트 개선 시간을 좀 더 주세요."',
         effects: { product: 15, hype: -10 },
-        result: '투자자에게 \'기다려달라\'고 말하는 건, 맛집에서 \'줄 서세요\'라고 말하는 것과 같다. 진짜 맛집이면 된다. 아니면 끝이다.',
+        result: '투자자에게 \'기다려달라\'고 말했다. Seed Capital: "연락 주세요." 그 \'연락 주세요\'는 보통 끝이라는 뜻이다. 3주 뒤, 다른 엔젤 투자자들을 모아 $2M을 간신히 마감했다. 작지만, 시작은 했다.',
         resultSpeaker: { name: '해설', emoji: '🎭', spriteKey: 'narrator' },
-        flags: [],
+        flags: ['seed_small'],
         nextEvent: null,
       },
     ],
@@ -162,13 +164,51 @@ const FounderScenario = [
   },
 
   // ===== CHAPTER 3: "폭발 - 모멘텀의 제국" =====
+  // Ch3 opening: reduced seed variant
+  {
+    id: 'f_ch3_ev1_small',
+    chapter: 3,
+    title: '챕터 3: 폭발 - 모멘텀의 제국',
+    speaker: { name: '마케팅 총괄', emoji: '📢', spriteKey: 'marketing' },
+    background: 'sf_office',
+    narration: '시드 라운드가 마감됐다. 원했던 금액의 절반도 안 되지만, 돈이 들어왔다는 게 중요하다. Bluffely 사무실은 SoMa의 코워킹 스페이스 한 층. 직원 10명. CEO 명패는 벽에 테이프로 붙어 있다. 작게 시작하지만, Roi Kim의 야망은 작지 않다.',
+    text: '"팔로워 10만 이상인 크리에이터 30명, 편집자 200명을 고용할 수 있습니다. 매일 바이럴 콘텐츠를 쏟아내면 됩니다."',
+    choices: [
+      {
+        text: '"좋아. 더 자극적으로. 논란이 곧 배포다."',
+        effects: { hype: 20, credibility: -10, product: -10 },
+        result: '크리에이터 30명, 편집자 200명. 엔지니어는 3명. 이 비율이 회사의 우선순위를 말해준다.',
+        resultSpeaker: { name: '해설', emoji: '🎭', spriteKey: 'narrator' },
+        flags: ['content_over_product'],
+        nextEvent: null,
+      },
+      {
+        text: '"콘텐츠 50%, 프로덕트 50%로 리소스 배분."',
+        effects: { hype: 10, product: 10 },
+        result: '균형. 아름다운 단어다. 스타트업에서는 보통 \'느리다\'의 동의어이지만.',
+        resultSpeaker: { name: '해설', emoji: '🎭', spriteKey: 'narrator' },
+        flags: [],
+        nextEvent: null,
+      },
+      {
+        text: '"콘텐츠 줄이고 프로덕트에 올인. 이제 진짜를 만들 때다."',
+        effects: { hype: -10, product: 20, credibility: 5 },
+        result: '시드가 작은 만큼, 프로덕트에 집중하는 게 합리적이다. 다만 주목의 유통기한은 생각보다 짧다.',
+        resultSpeaker: { name: '해설', emoji: '🎭', spriteKey: 'narrator' },
+        flags: [],
+        nextEvent: null,
+      },
+    ],
+    condition: { flag: 'seed_small' },
+  },
+  // Ch3 opening: full seed variant (default)
   {
     id: 'f_ch3_ev1',
     chapter: 3,
     title: '챕터 3: 폭발 - 모멘텀의 제국',
     speaker: { name: '마케팅 총괄', emoji: '📢', spriteKey: 'marketing' },
     background: 'sf_office',
-    narration: '시드 라운드 $5.3M 완료. Bluffely 사무실은 SoMa 3층짜리 건물. 직원 16명 중 대부분 대학 중퇴자. CEO 명패는 벽에 테이프로 붙어 있다. 이것이 $100M 밸류를 향해 달리는 회사의 본사다.',
+    narration: '시드 라운드 $5M 완료. Bluffely 사무실은 SoMa 3층짜리 건물. 직원 16명 중 대부분 대학 중퇴자. CEO 명패는 벽에 테이프로 붙어 있다. 이것이 $100M 밸류를 향해 달리는 회사의 본사다.',
     text: '"팔로워 10만 이상인 크리에이터 60명, 편집자 700명을 고용했습니다. 매일 바이럴 콘텐츠를 쏟아내면 됩니다."',
     choices: [
       {
@@ -196,7 +236,7 @@ const FounderScenario = [
         nextEvent: null,
       },
     ],
-    condition: null,
+    condition: { flag: 'seed_small', negate: true },
   },
   {
     id: 'f_ch3_ev2',
@@ -246,7 +286,7 @@ const FounderScenario = [
       {
         text: '"Done. 이번 주 안에 클로징합시다."',
         effects: { hype: 15 },
-        result: '2일 만에 $15M. IR 덱도 안 열었다. 이것이 \'모멘텀 투자\'의 정수다.',
+        result: '2일 만에 $15M 클로징. IR 덱도 안 열었다. 이것이 \'모멘텀 투자\'의 정수다. a2z의 이름이 캡테이블에 올랐다.',
         resultSpeaker: { name: '해설', emoji: '🎭', spriteKey: 'narrator' },
         flags: [],
         nextEvent: null,
@@ -254,7 +294,7 @@ const FounderScenario = [
       {
         text: '"조건 검토 시간을 주세요. 변호사랑 보겠습니다."',
         effects: { credibility: 10, hype: -5 },
-        result: 'a2z에게 \'기다려달라\'고 말했다. Byron Park의 표정이 0.3초간 변했다.',
+        result: 'a2z에게 \'기다려달라\'고 말했다. Byron Park의 표정이 0.3초간 변했다. 4일간의 밀당. 결국 a2z는 조건을 살짝 수정한 뒤 $15M을 집행했다. 왕관은 씌워졌다. 다만 왕관 위에 작은 흠집이 하나.',
         resultSpeaker: { name: '해설', emoji: '🎭', spriteKey: 'narrator' },
         flags: [],
         nextEvent: null,
@@ -262,7 +302,7 @@ const FounderScenario = [
       {
         text: '"제품 로드맵을 공유하고, 기술 DD를 진행하시죠."',
         effects: { product: 10, credibility: 10, hype: -10 },
-        result: '기술 DD를 자발적으로 제안하는 창업자. 제품에 자신이 있거나, 아니면 DD가 뭔지 모르거나.',
+        result: '기술 DD를 자발적으로 제안했다. 2주간의 DD. a2z 엔지니어가 코드를 봤다. 프로덕트의 현재 상태가 적나라하게 드러났다. 그럼에도 a2z는 투자를 결정했다. $15M. "프로덕트는 시간 문제다. 이 팀의 에이전시에 베팅한다." Byron의 메모였다.',
         resultSpeaker: { name: '해설', emoji: '🎭', spriteKey: 'narrator' },
         flags: [],
         nextEvent: null,
@@ -278,7 +318,7 @@ const FounderScenario = [
     title: '챕터 4: 균열 - 프로덕트는 거짓말을 안 한다',
     speaker: { name: 'TechBuzz 기자', emoji: '📰', spriteKey: 'reporter' },
     background: 'sf_office',
-    narration: '투자금 $20M+. 밸류에이션 $100M+. 직원 60명. 크리에이터 700명. 그리고 제품은- 글쎄, \'초기 단계\'라고 하자.\n\n📊 내부 데이터 (외부 미공개):\n- 응답 지연: 5-90초\n- 유저 리뷰: "작동 안 함" "거짓말이었음"\n- 유료 구독 해지율: 월 40%\n- 실제 DAU: 발표 수치의 1/5\n\n하이프와 현실 사이의 간극이 벌어지기 시작했다.',
+    narration: 'a2z의 Series A가 집행됐다. Bluffely의 밸류에이션은 $100M을 향해 달리고 있다. 직원은 빠르게 늘었고, 크리에이터 네트워크는 수백 명 규모다. 그리고 제품은- 글쎄, \'초기 단계\'라고 하자.\n\n📊 내부 데이터 (외부 미공개):\n- 응답 지연: 5-90초\n- 유저 리뷰: "작동 안 함" "거짓말이었음"\n- 유료 구독 해지율: 월 40%\n- 실제 DAU: 발표 수치의 1/5\n\n하이프와 현실 사이의 간극이 벌어지기 시작했다.',
     text: '"Roi Kim의 인터뷰가 가능할까요? Bluffely의 성장에 대해 이야기하고 싶습니다."',
     choices: [
       {
@@ -463,7 +503,7 @@ const FounderScenario = [
     title: '챕터 5: 심판 - 진실의 무게',
     speaker: null,
     background: 'ny_office',
-    narration: 'Roi Kim, 22세. 대학 중퇴. $20M+ 투자 유치. 크리에이터 700명. 미디어 표지 인물. 그리고 지금 이 순간, 당신은 갈림길에 서 있다.',
+    narration: 'Roi Kim, 22세. 대학 중퇴. 수천만 달러 투자 유치. 크리에이터 수백 명. 미디어 표지 인물. 그리고 지금 이 순간, 당신은 갈림길에 서 있다.',
     text: null,
     choices: [
       {

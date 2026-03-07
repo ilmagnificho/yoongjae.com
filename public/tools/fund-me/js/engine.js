@@ -146,10 +146,20 @@ const GameEngine = (() => {
         effects = choice.probability.success.effects;
         resultText = choice.probability.success.result;
         probabilityResult = 'success';
+        if (choice.probability.success.flags) {
+          choice.probability.success.flags.forEach(f => {
+            if (!state.flags.includes(f)) state.flags.push(f);
+          });
+        }
       } else {
         effects = choice.probability.failure.effects;
         resultText = choice.probability.failure.result;
         probabilityResult = 'failure';
+        if (choice.probability.failure.flags) {
+          choice.probability.failure.flags.forEach(f => {
+            if (!state.flags.includes(f)) state.flags.push(f);
+          });
+        }
       }
     }
 
