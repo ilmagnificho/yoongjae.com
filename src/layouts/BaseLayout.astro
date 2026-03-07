@@ -32,9 +32,15 @@ const ogLocale = lang === 'en' ? 'en_US' : 'ko_KR';
 const pageTitle = title === 'YoongJae' ? title : `${title} | YoongJae`;
 const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://yoongjae.com';
 const ogImageUrl = ogImage ? new URL(ogImage, siteUrl).toString() : new URL('/og/home.png', siteUrl).toString();
-const canonicalHref = canonicalUrl
-  ? new URL(canonicalUrl, siteUrl).toString()
-  : Astro.url.toString();
+// Ensure trailing slash on all canonical URLs for consistency with sitemap
+function ensureTrailingSlash(url: string): string {
+  const u = new URL(url);
+  if (!u.pathname.endsWith('/')) u.pathname += '/';
+  return u.toString();
+}
+const canonicalHref = ensureTrailingSlash(
+  canonicalUrl ? new URL(canonicalUrl, siteUrl).toString() : Astro.url.toString()
+);
 
 const alternates = getLangAlternates(Astro.url, siteUrl);
 

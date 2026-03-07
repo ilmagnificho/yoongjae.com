@@ -31,9 +31,9 @@ export function getAlternateLangUrl(pathname: string, targetLang: Lang): string 
     if (stripped.startsWith('/tools')) return '/en/tools/';
     return '/en/';
   } else {
-    // Korean: strip /en prefix
+    // Korean: strip /en prefix, ensure trailing slash
     const withoutEn = pathname.replace(/^\/en/, '').replace(/\/$/, '') || '/';
-    return withoutEn;
+    return withoutEn === '/' ? '/' : `${withoutEn}/`;
   }
 }
 
@@ -46,7 +46,7 @@ export function getLangAlternates(
   const isKnownPage = KNOWN_PAGES.includes(stripped);
   if (!isKnownPage) return null;
 
-  const koPath = stripped === '/' ? '/' : stripped;
+  const koPath = stripped === '/' ? '/' : `${stripped}/`;
   const enPath = stripped === '/' ? '/en/' : `/en${stripped}/`;
   return {
     ko: new URL(koPath, siteBase).toString(),

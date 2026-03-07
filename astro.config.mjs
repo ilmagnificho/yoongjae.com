@@ -6,6 +6,7 @@ import rehypeExternalLinks from 'rehype-external-links';
 
 export default defineConfig({
   site: 'https://yoongjae.com',
+  trailingSlash: 'always',
   integrations: [tailwind(), react(), sitemap()],
   output: 'static',
   markdown: {
