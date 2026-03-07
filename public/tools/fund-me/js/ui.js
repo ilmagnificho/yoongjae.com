@@ -68,6 +68,7 @@ const GameUI = (() => {
 
     GameEngine.selectRole(role);
     lastChapter = 0;
+    Tracking.gameStart(role);
 
     const state = GameEngine.getState();
     if (state.phase === 'playing' && state.currentEvent) {
@@ -81,6 +82,7 @@ const GameUI = (() => {
   function showChapterTitle(chapter, title, callback) {
     GameAudio.chapterStart();
     lastChapter = chapter;
+    Tracking.chapterEnter(chapter);
     const overlay = document.createElement('div');
     overlay.className = 'chapter-title-overlay';
 
@@ -272,8 +274,13 @@ const GameUI = (() => {
 
   // ===== HANDLE CHOICE =====
   async function handleChoice(choiceIndex) {
+    const state = GameEngine.getState();
+    const eventId = state.currentEvent ? state.currentEvent.id : '';
+    const choiceText = state.currentEvent && state.currentEvent.choices[choiceIndex]
+      ? state.currentEvent.choices[choiceIndex].text : '';
     const outcome = GameEngine.makeChoice(choiceIndex);
     if (!outcome) return;
+    Tracking.choiceMade(state.chapter, eventId, choiceIndex, choiceText);
 
     const choicesArea = document.getElementById('choices-area');
     if (choicesArea) choicesArea.innerHTML = '';
@@ -296,6 +303,7 @@ const GameUI = (() => {
     if (next.type === 'gameover') {
       await delay(300);
       GameAudio.gameOver();
+      Tracking.gameOver(GameEngine.getState().chapter, next.stat);
       showGameOverScreen(next.stat);
       return;
     }
@@ -303,6 +311,8 @@ const GameUI = (() => {
     if (next.type === 'ending') {
       await delay(300);
       GameAudio.ending();
+      const ending = GameEngine.getEnding();
+      if (ending) Tracking.endingReached(ending, GameEngine.getState().stats);
       showEndingScreen();
       return;
     }
@@ -401,6 +411,7 @@ const GameUI = (() => {
 
     document.getElementById('btn-retry').addEventListener('click', () => {
       const state = GameEngine.getState();
+      Tracking.replayClick('game_over');
       startGame(state.role);
     });
     document.getElementById('btn-title').addEventListener('click', showTitleScreen);
@@ -458,8 +469,9 @@ const GameUI = (() => {
       </div>
     `;
 
-    document.getElementById('btn-share-x').addEventListener('click', () => ShareModule.shareToX(ending));
+    document.getElementById('btn-share-x').addEventListener('click', () => { Tracking.shareClick('x'); ShareModule.shareToX(ending); });
     document.getElementById('btn-share-copy').addEventListener('click', async () => {
+      Tracking.shareClick('copy');
       const text = `[Fund Me If You Can] ${ending.emoji} ${ending.name}\n"${ending.description}"\n\nyoongjae.com/tools/fund-me`;
       const ok = await ShareModule.copyToClipboard(text);
       if (ok) {
@@ -469,11 +481,12 @@ const GameUI = (() => {
       }
     });
     document.getElementById('btn-share-img').addEventListener('click', () => {
+      Tracking.shareClick('image_download');
       const card = ShareModule.generateCard(ending, statDefs);
       ShareModule.downloadCard(card);
     });
-    document.getElementById('btn-other-route').addEventListener('click', () => startGame(otherRole));
-    document.getElementById('btn-retry').addEventListener('click', () => startGame(state.role));
+    document.getElementById('btn-other-route').addEventListener('click', () => { Tracking.crossRouteClick(state.role, otherRole); startGame(otherRole); });
+    document.getElementById('btn-retry').addEventListener('click', () => { Tracking.replayClick(ending.id || ending.name); startGame(state.role); });
     document.getElementById('btn-title').addEventListener('click', showTitleScreen);
     document.getElementById('btn-vc-sim').addEventListener('click', () => {
       window.location.href = '/vc-simulator/';
