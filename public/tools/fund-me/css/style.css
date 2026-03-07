@@ -624,6 +624,36 @@ body {
   background: rgba(0,0,0,0.2);
 }
 
+/* ===== SHARE BUTTONS ===== */
+.share-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 4px 0;
+}
+
+.share-btn {
+  padding: 8px 14px;
+  border: 2px solid var(--pixel-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+  min-height: 36px;
+  transition: border-color 0.1s, background 0.1s;
+}
+
+.share-btn:hover {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.share-btn:active {
+  transform: translate(1px, 1px);
+}
+
 .ending-actions {
   display: flex;
   flex-direction: column;

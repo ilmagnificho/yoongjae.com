@@ -437,6 +437,11 @@ const GameUI = (() => {
         <div class="ending-quote" style="border-left-color:var(--accent)">
           "${ending.quote}"
         </div>
+        <div class="share-actions">
+          <button class="share-btn" id="btn-share-x">𝕏 공유</button>
+          <button class="share-btn" id="btn-share-copy">🔗 링크 복사</button>
+          <button class="share-btn" id="btn-share-img">📷 결과 이미지 저장</button>
+        </div>
         <div class="ending-actions">
           <button class="ending-btn primary" id="btn-other-route">${otherLabel}</button>
           <button class="ending-btn" id="btn-retry">같은 루트 다시 도전</button>
@@ -447,6 +452,20 @@ const GameUI = (() => {
       </div>
     `;
 
+    document.getElementById('btn-share-x').addEventListener('click', () => ShareModule.shareToX(ending));
+    document.getElementById('btn-share-copy').addEventListener('click', async () => {
+      const text = `[Fund Me If You Can] ${ending.emoji} ${ending.name}\n"${ending.description}"\n\nyoongjae.com/tools/fund-me`;
+      const ok = await ShareModule.copyToClipboard(text);
+      if (ok) {
+        const btn = document.getElementById('btn-share-copy');
+        btn.textContent = '✅ 복사됨!';
+        setTimeout(() => { btn.textContent = '🔗 링크 복사'; }, 2000);
+      }
+    });
+    document.getElementById('btn-share-img').addEventListener('click', () => {
+      const card = ShareModule.generateCard(ending, statDefs);
+      ShareModule.downloadCard(card);
+    });
     document.getElementById('btn-other-route').addEventListener('click', () => startGame(otherRole));
     document.getElementById('btn-retry').addEventListener('click', () => startGame(state.role));
     document.getElementById('btn-title').addEventListener('click', showTitleScreen);
