@@ -13,6 +13,7 @@ interface Props {
   articleDate?: Date;
   articleTags?: string[];
   hideFooter?: boolean;
+  excludeAdsense?: boolean;
 }
 
 const {
@@ -24,6 +25,7 @@ const {
   articleDate,
   articleTags,
   hideFooter = false,
+  excludeAdsense = false,
 } = Astro.props;
 
 const lang = getLangFromUrl(Astro.url);
@@ -110,7 +112,9 @@ const personSchema = {
     </script>
     <script is:inline defer src="/js/analytics.js"></script>
     <!-- Google AdSense -->
-    <script is:inline async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2021805347195633" crossorigin="anonymous"></script>
+    {!excludeAdsense && (
+      <script is:inline async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2021805347195633" crossorigin="anonymous"></script>
+    )}
 <script is:inline>
       if (localStorage.getItem('skip_analytics') !== 'true') {
         const script = document.createElement('script');
