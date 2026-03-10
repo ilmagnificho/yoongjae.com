@@ -49,13 +49,13 @@ isDraft: false
 
 아직 초기입니다. 하지만 신호는 보이기 시작했습니다.
 
-![yoongjae.com GA4 보고서 개요 - 활성 사용자, 인기 페이지](/images/vc-builder-ep4-ga4-overview.png)
+<img src="/images/vc-builder-ep4-ga4-overview.png" alt="yoongjae.com GA4 보고서 개요 - 활성 사용자 259명, 인기 페이지별 조회수와 이탈률" style="width:100%;max-width:720px;border:1px solid rgba(0,0,0,0.1);border-radius:12px;" />
 
 yoongjae.com 활성 사용자 259명. 실패한 서비스들의 숫자와 비교하면 대단해 보이지 않을 수 있습니다. 하지만 결정적인 차이가 있습니다.
 
 봇이 아니라 진짜 사람이라는 것. 그리고 "투자 못 받는 시뮬레이터"가 108명, 이탈률 46.7%로 절반 이상의 사람이 실제로 써봤다는 것. Writing 페이지 이탈률은 4.0%입니다. 글을 읽으러 온 사람이 다른 글도 읽고 있다는 뜻입니다.
 
-![yoongjae.com GA4 유입 경로, 신규/재방문자 차트](/images/vc-builder-ep4-ga4-traffic.png)
+<img src="/images/vc-builder-ep4-ga4-traffic.png" alt="yoongjae.com GA4 유입 경로 - Threads, LinkedIn 등 매체별 활성 사용자 및 신규/재방문자 추이" style="width:100%;max-width:720px;border:1px solid rgba(0,0,0,0.1);border-radius:12px;" />
 
 유입 경로를 보면, Threads에서의 유입이 가장 많습니다. LinkedIn보다도 많습니다. 몇 주 전에는 존재하지 않았던 채널입니다. 재방문자도 조금씩 생기기 시작했습니다.
 
