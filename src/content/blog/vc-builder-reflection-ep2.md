@@ -11,7 +11,7 @@ isDraft: false
 > 1. [5개 만들고 배운 것: 순서가 전부 틀렸다](/blog/vc-builder-reflection-ep1)
 > 2. **AI가 만드는 비용을 0으로 만들었을 때 남는 것** ← 현재 글
 > 3. [서비스별 실패 부검 - 숫자 공개](/blog/vc-builder-reflection-ep3)
-> 4. 그래서 지금은 뭘 하고 있는가 (예정)
+> 4. [그래서 지금은 뭘 하고 있는가](/blog/vc-builder-reflection-ep4)
 
 ---
 
