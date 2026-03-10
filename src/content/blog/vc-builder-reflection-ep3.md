@@ -8,10 +8,10 @@ isDraft: false
 
 > 📚 **시리즈: 유니콘에 투자한 VC의 삽질 회고**
 >
-> 1. [5개 만들고 배운 것: 순서가 전부 틀렸다](/blog/vc-builder-reflection-ep1)
-> 2. [AI가 만드는 비용을 0으로 만들었을 때 남는 것](/blog/vc-builder-reflection-ep2)
+> 1. [5개 만들고 배운 것: 순서가 전부 틀렸다](/writing/vc-builder-reflection-ep1)
+> 2. [AI가 만드는 비용을 0으로 만들었을 때 남는 것](/writing/vc-builder-reflection-ep2)
 > 3. **서비스별 실패 부검 - 숫자 공개** ← 현재 글
-> 4. [그래서 지금은 뭘 하고 있는가](/blog/vc-builder-reflection-ep4)
+> 4. [그래서 지금은 뭘 하고 있는가](/writing/vc-builder-reflection-ep4)
 
 ---
 
@@ -83,4 +83,4 @@ YC Startup School 25개 영상을 학습시킨 AI 챗봇입니다. 5개 중 제�
 
 ---
 
-**다음 편:** [유니콘에 투자한 VC의 삽질 회고 — EP.4: 그래서 지금은 뭘 하고 있는가](/blog/vc-builder-reflection-ep4)
+**다음 편:** [유니콘에 투자한 VC의 삽질 회고 — EP.4: 그래서 지금은 뭘 하고 있는가](/writing/vc-builder-reflection-ep4)

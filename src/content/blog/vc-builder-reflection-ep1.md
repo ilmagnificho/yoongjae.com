@@ -9,9 +9,9 @@ isDraft: false
 > 📚 **시리즈: 유니콘에 투자한 VC의 삽질 회고**
 >
 > 1. **5개 만들고 배운 것: 순서가 전부 틀렸다** ← 현재 글
-> 2. [AI가 만드는 비용을 0으로 만들었을 때 남는 것](/blog/vc-builder-reflection-ep2)
-> 3. [서비스별 실패 부검 - 숫자 공개](/blog/vc-builder-reflection-ep3)
-> 4. [그래서 지금은 뭘 하고 있는가](/blog/vc-builder-reflection-ep4)
+> 2. [AI가 만드는 비용을 0으로 만들었을 때 남는 것](/writing/vc-builder-reflection-ep2)
+> 3. [서비스별 실패 부검 - 숫자 공개](/writing/vc-builder-reflection-ep3)
+> 4. [그래서 지금은 뭘 하고 있는가](/writing/vc-builder-reflection-ep4)
 
 ---
 
@@ -79,4 +79,4 @@ VC로 있을 때는 이 문제를 느끼지 못했습니다.
 
 ---
 
-**다음 편:** [유니콘에 투자한 VC의 삽질 회고 — EP.2: AI가 만드는 비용을 0으로 만들었을 때 남는 것](/blog/vc-builder-reflection-ep2)
+**다음 편:** [유니콘에 투자한 VC의 삽질 회고 — EP.2: AI가 만드는 비용을 0으로 만들었을 때 남는 것](/writing/vc-builder-reflection-ep2)
