@@ -32,11 +32,11 @@ const sortedPortfolio = portfolioEntries
       sharing hands-on perspectives from the Korean ecosystem.
     </p>
     <div class="flex gap-4 mt-6">
-      <a href="/en/writing" class="inline-flex items-center gap-1.5 text-sm font-bold text-accent-blue hover:text-accent-blue/80 transition-colors">
+      <a href="/en/writing/" class="inline-flex items-center gap-1.5 text-sm font-bold text-accent-blue hover:text-accent-blue/80 transition-colors">
         Read Writing
         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </a>
-      <a href="/en/about" class="inline-flex items-center gap-1.5 text-sm font-bold text-ink/45 hover:text-ink transition-colors">
+      <a href="/en/about/" class="inline-flex items-center gap-1.5 text-sm font-bold text-ink/45 hover:text-ink transition-colors">
         About Me
         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </a>
@@ -47,7 +47,7 @@ const sortedPortfolio = portfolioEntries
   <section class="py-8 border-b border-ink/8">
     <div class="flex items-center justify-between mb-4">
       <h2 class="font-serif text-xl font-semibold">Recent Writing</h2>
-      <a href="/en/writing" class="text-xs text-ink/40 hover:text-ink font-mono transition-colors">
+      <a href="/en/writing/" class="text-xs text-ink/40 hover:text-ink font-mono transition-colors">
         View All &rarr;
       </a>
     </div>
@@ -59,7 +59,7 @@ const sortedPortfolio = portfolioEntries
     <section class="py-8 border-b border-ink/8">
       <div class="flex items-center justify-between mb-4">
         <h2 class="font-serif text-xl font-semibold">Portfolio Companies</h2>
-        <a href="/en/companies" class="text-xs text-ink/40 hover:text-ink font-mono transition-colors">
+        <a href="/en/companies/" class="text-xs text-ink/40 hover:text-ink font-mono transition-colors">
           View All &rarr;
         </a>
       </div>
@@ -91,18 +91,18 @@ const sortedPortfolio = portfolioEntries
   <section class="py-8">
     <div class="flex items-center justify-between mb-4">
       <h2 class="font-serif text-xl font-semibold">Free Tools</h2>
-      <a href="/en/tools" class="text-xs text-ink/40 hover:text-ink font-mono transition-colors">
+      <a href="/en/tools/" class="text-xs text-ink/40 hover:text-ink font-mono transition-colors">
         View All &rarr;
       </a>
     </div>
     <div class="space-y-2">
       {[
-        { href: '/tools/cardnews', name: 'CardNews Studio', desc: 'AI Card News Generator (OpenAI API key required)' },
-        { href: '/tools/vc-simulator', name: 'VC Rejection Simulator', desc: 'Brutally hard startup RPG (3.4% clear rate)' },
-        { href: '/tools/prompt', name: 'PromptForge', desc: 'Claude & Gemini Prompt Generator' },
-        { href: '/tools/cap-table', name: 'Cap Table Calculator', desc: 'Equity Dilution Simulator' },
-        { href: '/tools/safe-simulator', name: 'SAFE Simulator', desc: 'SAFE / Convertible Note Calculator' },
-        { href: '/tools/esop-calculator', name: 'ESOP Calculator', desc: 'Stock Option Value Calculator' },
+        { href: '/tools/cardnews/', name: 'CardNews Studio', desc: 'AI Card News Generator (OpenAI API key required)' },
+        { href: '/tools/vc-simulator/', name: 'VC Rejection Simulator', desc: 'Brutally hard startup RPG (3.4% clear rate)' },
+        { href: '/tools/prompt/', name: 'PromptForge', desc: 'Claude & Gemini Prompt Generator' },
+        { href: '/tools/cap-table/', name: 'Cap Table Calculator', desc: 'Equity Dilution Simulator' },
+        { href: '/tools/safe-simulator/', name: 'SAFE Simulator', desc: 'SAFE / Convertible Note Calculator' },
+        { href: '/tools/esop-calculator/', name: 'ESOP Calculator', desc: 'Stock Option Value Calculator' },
       ].map((tool) => (
         <a
           href={tool.href}
