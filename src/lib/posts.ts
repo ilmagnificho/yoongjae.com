@@ -10,7 +10,7 @@ export async function getSortedPosts(): Promise<Post[]> {
       title: entry.data.title,
       date: entry.data.date,
       description: entry.data.description,
-      url: `/writing/${entry.id}`,
+      url: `/writing/${entry.id}/`,
       tags: entry.data.tags,
     }));
 

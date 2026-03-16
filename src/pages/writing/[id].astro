@@ -16,7 +16,7 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
-const postUrl = `/writing/${post.id}`;
+const postUrl = `/writing/${post.id}/`;
 const siteUrl = Astro.site?.toString().replace(/\/$/, '') ?? 'https://yoongjae.com';
 
 // Reading time (Korean ~500 chars/min)
