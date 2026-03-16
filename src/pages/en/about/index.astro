@@ -2,7 +2,7 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 
 const siteUrl = Astro.site?.toString() ?? 'https://yoongjae.com';
-const aboutUrl = new URL('/en/about', siteUrl).toString();
+const aboutUrl = new URL('/en/about/', siteUrl).toString();
 
 const profilePageSchema = {
   '@context': 'https://schema.org',
@@ -80,7 +80,7 @@ const timeline = [
 <BaseLayout
   title="About"
   description="Builder and investor based in Seoul, Korea."
-  canonicalUrl="/en/about"
+  canonicalUrl="/en/about/"
   ogImage="/og/about.png"
 >
   <Fragment slot="head">

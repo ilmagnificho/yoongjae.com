@@ -2,7 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const siteUrl = Astro.site?.toString() ?? 'https://yoongjae.com';
-const aboutUrl = new URL('/about', siteUrl).toString();
+const aboutUrl = new URL('/about/', siteUrl).toString();
 
 const profilePageSchema = {
   '@context': 'https://schema.org',
@@ -40,7 +40,7 @@ const timeline = [
 ];
 ---
 
-<BaseLayout title="소개 About" description="한국 창업자와 투자자를 위한 빌더·투자자 요약." canonicalUrl="/about" ogImage="/og/about.png">
+<BaseLayout title="소개 About" description="한국 창업자와 투자자를 위한 빌더·투자자 요약." canonicalUrl="/about/" ogImage="/og/about.png">
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(profilePageSchema)} />
   </Fragment>
