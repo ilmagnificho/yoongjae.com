@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CherryBlossomQuiz from '../../components/tools/CherryBlossomQuiz';
+
+const title = '나의 벚꽃 명소 찾기 🌸 | 2026 벚꽃 개화 시기';
+const description = '4가지 질문으로 당신에게 딱 맞는 벚꽃 여행지를 찾아보세요. 전국 20개 명소의 2026년 개화·만개 예상 시기까지!';
+
+const appSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: '나의 벚꽃 명소 찾기',
+  url: 'https://yoongjae.com/tools/cherry/',
+  applicationCategory: 'EntertainmentApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'ko',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'KRW',
+  },
+  author: {
+    '@type': 'Person',
+    name: '조융재',
+    url: 'https://yoongjae.com',
+  },
+};
+---
+
+<BaseLayout title={title} description={description} canonicalUrl="/tools/cherry/">
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(appSchema)} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet" />
+  </Fragment>
+
+  <!-- Breadcrumb -->
+  <section class="py-4">
+    <div class="flex items-center gap-2 text-xs text-ink/40 mb-4">
+      <a href="/tools/" class="hover:text-ink transition-colors">Tools</a>
+      <span>/</span>
+      <span>벚꽃 명소 찾기</span>
+    </div>
+  </section>
+
+  <!-- Quiz -->
+  <section class="pb-8">
+    <CherryBlossomQuiz client:load />
+  </section>
+</BaseLayout>
