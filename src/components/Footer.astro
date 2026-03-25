@@ -64,12 +64,6 @@ const year = new Date().getFullYear();
 
       <!-- Social Links -->
       <div class="flex flex-col items-start md:items-end gap-2">
-        <a
-          href="/bts/"
-          class="text-sm font-semibold text-[#6A0DAD] hover:text-[#4A0080] transition-colors"
-        >
-          {t('footer.bts')}
-        </a>
         {socialLinks.map((link) => (
           <a
             href={link.href}
