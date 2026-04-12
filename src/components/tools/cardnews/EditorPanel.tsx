@@ -9,6 +9,7 @@ interface EditorPanelProps {
   onSettingsChange: (settings: CardSettings) => void;
   onSelectTextBlock: (id: string | null) => void;
   onSearchImages: () => void;
+  onFileUpload: (dataUrl: string) => void;
 }
 
 function SliderRow({ label, value, min, max, step, onChange, unit }: {
@@ -31,7 +32,7 @@ function SliderRow({ label, value, min, max, step, onChange, unit }: {
 }
 
 export default function EditorPanel({
-  card, settings, selectedTextBlockId, onCardChange, onSettingsChange, onSelectTextBlock, onSearchImages,
+  card, settings, selectedTextBlockId, onCardChange, onSettingsChange, onSelectTextBlock, onSearchImages, onFileUpload,
 }: EditorPanelProps) {
   const [tab, setTab] = useState<'text' | 'bg' | 'header'>('text');
 
@@ -209,24 +210,65 @@ export default function EditorPanel({
 
       {tab === 'bg' && (
         <div>
+          {/* Current bg preview */}
+          {card.bgImage && (
+            <div style={{ marginBottom: 12, borderRadius: 8, overflow: 'hidden', position: 'relative' }}>
+              <img src={card.bgImage} alt="배경" style={{ width: '100%', height: 120, objectFit: 'cover' }} />
+              <button
+                onClick={() => onCardChange({ ...card, bgImage: '' })}
+                style={{ position: 'absolute', top: 4, right: 4, background: 'rgba(0,0,0,0.7)', border: 'none', color: '#fff', width: 24, height: 24, borderRadius: 12, cursor: 'pointer', fontSize: 14 }}
+              >
+                ×
+              </button>
+            </div>
+          )}
+
           {/* Image search button */}
           <button
             onClick={onSearchImages}
-            style={{ width: '100%', padding: '10px 0', background: '#333', border: '1px solid #555', color: '#F5C518', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600, marginBottom: 16 }}
+            style={{ width: '100%', padding: '10px 0', background: '#333', border: '1px solid #555', color: '#F5C518', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600, marginBottom: 8 }}
           >
-            🔍 이미지 검색
+            이미지 검색
           </button>
+
+          {/* File upload */}
+          <label style={{ display: 'block', width: '100%', padding: '10px 0', background: '#333', border: '1px solid #555', color: '#ccc', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600, marginBottom: 8, textAlign: 'center' }}>
+            파일 업로드
+            <input
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = () => {
+                  if (typeof reader.result === 'string') onFileUpload(reader.result);
+                };
+                reader.readAsDataURL(file);
+                e.target.value = '';
+              }}
+            />
+          </label>
 
           {/* Direct URL input */}
           <div style={{ marginBottom: 16 }}>
             <label style={{ fontSize: 12, color: '#aaa', display: 'block', marginBottom: 4 }}>이미지 URL 직접 입력</label>
-            <input
-              type="text"
-              value={card.bgImage}
-              onChange={(e) => onCardChange({ ...card, bgImage: e.target.value })}
-              placeholder="https://..."
-              style={{ width: '100%', background: '#222', border: '1px solid #444', borderRadius: 6, padding: 8, color: '#fff', fontSize: 12 }}
-            />
+            <div style={{ display: 'flex', gap: 4 }}>
+              <input
+                type="text"
+                value={card.bgImage}
+                onChange={(e) => onCardChange({ ...card, bgImage: e.target.value })}
+                placeholder="https://..."
+                style={{ flex: 1, background: '#222', border: '1px solid #444', borderRadius: 6, padding: 8, color: '#fff', fontSize: 12 }}
+              />
+              <button
+                onClick={() => onCardChange({ ...card, bgImage: card.bgImage })}
+                style={{ background: '#444', border: 'none', color: '#fff', borderRadius: 6, padding: '8px 12px', fontSize: 11, cursor: 'pointer', whiteSpace: 'nowrap' }}
+              >
+                적용
+              </button>
+            </div>
           </div>
 
           <SliderRow label="확대/축소" value={card.bgScale} min={80} max={250} onChange={(v) => onCardChange({ ...card, bgScale: v })} unit="%" />

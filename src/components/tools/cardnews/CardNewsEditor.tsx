@@ -29,7 +29,7 @@ export default function CardNewsEditor() {
   const [tone, setTone] = useState('professional');
   const [generating, setGenerating] = useState(false);
   const [genError, setGenError] = useState('');
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // cardRefs no longer needed - download renders hidden full-size card
 
   const theme = THEMES[themeKey] || THEMES[DEFAULT_THEME];
 
@@ -53,10 +53,82 @@ export default function CardNewsEditor() {
     setCards((prev) => prev.map((c, i) => (i === activeCardIndex ? { ...c, bgImage: url } : c)));
   }, [activeCardIndex]);
 
-  const handleDownloadCard = useCallback(async (index: number) => {
-    const el = cardRefs.current[index];
-    if (!el) return;
+  const handleFileUpload = useCallback((dataUrl: string) => {
+    setCards((prev) => prev.map((c, i) => (i === activeCardIndex ? { ...c, bgImage: dataUrl } : c)));
+  }, [activeCardIndex]);
+
+  // Save/Load
+  const SAVE_KEY = 'cn_project';
+  const saveProject = useCallback(() => {
     try {
+      const data = JSON.stringify({ settings, cards, cardCount, themeKey });
+      localStorage.setItem(SAVE_KEY, data);
+      alert('저장되었습니다.');
+    } catch {
+      alert('저장 실패');
+    }
+  }, [settings, cards, cardCount, themeKey]);
+
+  const loadProject = useCallback(() => {
+    try {
+      const raw = localStorage.getItem(SAVE_KEY);
+      if (!raw) { alert('저장된 프로젝트가 없습니다.'); return; }
+      const data = JSON.parse(raw);
+      if (data.cards) setCards(data.cards);
+      if (data.settings) setSettings(data.settings);
+      if (data.cardCount) setCardCount(data.cardCount);
+      if (data.themeKey) setThemeKey(data.themeKey);
+      setActiveCardIndex(0);
+      alert('불러오기 완료');
+    } catch {
+      alert('불러오기 실패');
+    }
+  }, []);
+
+  const exportJson = useCallback(() => {
+    const data = JSON.stringify({ settings, cards, cardCount, themeKey }, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const link = document.createElement('a');
+    link.download = 'cardnews_project.json';
+    link.href = URL.createObjectURL(blob);
+    link.click();
+    URL.revokeObjectURL(link.href);
+  }, [settings, cards, cardCount, themeKey]);
+
+  const importJson = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result as string);
+        if (data.cards) setCards(data.cards);
+        if (data.settings) setSettings(data.settings);
+        if (data.cardCount) setCardCount(data.cardCount);
+        if (data.themeKey) setThemeKey(data.themeKey);
+        setActiveCardIndex(0);
+      } catch { alert('파일 형식이 올바르지 않습니다.'); }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  }, []);
+
+  const handleDownloadCard = useCallback(async (index: number) => {
+    // Render a hidden full-size card for capture (scale=1, no transform)
+    const container = document.createElement('div');
+    container.style.cssText = 'position:fixed;left:-9999px;top:0;z-index:-1;';
+    document.body.appendChild(container);
+    try {
+      const { createRoot } = await import('react-dom/client');
+      const root = createRoot(container);
+      await new Promise<void>((resolve) => {
+        root.render(
+          <CardPreview card={cards[index]} settings={settings} theme={theme} scale={1} />
+        );
+        setTimeout(resolve, 300);
+      });
+      const el = container.firstElementChild as HTMLElement;
+      if (!el) return;
       const html2canvas = (await import('html2canvas')).default;
       const canvas = await html2canvas(el, {
         width: CARD_W,
@@ -70,10 +142,13 @@ export default function CardNewsEditor() {
       link.download = `card_${index + 1}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
+      root.unmount();
     } catch (err) {
       console.error('Download failed:', err);
+    } finally {
+      document.body.removeChild(container);
     }
-  }, [theme.bg]);
+  }, [cards, settings, theme]);
 
   const handleDownloadAll = useCallback(async () => {
     for (let i = 0; i < cards.length; i++) {
@@ -236,6 +311,20 @@ export default function CardNewsEditor() {
               <option key={key} value={key}>{t.name}</option>
             ))}
           </select>
+          {/* Save/Load */}
+          <button onClick={saveProject} style={{ background: '#333', border: '1px solid #555', color: '#ccc', borderRadius: 6, padding: '6px 12px', fontSize: 11, cursor: 'pointer' }}>
+            저장
+          </button>
+          <button onClick={loadProject} style={{ background: '#333', border: '1px solid #555', color: '#ccc', borderRadius: 6, padding: '6px 12px', fontSize: 11, cursor: 'pointer' }}>
+            불러오기
+          </button>
+          <button onClick={exportJson} style={{ background: '#333', border: '1px solid #555', color: '#ccc', borderRadius: 6, padding: '6px 12px', fontSize: 11, cursor: 'pointer' }}>
+            JSON 내보내기
+          </button>
+          <label style={{ background: '#333', border: '1px solid #555', color: '#ccc', borderRadius: 6, padding: '6px 12px', fontSize: 11, cursor: 'pointer', display: 'inline-flex', alignItems: 'center' }}>
+            JSON 가져오기
+            <input type="file" accept=".json" onChange={importJson} style={{ display: 'none' }} />
+          </label>
           <button onClick={handleDownloadAll} style={{ background: theme.accent, color: theme.tagText, border: 'none', borderRadius: 6, padding: '6px 16px', fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>
             전체 다운로드
           </button>
@@ -267,7 +356,6 @@ export default function CardNewsEditor() {
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'auto', padding: 24, background: '#0d0d0d' }}>
           <div style={{ position: 'relative' }}>
             <CardPreview
-              ref={(el) => { cardRefs.current[activeCardIndex] = el; }}
               card={cards[activeCardIndex]}
               settings={settings}
               theme={theme}
@@ -294,6 +382,7 @@ export default function CardNewsEditor() {
           onSettingsChange={setSettings}
           onSelectTextBlock={setSelectedTextBlockId}
           onSearchImages={() => setImageSearchOpen(true)}
+          onFileUpload={handleFileUpload}
         />
       </div>
 
