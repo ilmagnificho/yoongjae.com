@@ -10,8 +10,8 @@ export interface Theme {
 }
 
 export const THEMES: Record<string, Theme> = {
-  ianpark: {
-    name: 'VC Morning',
+  golden: {
+    name: 'Golden',
     bg: '#0a0a0a',
     accent: '#F5C518',
     text: '#ffffff',
@@ -62,4 +62,4 @@ export const THEMES: Record<string, Theme> = {
   },
 };
 
-export const DEFAULT_THEME = 'ianpark';
+export const DEFAULT_THEME = 'golden';

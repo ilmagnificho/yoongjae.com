@@ -46,10 +46,10 @@ export function createDefaultCard(index: number): CardData {
 
 export function createDefaultSettings(): CardSettings {
   return {
-    seriesName: '실리콘밸리 VC가\n오늘 아침에 읽은 뉴스',
+    seriesName: '시리즈 제목을\n입력하세요',
     date: new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\./g, '. ').replace(/\s$/, ''),
-    brandName: 'ianpark.vc',
-    categoryTag: 'MACRO',
+    brandName: 'brand.name',
+    categoryTag: 'TAG',
     accentColor: '#F5C518',
     bgOverlayOpacity: 75,
   };
