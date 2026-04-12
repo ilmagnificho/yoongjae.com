@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import type { CardData, CardSettings } from './types';
 import { THEMES, DEFAULT_THEME } from './themes';
-import { createDefaultCard, createDefaultSettings } from './utils';
+import { createDefaultCard, createDefaultSettings, generateCardsFromText, aiResultToCardData, TONE_OPTIONS } from './utils';
 import CardPreview, { CARD_W, CARD_H } from './CardPreview';
 import EditorPanel from './EditorPanel';
 import ImageSearchModal from './ImageSearchModal';
@@ -24,6 +24,11 @@ export default function CardNewsEditor() {
   const [imageSearchOpen, setImageSearchOpen] = useState(false);
   const [setupDone, setSetupDone] = useState(false);
   const [pendingCardCount, setPendingCardCount] = useState(5);
+  const [rawText, setRawText] = useState('');
+  const [apiKey, setApiKey] = useState('');
+  const [tone, setTone] = useState('professional');
+  const [generating, setGenerating] = useState(false);
+  const [genError, setGenError] = useState('');
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const theme = THEMES[themeKey] || THEMES[DEFAULT_THEME];
@@ -77,10 +82,30 @@ export default function CardNewsEditor() {
     }
   }, [cards.length, handleDownloadCard]);
 
-  const startSetup = () => {
+  const startManual = () => {
     handleCardCountChange(pendingCardCount);
     setSetupDone(true);
-    window.__ga4?.trackToolUse('cardnews', 'start', { cardCount: pendingCardCount, theme: themeKey });
+    window.__ga4?.trackToolUse('cardnews', 'start_manual', { cardCount: pendingCardCount, theme: themeKey });
+  };
+
+  const startWithAI = async () => {
+    if (!apiKey.trim()) { setGenError('API 키를 입력해주세요.'); return; }
+    if (!rawText.trim()) { setGenError('텍스트를 입력해주세요.'); return; }
+    setGenerating(true);
+    setGenError('');
+    try {
+      const result = await generateCardsFromText(rawText, apiKey.trim(), pendingCardCount, tone);
+      const generatedCards = aiResultToCardData(result.cards);
+      setCards(generatedCards);
+      setCardCount(generatedCards.length);
+      setSettings((prev) => ({ ...prev, seriesName: result.seriesTitle }));
+      setSetupDone(true);
+      window.__ga4?.trackToolUse('cardnews', 'start_ai', { cardCount: generatedCards.length, theme: themeKey });
+    } catch (err: any) {
+      setGenError(err.message || 'AI 생성 중 오류가 발생했습니다.');
+    } finally {
+      setGenerating(false);
+    }
   };
 
   // Setup screen
@@ -89,28 +114,61 @@ export default function CardNewsEditor() {
       <div style={{ minHeight: '100vh', background: '#111113', color: '#e5e5e5', fontFamily: '"Pretendard Variable", Pretendard, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ background: '#1a1a1a', borderRadius: 20, padding: 40, width: 480, maxWidth: '90vw' }}>
           <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 8, color: '#fff' }}>CardNews Studio</h1>
-          <p style={{ fontSize: 14, color: '#888', marginBottom: 32 }}>카드뉴스를 만들어보세요. 아래 설정을 먼저 해주세요.</p>
+          <p style={{ fontSize: 14, color: '#888', marginBottom: 24 }}>텍스트를 붙여넣으면 AI가 자동으로 카드를 만들어줍니다.</p>
 
-          {/* Card count */}
-          <div style={{ marginBottom: 24 }}>
-            <label style={{ fontSize: 13, color: '#aaa', display: 'block', marginBottom: 8 }}>카드 수 (1~15)</label>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <button onClick={() => setPendingCardCount((p) => Math.max(1, p - 1))} style={{ width: 40, height: 40, background: '#333', border: 'none', color: '#fff', borderRadius: 8, fontSize: 20, cursor: 'pointer' }}>−</button>
-              <span style={{ fontSize: 32, fontWeight: 800, color: '#fff', minWidth: 50, textAlign: 'center' }}>{pendingCardCount}</span>
-              <button onClick={() => setPendingCardCount((p) => Math.min(15, p + 1))} style={{ width: 40, height: 40, background: '#333', border: 'none', color: '#fff', borderRadius: 8, fontSize: 20, cursor: 'pointer' }}>+</button>
+          {/* AI Text Input */}
+          <div style={{ marginBottom: 20 }}>
+            <label style={{ fontSize: 13, color: '#aaa', display: 'block', marginBottom: 6 }}>원문 텍스트 (기사, 에세이, 메모 등)</label>
+            <textarea
+              value={rawText}
+              onChange={(e) => setRawText(e.target.value)}
+              placeholder="카드뉴스로 만들고 싶은 텍스트를 붙여넣으세요..."
+              rows={8}
+              style={{ width: '100%', background: '#222', border: '1px solid #444', borderRadius: 8, padding: 12, color: '#fff', fontSize: 13, fontFamily: 'inherit', resize: 'vertical', lineHeight: 1.6 }}
+            />
+          </div>
+
+          {/* API Key */}
+          <div style={{ marginBottom: 20 }}>
+            <label style={{ fontSize: 13, color: '#aaa', display: 'block', marginBottom: 6 }}>Anthropic API Key</label>
+            <input
+              type="password"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              placeholder="sk-ant-..."
+              style={{ width: '100%', background: '#222', border: '1px solid #444', borderRadius: 8, padding: '10px 12px', color: '#fff', fontSize: 13 }}
+            />
+            <p style={{ fontSize: 11, color: '#666', marginTop: 4 }}>키는 브라우저에만 저장되며 서버로 전송되지 않습니다.</p>
+          </div>
+
+          {/* Card count + Tone + Theme row */}
+          <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
+            <div style={{ flex: 1 }}>
+              <label style={{ fontSize: 12, color: '#aaa', display: 'block', marginBottom: 6 }}>카드 수</label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <button onClick={() => setPendingCardCount((p) => Math.max(1, p - 1))} style={{ width: 32, height: 32, background: '#333', border: 'none', color: '#fff', borderRadius: 6, fontSize: 18, cursor: 'pointer' }}>-</button>
+                <span style={{ fontSize: 20, fontWeight: 700, color: '#fff', minWidth: 30, textAlign: 'center' }}>{pendingCardCount}</span>
+                <button onClick={() => setPendingCardCount((p) => Math.min(15, p + 1))} style={{ width: 32, height: 32, background: '#333', border: 'none', color: '#fff', borderRadius: 6, fontSize: 18, cursor: 'pointer' }}>+</button>
+              </div>
+            </div>
+            <div style={{ flex: 1 }}>
+              <label style={{ fontSize: 12, color: '#aaa', display: 'block', marginBottom: 6 }}>톤</label>
+              <select value={tone} onChange={(e) => setTone(e.target.value)} style={{ width: '100%', background: '#222', border: '1px solid #444', borderRadius: 6, padding: '8px', color: '#fff', fontSize: 12 }}>
+                {TONE_OPTIONS.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
+              </select>
             </div>
           </div>
 
           {/* Theme */}
-          <div style={{ marginBottom: 32 }}>
-            <label style={{ fontSize: 13, color: '#aaa', display: 'block', marginBottom: 8 }}>테마</label>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <div style={{ marginBottom: 20 }}>
+            <label style={{ fontSize: 12, color: '#aaa', display: 'block', marginBottom: 6 }}>테마</label>
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
               {Object.entries(THEMES).map(([key, t]) => (
                 <button
                   key={key}
                   onClick={() => setThemeKey(key)}
                   style={{
-                    padding: '8px 16px', borderRadius: 8, cursor: 'pointer', fontSize: 13,
+                    padding: '6px 14px', borderRadius: 6, cursor: 'pointer', fontSize: 12,
                     background: themeKey === key ? t.accent : '#222',
                     color: themeKey === key ? (t.tagText || '#000') : '#ccc',
                     border: themeKey === key ? `2px solid ${t.accent}` : '2px solid #333',
@@ -123,12 +181,29 @@ export default function CardNewsEditor() {
             </div>
           </div>
 
-          <button
-            onClick={startSetup}
-            style={{ width: '100%', padding: '14px 0', background: theme.accent, color: theme.tagText, border: 'none', borderRadius: 12, fontSize: 16, fontWeight: 700, cursor: 'pointer' }}
-          >
-            시작하기
-          </button>
+          {/* Error message */}
+          {genError && (
+            <div style={{ padding: '10px 14px', background: '#2a1a1a', border: '1px solid #4a2020', borderRadius: 8, color: '#ff6b6b', fontSize: 12, marginBottom: 16 }}>
+              {genError}
+            </div>
+          )}
+
+          {/* Buttons */}
+          <div style={{ display: 'flex', gap: 10 }}>
+            <button
+              onClick={startWithAI}
+              disabled={generating}
+              style={{ flex: 2, padding: '14px 0', background: generating ? '#555' : theme.accent, color: theme.tagText, border: 'none', borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: generating ? 'wait' : 'pointer', opacity: generating ? 0.7 : 1 }}
+            >
+              {generating ? 'AI 생성 중...' : 'AI로 자동 생성'}
+            </button>
+            <button
+              onClick={startManual}
+              style={{ flex: 1, padding: '14px 0', background: '#333', color: '#ccc', border: '1px solid #555', borderRadius: 12, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}
+            >
+              수동 편집
+            </button>
+          </div>
         </div>
       </div>
     );
