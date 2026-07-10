@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>투자 적합성 자가진단 — 투자자는 무엇을 보는가</title>
+<meta name="description" content="6가지 치명적 IR 실수를 기준으로, 자신감이 아니라 '증거'로 내 IR을 진단합니다. 12문항, 약 7분.">
+<meta property="og:title" content="투자 적합성 자가진단">
+<meta property="og:description" content="투자자는 평균이 아니라 가장 약한 축에서 거절합니다. 지금 내 IR의 '가장 약한 고리'를 확인하세요.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://yoongjae.com/ir-check/">
+<meta name="theme-color" content="#1E2761">
+
+<!-- Pretendard: 논블로킹 로드 (실패해도 시스템 폰트로 동작) -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" media="print" onload="this.media='all'">
+
+<style>
+:root{
+  --navy:#1E2761; --mid:#3D5AA9; --mid-soft:#8FA8DF;
+  --ice:#E9F0FB; --ice-2:#F5F8FD; --paper:#FFFFFF; --bg:#EFF3FA;
+  --ink:#2A2D34; --muted:#7A828E; --line:#D9E0EC;
+  --orange:#E8590C; --or-tint:#FDEDE2;
+  --green:#1E7B4F; --green-tint:#E4F1EA; --red:#C0392B;
+  --r-lg:20px; --r-md:14px; --r-sm:10px;
+  --shadow:0 10px 30px rgba(30,39,97,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif;
+  background:var(--bg); color:var(--ink); line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+button{font:inherit;cursor:pointer;border:0;background:none;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:520px;margin:0 auto;padding:20px 18px calc(36px + env(safe-area-inset-bottom));min-height:100dvh;display:flex;flex-direction:column}
+.screen{display:none;flex:1;flex-direction:column}
+.screen.on{display:flex}
+
+/* ---------- 공통 타이포 ---------- */
+.kicker{font-size:11.5px;font-weight:700;letter-spacing:.18em;color:var(--mid);text-transform:uppercase}
+.h1{font-size:27px;font-weight:800;color:var(--navy);letter-spacing:-.02em;line-height:1.25}
+.sub{font-size:14.5px;color:var(--ink)}
+.small{font-size:12px;color:var(--muted)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow)}
+
+/* ---------- CTA ---------- */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  padding:15px 18px;border-radius:14px;font-size:16px;font-weight:700;transition:transform .06s ease, background .15s}
+.btn:active{transform:scale(.985)}
+.btn-primary{background:var(--navy);color:#fff}
+.btn-primary:disabled{background:#B9C2D6;cursor:not-allowed}
+.btn-ghost{background:transparent;color:var(--mid);font-weight:600;font-size:14px;padding:12px}
+.btn-line{background:#fff;border:1.5px solid var(--line);color:var(--navy)}
+
+/* ---------- 인트로 ---------- */
+#s-intro .hero{margin:8px 0 18px}
+#s-intro .hex-mark{display:block;margin:26px auto 20px}
+.pillrow{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 4px}
+.pill{font-size:12px;font-weight:600;color:var(--navy);background:var(--ice);border-radius:999px;padding:6px 11px}
+.intro-card{padding:18px;margin-top:16px}
+.intro-card .row{display:flex;gap:11px;align-items:flex-start;padding:11px 0}
+.intro-card .row + .row{border-top:1px solid var(--line)}
+.intro-card .n{flex:0 0 24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;
+  font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.intro-card b{color:var(--navy)}
+.evidence-note{margin-top:14px;background:var(--or-tint);border-radius:var(--r-md);padding:13px 15px;font-size:13.5px;color:var(--ink)}
+.evidence-note b{color:var(--orange)}
+.intro-foot{margin-top:auto;padding-top:22px}
+.privacy{margin-top:10px;text-align:center}
+
+/* ---------- 진행(육각) ---------- */
+.quiz-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.progress-label{font-size:13px;font-weight:700;color:var(--mid);letter-spacing:.02em}
+.progress-label .qn{color:var(--muted);font-weight:600}
+.hexprog{width:44px;height:44px}
+.hexprog .edge{stroke:var(--line);stroke-width:3.4;fill:none;stroke-linecap:round;transition:stroke .25s}
+.hexprog .edge.half{stroke:var(--mid-soft)}
+.hexprog .edge.done{stroke:var(--navy)}
+.hexprog .edge.now{stroke:var(--orange)}
+
+/* ---------- 질문 ---------- */
+.q-card{padding:20px 18px 16px}
+.axis-tag{display:inline-flex;align-items:center;gap:7px;background:var(--ice);border-radius:999px;
+  padding:6px 12px 6px 7px;margin-bottom:12px}
+.axis-tag .dot{width:20px;height:20px;border-radius:50%;background:var(--navy);color:#fff;font-size:11px;
+  font-weight:800;display:flex;align-items:center;justify-content:center}
+.axis-tag .t{font-size:12.5px;font-weight:700;color:var(--navy)}
+.axis-tag .fc{font-size:11px;font-weight:700;color:var(--mid)}
+.mistake{font-size:12px;color:var(--muted);margin-bottom:6px}
+.q-text{font-size:18.5px;font-weight:800;color:var(--navy);letter-spacing:-.015em;line-height:1.4;margin-bottom:16px}
+
+.opt{display:flex;gap:12px;width:100%;text-align:left;border:1.5px solid var(--line);border-radius:var(--r-md);
+  padding:13px 14px;margin-bottom:10px;background:#fff;transition:border-color .12s, background .12s}
+.opt .lv{flex:0 0 44px;align-self:stretch;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border-radius:9px;background:var(--ice-2);border:1px solid var(--line)}
+.opt .lv .num{font-size:17px;font-weight:800;color:var(--mid);line-height:1}
+.opt .lv .lab{font-size:9.5px;font-weight:700;color:var(--muted);margin-top:3px;letter-spacing:.02em}
+.opt .txt{font-size:14px;color:var(--ink);line-height:1.5;padding-top:2px}
+.opt.sel{border-color:var(--navy);background:var(--ice-2)}
+.opt.sel .lv{background:var(--navy);border-color:var(--navy)}
+.opt.sel .lv .num,.opt.sel .lv .lab{color:#fff}
+.opt:focus-visible{outline:3px solid var(--mid-soft);outline-offset:2px}
+
+.q-nav{display:flex;gap:10px;margin-top:16px}
+.q-nav .btn-line{flex:0 0 92px}
+.q-nav .btn-primary{flex:1}
+
+/* ---------- 결과 ---------- */
+#capture{background:#fff;border-radius:var(--r-lg);border:1px solid var(--line);box-shadow:var(--shadow);
+  padding:22px 18px 18px}
+.res-head{text-align:center;margin-bottom:6px}
+.res-score{font-size:44px;font-weight:800;color:var(--navy);letter-spacing:-.03em;line-height:1;
+  font-variant-numeric:tabular-nums;margin-top:12px}
+.res-score .of{font-size:17px;color:var(--muted);font-weight:600}
+.band{display:inline-flex;align-items:center;gap:6px;margin-top:9px;border-radius:999px;padding:6px 14px;
+  font-size:13.5px;font-weight:800;color:#fff}
+.band-tip{margin-top:10px;font-size:13.5px;color:var(--ink);text-align:left}
+
+.sec-k{font-size:11px;font-weight:800;letter-spacing:.16em;color:var(--mid);margin:22px 0 10px}
+
+/* 실체 vs 스토리 */
+.insight{background:var(--ice-2);border:1px solid var(--line);border-radius:var(--r-md);padding:15px 15px 13px}
+.grp{margin-bottom:10px}
+.grp .lab{display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;color:var(--navy);margin-bottom:5px}
+.grp .lab .axnames{font-weight:500;color:var(--muted);font-size:11px}
+.grp .bar{height:9px;border-radius:99px;background:#E3E9F4;overflow:hidden}
+.grp .bar i{display:block;height:100%;border-radius:99px}
+.grp.g-sub .bar i{background:var(--navy)}
+.grp.g-sto .bar i{background:var(--orange)}
+.insight .read{margin-top:11px;font-size:13.5px;color:var(--ink);line-height:1.6;border-top:1px dashed var(--line);padding-top:11px}
+.insight .read b{color:var(--navy)}
+
+.radar-wrap{margin:10px auto 4px;max-width:340px}
+.radar-cap{text-align:center;font-size:11.5px;color:var(--muted);margin-bottom:8px}
+
+/* 축별 상세 */
+.ax-block{border:1px solid var(--line);border-radius:var(--r-md);padding:13px 14px;margin-bottom:10px;background:#fff}
+.ax-block.weak{border-color:#F3C4AB;background:#FFFBF8}
+.ax-head{display:flex;align-items:center;gap:9px}
+.ax-head .nm{font-size:14.5px;font-weight:800;color:var(--navy)}
+.ax-block.weak .ax-head .nm{color:var(--orange)}
+.tier{font-size:10.5px;font-weight:800;border-radius:999px;padding:3px 9px;letter-spacing:.04em}
+.tier.strong{background:var(--green-tint);color:var(--green)}
+.tier.mid{background:var(--ice);color:var(--mid)}
+.tier.weak{background:var(--or-tint);color:var(--orange)}
+.ax-head .sc{margin-left:auto;font-size:14px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
+.ax-block.weak .ax-head .sc{color:var(--orange)}
+.ax-bar{height:7px;border-radius:99px;background:var(--ice);overflow:hidden;margin:9px 0 9px}
+.ax-bar i{display:block;height:100%;border-radius:99px;background:var(--mid)}
+.ax-block.weak .ax-bar i{background:var(--orange)}
+.ax-read{font-size:13px;color:var(--ink);line-height:1.6}
+.ax-read b{color:var(--navy)}
+.ax-block.weak .ax-read b{color:var(--orange)}
+.ax-read .pin{color:var(--orange);font-weight:700}
+
+/* 가장 약한 고리 */
+.weak-card{margin-top:12px;background:var(--navy);border-radius:var(--r-md);padding:17px 16px;color:#fff}
+.weak-card .k{font-size:11px;font-weight:800;letter-spacing:.16em;color:var(--mid-soft);margin-bottom:6px}
+.weak-card .nm{font-size:19px;font-weight:800;letter-spacing:-.01em}
+.weak-card .hd{font-size:13.5px;color:#DCE6FA;margin:7px 0 12px;line-height:1.5}
+.xo{background:rgba(255,255,255,.07);border-radius:10px;padding:11px 12px;font-size:13px;line-height:1.55}
+.xo .x{color:#F3B7A9;text-decoration:line-through;text-decoration-color:rgba(243,183,169,.6)}
+.xo .o{color:#fff;font-weight:700}
+.xo .arr{color:#FFB380;font-weight:800;margin:0 4px}
+.weak-card .fix{margin-top:12px;font-size:13.5px;line-height:1.55}
+.weak-card .fix b{color:#FFB380}
+
+/* 처방전 */
+.rx{border:1.5px solid var(--navy);border-radius:var(--r-md);overflow:hidden}
+.rx .rx-head{background:var(--navy);color:#fff;padding:11px 15px;font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px}
+.rx .rx-head .sub2{font-weight:500;font-size:11.5px;color:#C9D8F5;margin-left:auto}
+.rx .item{display:flex;gap:11px;padding:13px 15px;border-top:1px solid var(--line);background:#fff}
+.rx .item .n{flex:0 0 24px;height:24px;border-radius:50%;background:var(--or-tint);color:var(--orange);
+  font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.rx .item .bd{font-size:13px;line-height:1.55;color:var(--ink)}
+.rx .item .bd .axn{font-weight:800;color:var(--navy)}
+.rx .item .bd .axsc{font-size:11.5px;color:var(--muted);font-weight:600}
+.rx .item .bd b{color:var(--orange)}
+.rx .empty{padding:14px 15px;font-size:13px;color:var(--ink);border-top:1px solid var(--line);background:#fff}
+
+.truth{margin-top:14px;background:var(--ice);border-radius:var(--r-md);padding:13px 15px;font-size:13px;color:var(--navy)}
+.truth b{color:var(--orange)}
+
+.res-actions{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+.disclaim{margin-top:14px;font-size:11px;color:var(--muted);line-height:1.6;text-align:center}
+
+/* ---------- 리드 폼 (CONFIG.leadEndpoint 설정 시에만 표시) ---------- */
+#leadbox{display:none;margin-top:16px;padding:16px}
+#leadbox h3{font-size:15px;color:var(--navy);margin-bottom:4px}
+#leadbox p{font-size:12.5px;color:var(--muted);margin-bottom:12px}
+#leadbox input[type=text],#leadbox input[type=email]{width:100%;padding:12px 13px;border:1.5px solid var(--line);
+  border-radius:10px;font:inherit;font-size:14.5px;margin-bottom:9px;background:#fff}
+#leadbox label.consent{display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--muted);margin:4px 0 12px}
+#leadbox .msg{font-size:12.5px;margin-top:8px}
+
+/* ---------- 발표 모드 ---------- */
+#s-present{position:fixed;inset:0;background:var(--navy);color:#fff;display:none;
+  flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center;z-index:50}
+#s-present.on{display:flex}
+#s-present .pk{font-size:14px;font-weight:800;letter-spacing:.22em;color:var(--mid-soft)}
+#s-present h1{font-size:clamp(26px,4.5vw,44px);font-weight:800;margin:14px 0 6px;letter-spacing:-.02em}
+#s-present .steps{font-size:clamp(14px,2vw,19px);color:#C9D8F5;margin-bottom:30px}
+#qrbox{background:#fff;border-radius:24px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#qrbox img,#qrbox canvas{display:block}
+#s-present .url{margin-top:22px;font-size:clamp(15px,2.2vw,22px);font-weight:700;color:#FFB380;word-break:break-all}
+#s-present .hint{margin-top:10px;font-size:13px;color:#8FA8DF}
+
+/* ---------- 애니메이션 ---------- */
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.screen.on > *{animation:rise .35s ease both}
+.screen.on > *:nth-child(2){animation-delay:.05s}
+.screen.on > *:nth-child(3){animation-delay:.1s}
+.screen.on > *:nth-child(4){animation-delay:.15s}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+}
+@media (min-width:560px){ body{padding-top:14px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ 인트로 ============ -->
+  <section class="screen on" id="s-intro" aria-label="시작 화면">
+    <div class="hero">
+      <div class="kicker">투자자는 무엇을 보는가 · 현장 진단 도구</div>
+      <svg class="hex-mark" width="86" height="86" viewBox="0 0 100 100" aria-hidden="true">
+        <polygon points="50,6 88,28 88,72 50,94 12,72 12,28" fill="none" stroke="#1E2761" stroke-width="5" stroke-linejoin="round"/>
+        <polygon points="50,26 71,38 71,62 50,74 29,62 29,38" fill="#E9F0FB" stroke="#3D5AA9" stroke-width="2.5" stroke-linejoin="round"/>
+        <circle cx="50" cy="26" r="5.5" fill="#E8590C"/>
+      </svg>
+      <h1 class="h1" style="text-align:center">투자 적합성 자가진단</h1>
+      <p class="sub" style="text-align:center;margin-top:8px">투자자가 거절하는 <b>치명적 실수 6가지</b>를 기준으로,<br>지금 내 IR을 스스로 진단합니다.</p>
+      <div class="pillrow" style="justify-content:center">
+        <span class="pill">6개 축 · 12문항</span><span class="pill">약 7분</span><span class="pill">결과 이미지 저장</span>
+      </div>
+    </div>
+
+    <div class="card intro-card">
+      <div class="row"><span class="n">1</span><div class="sub">문항마다 <b>내 상태에 가장 가까운 답</b>을 하나 고릅니다.</div></div>
+      <div class="row"><span class="n">2</span><div class="sub">점수는 곧 <b>증거 수준</b>입니다 — 1 의견 · 2 정황 · 3 데이터 · 4 검증된 데이터.</div></div>
+      <div class="row"><span class="n">3</span><div class="sub">결과에서 <b>축별 상세 해석</b>과 <b>'가장 약한 고리'의 처방</b>을 받습니다.</div></div>
+    </div>
+
+    <div class="evidence-note"><b>솔직하게 답할수록 정확해집니다.</b> 채점 기준은 자신감이 아니라 증거입니다 — 지금 투자자 앞에서 꺼내 보일 수 있는 것만 인정하세요.</div>
+
+    <div class="intro-foot">
+      <button class="btn btn-primary" id="btn-start" type="button">진단 시작</button>
+      <p class="small privacy">응답은 이 기기(브라우저)에만 저장되며, 서버로 전송되지 않습니다.</p>
+    </div>
+  </section>
+
+  <!-- ============ 질문 ============ -->
+  <section class="screen" id="s-quiz" aria-label="진단 문항">
+    <div class="quiz-top">
+      <div class="progress-label"><span id="prog-axis">축 1 / 6</span> <span class="qn" id="prog-q">· 문항 1 / 12</span></div>
+      <svg class="hexprog" viewBox="0 0 100 100" aria-hidden="true" id="hexprog"></svg>
+    </div>
+    <div class="card q-card">
+      <div class="axis-tag"><span class="dot" id="ax-no">1</span><span class="t" id="ax-name">문제 정의</span><span class="fc" id="ax-facet">1/2</span></div>
+      <div class="mistake" id="ax-mistake"></div>
+      <h2 class="q-text" id="q-text"></h2>
+      <div id="opts" role="radiogroup" aria-label="증거 수준 선택"></div>
+      <div class="q-nav">
+        <button class="btn btn-line" id="btn-prev" type="button">이전</button>
+        <button class="btn btn-primary" id="btn-next" type="button" disabled>다음</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 결과 ============ -->
+  <section class="screen" id="s-result" aria-label="진단 결과">
+    <div id="capture">
+      <div class="res-head">
+        <div class="kicker">투자 적합성 자가진단 · 결과 리포트</div>
+        <div class="res-score"><span id="score">0</span><span class="of"> / 48</span></div>
+        <div class="band" id="band-pill">—</div>
+        <p class="band-tip" id="band-tip"></p>
+      </div>
+
+      <div class="sec-k">진단 1 · 실체 vs 스토리</div>
+      <div class="insight">
+        <div class="grp g-sub">
+          <div class="lab"><span>회사의 실체 <span class="axnames">문제 · 시장 · 리스크</span></span><span id="sub-score">0/24</span></div>
+          <div class="bar"><i id="sub-bar" style="width:0%"></i></div>
+        </div>
+        <div class="grp g-sto">
+          <div class="lab"><span>투자 스토리 <span class="axnames">Ask · 왜 지금 · 내러티브</span></span><span id="sto-score">0/24</span></div>
+          <div class="bar"><i id="sto-bar" style="width:0%"></i></div>
+        </div>
+        <div class="read" id="insight-read"></div>
+      </div>
+
+      <div class="sec-k">진단 2 · 6축 균형</div>
+      <div class="radar-wrap">
+        <div class="radar-cap">약한 축(4점 이하)은 <span style="color:var(--orange);font-weight:700">주황</span>으로 표시됩니다</div>
+        <svg id="radar" viewBox="0 0 360 322" role="img" aria-label="6축 육각 레이더 차트"></svg>
+      </div>
+
+      <div class="sec-k">진단 3 · 축별 상세 해석</div>
+      <div id="axis-detail"></div>
+
+      <div class="sec-k">진단 4 · 가장 약한 고리</div>
+      <div id="weak-cards"></div>
+
+      <div class="sec-k">이번 주 처방전</div>
+      <div class="rx">
+        <div class="rx-head">우선순위 3가지 <span class="sub2">약한 축부터, 이번 주 안에</span></div>
+        <div id="rx-items"></div>
+      </div>
+
+      <div class="truth">점수보다 중요한 것은 <b>가장 약한 고리</b>입니다.<br>투자자는 평균 점수가 아니라, <b>가장 약한 축</b>에서 거절합니다.</div>
+
+      <p class="disclaim" style="margin-top:16px">자기 보고 기반의 참고용 진단입니다 · 강연 「투자자는 무엇을 보는가」 현장 도구 · 테트라㈜ 조융재 × Indie Founders</p>
+    </div>
+
+    <div class="card" id="leadbox">
+      <h3>결과 리포트를 이메일로 받기 (선택)</h3>
+      <p>남겨주시면 축별 보강 가이드를 보내드립니다.</p>
+      <input type="text" id="lead-name" placeholder="이름 (선택)" autocomplete="name">
+      <input type="email" id="lead-email" placeholder="이메일" autocomplete="email" required>
+      <label class="consent"><input type="checkbox" id="lead-consent"> 위 정보와 진단 결과 요약을 강연자(테트라㈜)에게 전송하는 데 동의합니다.</label>
+      <button class="btn btn-line" id="lead-send" type="button">보내기</button>
+      <div class="msg" id="lead-msg"></div>
+    </div>
+
+    <div class="res-actions">
+      <button class="btn btn-primary" id="btn-save" type="button">결과를 이미지로 저장</button>
+      <button class="btn btn-ghost" id="btn-retry" type="button">다시 진단하기</button>
+    </div>
+
+    <p class="disclaim">본 도구는 조융재 개인의 투자 심사 경험에 기반한 교육용 참고 자료이며, 투자 유치 결과를 보장하지 않습니다.<br>모든 판단과 결정의 책임은 이용자 본인에게 있습니다.</p>
+  </section>
+
+</div>
+
+<!-- ============ 발표 모드 (#present) ============ -->
+<section id="s-present" aria-label="발표용 QR 화면">
+  <div class="pk">LIVE · 자가진단</div>
+  <h1>지금, 카메라로 스캔하세요</h1>
+  <div class="steps">① QR 스캔 → ② 12문항 진단 (약 7분) → ③ '가장 약한 고리' 확인</div>
+  <div id="qrbox"><div id="qr"></div></div>
+  <div class="url" id="present-url"></div>
+  <div class="hint">카메라가 안 되면 위 주소를 직접 입력해 주세요 · ESC 또는 뒤로가기로 종료</div>
+</section>
+
+<script>
+/* =========================================================
+   CONFIG — 코드를 몰라도 이 부분만 수정하시면 됩니다.
+   leadEndpoint : 이메일 수집을 켜려면 Formspree 등에서 받은
+     전송 주소(https://...)를 따옴표 안에 붙여넣으세요.
+     비워두면("") 이메일 입력란은 화면에 나타나지 않습니다.
+   ========================================================= */
+const CONFIG = { leadEndpoint: "" };
+
+/* ---------- 진단 콘텐츠 (강연 덱 P26-P28과 1:1 정합) ----------
+   축 6개 × 문항 2개 = 12문항. 문항당 1-4점(증거 수준), 축당 8점, 총 48점. */
+const LEVELS = ["의견","정황","데이터","검증"];
+const AXES = [
+  {
+    id:"problem", name:"문제 정의", grp:"sub",
+    mistake:"실수 ① — 문제가 아니라, 제품으로 시작한다",
+    qs:[
+      { q:"제품 이야기를 빼고, 고객의 문제를 숫자로 증명할 수 있습니까?",
+        anchors:[
+          "\u201C불편할 것 같다\u201D는 팀 내부의 추정이 근거의 전부다",
+          "잠재 고객 몇 명에게 물었고, 공감한다는 반응을 받았다",
+          "인터뷰 건수, 대체 수단에 쓰는 비용 등 문제의 크기를 숫자로 말할 수 있다",
+          "고객이 이 문제에 이미 돈이나 시간을 쓰고 있음을 데이터로 보여줄 수 있다"
+        ]},
+      { q:"이 문제를 '가장 아프게' 겪는 첫 고객이 누구인지, 얼굴이 구체적입니까?",
+        anchors:[
+          "\u201C누구나 쓸 수 있는 서비스\u201D라고 설명하게 된다",
+          "대략의 고객군(예: 2030 직장인)은 있지만 범위가 넓다",
+          "직무·상황·규모까지 좁힌 타깃 정의가 있고, 실제로 만나봤다",
+          "가장 아픈 세그먼트를 데이터로 특정했고, 그들이 먼저 찾아온다"
+        ]}
+    ],
+    read:{
+      strong:"문제의 증거가 이미 말하고 있습니다. 이 축을 피치 첫 90초의 무기로 쓰세요 — <b>고객이 낭비하는 숫자 하나</b>로 시작하면 됩니다.",
+      mid:"문제는 잡았지만 증거의 해상도가 아직 낮습니다. <b>인터뷰 10건</b>과 <b>'대체 수단에 쓰는 비용' 숫자 하나</b>를 추가하면 한 단계 올라갑니다."
+    },
+    diag:{
+      hd:"피치가 '제품 자랑'으로 시작되고 있을 가능성이 큽니다. 투자자는 제품이 아니라 문제의 크기를 삽니다.",
+      x:"\u201C저희 앱은 AI 기반으로...\u201D",
+      o:"\u201COO 담당자는 매주 10시간을 이 업무에 씁니다\u201D",
+      fix:"첫 슬라이드에서 제품 설명을 지우고, 고객이 낭비하는 <b>시간·돈 숫자 하나</b>로 시작하세요."
+    }
+  },
+  {
+    id:"market", name:"시장 크기", grp:"sub",
+    mistake:"실수 ② — 시장이 막연하다",
+    qs:[
+      { q:"시장 규모를 '고객 수 × 객단가 × 침투 논리'로 직접 계산해 보여줄 수 있습니까?",
+        anchors:[
+          "\u201C국내 시장 12조\u201D 같은 기사 인용(top-down)이 전부다",
+          "타깃 고객군은 정의했지만, 규모 계산의 근거는 약하다",
+          "고객 수 × 객단가로 도달 가능한 시장을 계산했고, 출처를 댈 수 있다",
+          "계산의 모든 항이 검증된 데이터이고, 민감도(범위)까지 제시할 수 있다"
+        ]},
+      { q:"이 시장에서 '10배 시나리오'가 나오는 확장 경로를 숫자로 설명할 수 있습니까?",
+        anchors:[
+          "\u201C잘되면 커질 것\u201D이라는 기대 수준이다",
+          "확장 아이디어는 있지만 순서와 근거가 없다",
+          "인접 시장·글로벌 등 다음 단계와 진입 논리가 정리돼 있다",
+          "확장 단계별 규모·선례에 더해 초기 신호(문의·파트너)까지 있다"
+        ]}
+    ],
+    read:{
+      strong:"bottom-up과 확장 경로가 갖춰졌습니다. 이제 숫자를 외우지 말고 <b>계산 과정 자체를 보여주세요</b> — 신뢰가 배가됩니다.",
+      mid:"계산의 뼈대는 있으나 근거와 확장 중 하나가 비어 있습니다. <b>출처 있는 객단가</b>와 <b>다음 시장 한 칸</b>을 채우세요."
+    },
+    diag:{
+      hd:"투자자는 top-down 숫자를 읽지 않습니다. 커다란 시장이 아니라 '10배가 나올 구조'를 삽니다.",
+      x:"\u201C국내 시장은 12조 규모입니다\u201D",
+      o:"\u201C타깃 3만 개사 × 연 120만원 — 3년 내 5% 침투\u201D",
+      fix:"한 줄 계산식(<b>고객 수 × 객단가 × 침투율</b>)을 만들고, 한국이 작다면 확장 경로를 스토리에 미리 심으세요."
+    }
+  },
+  {
+    id:"ask", name:"명확한 Ask", grp:"sto",
+    mistake:"실수 ③ — 명확한 Ask가 없다",
+    qs:[
+      { q:"얼마를 받아, 몇 개월 동안, 어떤 지표까지 갈지 한 문장으로 말할 수 있습니까?",
+        anchors:[
+          "\u201C좋은 파트너를 찾고 있습니다\u201D 수준의 인사에 가깝다",
+          "금액은 있지만, 사용처와 마일스톤이 막연하다",
+          "금액 - 기간 - 핵심 마일스톤이 하나의 문장으로 연결된다",
+          "그 마일스톤이 다음 라운드의 조건으로까지 이어진다"
+        ]},
+      { q:"받은 돈을 '어디에 얼마' 쓸지, 그 배분이 마일스톤과 연결됩니까?",
+        anchors:[
+          "자금 사용 계획이 아직 없다",
+          "인건비·마케팅 등 항목은 있지만 비율과 근거가 없다",
+          "항목별 배분과 각 지출이 만들 결과가 연결돼 있다",
+          "배분 - 지표 - 다음 라운드 조건까지 하나의 계획으로 검증 가능하다"
+        ]}
+    ],
+    read:{
+      strong:"검토 가능한 '안건'이 됐습니다. 미팅 말미에 이 문장을 그대로 말하고, <b>다음 단계를 먼저 제안</b>하세요.",
+      mid:"금액은 있지만 돈-기간-지표의 연결 고리가 느슨합니다. <b>배분표 한 장</b>으로 잇기만 하면 됩니다."
+    },
+    diag:{
+      hd:"Ask가 없으면 투자자에게는 '검토할 안건' 자체가 없습니다. 회의는 좋게 끝나고, 연락은 오지 않습니다.",
+      x:"\u201C좋은 파트너를 찾고 있습니다\u201D",
+      o:"\u201C5억으로 18개월, [핵심 지표]까지 갑니다\u201D",
+      fix:"<b>\u201C[금액]으로 [기간], [지표]까지\u201D</b> 문장을 완성해 덱의 마지막 장에 고정하세요."
+    }
+  },
+  {
+    id:"risk", name:"리스크 대응", grp:"sub",
+    mistake:"실수 ④ — 리스크를 숨긴다",
+    qs:[
+      { q:"우리 사업의 가장 큰 리스크를 먼저 말하고, 검증 계획을 붙일 수 있습니까?",
+        anchors:[
+          "\u201C경쟁사는 없습니다\u201D라고 답하거나, 리스크 질문을 피한다",
+          "리스크를 알고는 있지만, 준비된 답변이 없다",
+          "핵심 리스크 목록과 각각에 대한 대응 논리를 갖고 있다",
+          "리스크별 검증 실험을 이미 진행 중이고, 중간 결과가 있다"
+        ]},
+      { q:"경쟁과 대체재를, 투자자보다 더 잘 알고 있습니까?",
+        anchors:[
+          "\u201C직접 경쟁사는 없다\u201D에 가깝게 답하게 된다",
+          "경쟁사 이름은 알지만 우리와의 차이를 한 줄로 만들지 못한다",
+          "경쟁·대체재 지도와 우리가 이기는 지점(엣지)을 설명할 수 있다",
+          "고객이 경쟁 대신 우리를 고른 실제 사례와 이유 데이터가 있다"
+        ]}
+    ],
+    read:{
+      strong:"리스크를 먼저 꺼내는 팀은 드뭅니다. Q&A에서 <b>가장 아픈 질문을 스스로 던지고 답하는 연출</b>까지 가능한 수준입니다.",
+      mid:"리스크 목록은 있으나 '검증 중'이라는 현재진행형 증거가 약합니다. <b>가장 큰 리스크 1개의 검증 실험</b>을 시작하세요."
+    },
+    diag:{
+      hd:"리스크를 모르는 팀보다, 숨기는 팀이 먼저 탈락합니다. 리스크를 아는 팀이 신뢰를 받습니다.",
+      x:"\u201C경쟁사는 없습니다\u201D",
+      o:"\u201C최대 리스크는 OO이고, 이렇게 검증 중입니다\u201D",
+      fix:"가장 아픈 리스크 <b>1개를 먼저</b> 꺼내고, 그 옆에 검증 계획을 붙이세요. 신뢰는 거기서 생깁니다."
+    }
+  },
+  {
+    id:"whynow", name:"왜 지금", grp:"sto",
+    mistake:"실수 ⑤ — '왜 지금'이 약하다",
+    qs:[
+      { q:"'왜 지금이어야 하는가'를 기술·규제·행동의 변화로 설명할 수 있습니까?",
+        anchors:[
+          "\u201C시장이 빠르게 성장 중\u201D이라는 말이 전부다",
+          "트렌드는 짚지만, 우리 사업과의 인과가 약하다",
+          "어떤 변화가 언제 문을 열었는지 구체적으로 설명할 수 있다",
+          "그 변화의 증거(시행 시점·데이터)까지 제시할 수 있다"
+        ]},
+      { q:"'지금 놓치면 안 되는 이유'(기회의 시간창)를 근거와 함께 말할 수 있습니까?",
+        anchors:[
+          "언제 시작해도 비슷하다고 생각하거나, 답이 없다",
+          "급하다고는 하지만 근거가 감에 가깝다",
+          "시간창이 열리고 닫히는 조건을 논리로 설명할 수 있다",
+          "시행 시점·데이터·선점 신호로 시간창을 증명할 수 있다"
+        ]}
+    ],
+    read:{
+      strong:"타이밍 논리가 섰습니다. <b>'왜 지금' 한 문장을 첫 장 또는 마지막 장에 박아</b> 잊히지 않게 하세요.",
+      mid:"변화는 짚었지만 시간창의 근거가 감에 가깝습니다. <b>시행 시점이나 데이터 하나</b>를 붙이세요."
+    },
+    diag:{
+      hd:"'왜 지금'이 없으면 좋은 사업도 \u201C나중에 봐도 되는 딜\u201D이 됩니다 — 그리고 나중은 오지 않습니다.",
+      x:"\u201C시장이 빠르게 성장 중입니다\u201D",
+      o:"\u201C올해 OO 변화(기술·규제)로 이제야 가능해졌습니다\u201D",
+      fix:"기술·규제·행동 중 <b>무엇이 지금 문을 열었는지</b> 한 문장으로 박고, 시점 근거를 붙이세요."
+    }
+  },
+  {
+    id:"narrative", name:"내러티브", grp:"sto",
+    mistake:"실수 ⑥ — 내러티브가 없다 (미래가 그려지지 않는다)",
+    qs:[
+      { q:"30초 안에, 듣는 투자자가 '이 회사가 커진 미래'를 상상하게 만들 수 있습니까?",
+        anchors:[
+          "설명에 3분 넘게 걸리고, 슬라이드가 각자 논다",
+          "한 문장은 있지만, 증거·Ask와 연결되지 않는다",
+          "[고객]-[문제]-[방식]-[증거]-[금액]-[마일스톤]이 한 문장으로 이어진다",
+          "그 문장을 들은 상대가 먼저 다음 질문을 궁금해한 적이 있다"
+        ]},
+      { q:"덱의 모든 슬라이드가 그 '하나의 미래'를 증명하도록 배열돼 있습니까?",
+        anchors:[
+          "회사 소개·제품·시장 순으로, 장들이 각자 논다",
+          "핵심 문장은 있지만 덱 구성과 따로 논다",
+          "각 장이 핵심 문장의 어떤 부분을 증명하는지 말할 수 있다",
+          "장 순서 자체가 논증 구조이고, 빼도 되는 장이 없다"
+        ]}
+    ],
+    read:{
+      strong:"미래가 그려지는 피치입니다. 이제 <b>30초 버전과 3분 버전</b>, 두 길이로 연습해 두세요.",
+      mid:"문장은 있는데 덱이 그 문장을 증명하도록 정렬되지 않았습니다. <b>각 장 제목 옆에 '이 장이 증명하는 것'</b>을 메모해 보세요."
+    },
+    diag:{
+      hd:"정보는 전달됐지만, 미래가 그려지지 않고 있습니다. 내러티브의 일은 설명이 아니라 '상상'입니다.",
+      x:"슬라이드 20장이 각자 말한다",
+      o:"모든 장이 '하나의 미래'를 증명한다",
+      fix:"<b>\u201C우리는 [고객]의 [문제]를 [방식]으로 풉니다. [증거]가 있고, [금액]으로 [마일스톤]까지 갑니다.\u201D</b> — 이 문장을 완성하고, 모든 슬라이드가 이를 증명하는지 점검하세요."
+    }
+  }
+];
+
+/* 12문항 평탄화 */
+const QUESTIONS = [];
+AXES.forEach((ax, ai)=> ax.qs.forEach((qq, qi)=> QUESTIONS.push({ai, qi, ...qq})));
+
+const BANDS = [
+  {min:42, name:"우수",       hex:"#1E7B4F",
+   tip:"증거가 이야기를 끌고 갑니다. 남은 과제는 내용보다 전달입니다 — 가장 약한 고리 하나만 마저 메우고, 실전 미팅에서 검증하세요."},
+  {min:34, name:"양호",       hex:"#3D5AA9",
+   tip:"뼈대는 섰습니다. 다만 투자자는 평균이 아니라 최약점에서 거절합니다 — 아래 '가장 약한 고리'부터 보강하세요."},
+  {min:24, name:"보완 필요",  hex:"#E8590C",
+   tip:"주장이 증거를 앞서가고 있습니다. 이 상태의 IR은 첫 미팅은 잡혀도 2차로 이어지기 어렵습니다 — 약한 축의 처방대로 증거부터 만드세요."},
+  {min:0,  name:"위험",       hex:"#C0392B",
+   tip:"지금 IR을 보내면 첫 3분을 넘기기 어렵습니다. 덱을 고치기 전에 증거를 만들 차례입니다 — 가장 약한 고리 1개를 골라 이번 주에 검증을 시작하세요."}
+];
+
+/* ---------- 상태 ---------- */
+const KEY = "irdiag_v3";
+let idx = 0;
+let answers = new Array(QUESTIONS.length).fill(0); // 1-4, 0=미응답
+try{
+  const saved = JSON.parse(localStorage.getItem(KEY) || "null");
+  if (saved && Array.isArray(saved.answers) && saved.answers.length === QUESTIONS.length) answers = saved.answers;
+}catch(e){}
+
+const $ = (s)=>document.querySelector(s);
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify({answers, ts:Date.now()})); }catch(e){} }
+function show(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("on"));
+  $(id).classList.add("on");
+  window.scrollTo({top:0});
+}
+const axScore = (ai)=> (answers[ai*2]||0) + (answers[ai*2+1]||0);
+const axDone  = (ai)=> answers[ai*2]>0 && answers[ai*2+1]>0;
+
+/* ---------- 육각 진행 표시 ---------- */
+function hexPoints(cx,cy,r){
+  const pts=[];
+  for(let i=0;i<6;i++){ const a=-Math.PI/2 + i*Math.PI/3; pts.push([cx+r*Math.cos(a), cy+r*Math.sin(a)]); }
+  return pts;
+}
+function renderHexProg(){
+  const pts = hexPoints(50,50,40);
+  const curAxis = QUESTIONS[idx].ai;
+  let html="";
+  for(let i=0;i<6;i++){
+    const a=pts[i], b=pts[(i+1)%6];
+    let cls="edge";
+    if(axDone(i)) cls="edge done";
+    else if(answers[i*2]||answers[i*2+1]) cls="edge half";
+    if(i===curAxis) cls="edge now";
+    html += `<line class="${cls}" x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}"/>`;
+  }
+  $("#hexprog").innerHTML = html;
+}
+
+/* ---------- 질문 렌더 ---------- */
+function renderQ(){
+  const Q = QUESTIONS[idx], ax = AXES[Q.ai];
+  $("#prog-axis").textContent = `축 ${Q.ai+1} / 6`;
+  $("#prog-q").textContent = `· 문항 ${idx+1} / ${QUESTIONS.length}`;
+  $("#ax-no").textContent = Q.ai+1;
+  $("#ax-name").textContent = ax.name;
+  $("#ax-facet").textContent = `${Q.qi+1}/2`;
+  $("#ax-mistake").textContent = ax.mistake;
+  $("#q-text").textContent = Q.q;
+  const box = $("#opts"); box.innerHTML = "";
+  Q.anchors.forEach((t,li)=>{
+    const lv = li+1;
+    const b = document.createElement("button");
+    b.type="button"; b.className = "opt" + (answers[idx]===lv ? " sel":"");
+    b.setAttribute("role","radio");
+    b.setAttribute("aria-checked", answers[idx]===lv ? "true":"false");
+    b.innerHTML = `<span class="lv"><span class="num">${lv}</span><span class="lab">${LEVELS[li]}</span></span><span class="txt">${t}</span>`;
+    b.addEventListener("click", ()=>{
+      answers[idx]=lv; save();
+      box.querySelectorAll(".opt").forEach(o=>{o.classList.remove("sel");o.setAttribute("aria-checked","false");});
+      b.classList.add("sel"); b.setAttribute("aria-checked","true");
+      $("#btn-next").disabled = false;
+      renderHexProg();
+    });
+    box.appendChild(b);
+  });
+  $("#btn-prev").style.visibility = idx===0 ? "hidden":"visible";
+  $("#btn-next").textContent = idx===QUESTIONS.length-1 ? "결과 보기" : "다음";
+  $("#btn-next").disabled = !answers[idx];
+  renderHexProg();
+}
+
+/* ---------- 결과 계산 ---------- */
+function calc(){
+  const total = answers.reduce((a,b)=>a+b,0);
+  const band = BANDS.find(b=>total>=b.min);
+  const axScores = AXES.map((_,i)=>axScore(i));
+  const minScore = Math.min(...axScores);
+  const weakIdx = axScores.map((v,i)=>({v,i})).filter(o=>o.v===minScore).slice(0,2).map(o=>o.i);
+  let sub=0, sto=0;
+  AXES.forEach((ax,i)=>{ if(ax.grp==="sub") sub+=axScores[i]; else sto+=axScores[i]; });
+  return {total, band, axScores, weakIdx, minScore, sub, sto};
+}
+function tierOf(sc){ return sc>=7 ? "strong" : (sc>=5 ? "mid" : "weak"); }
+const TIER_LABEL = {strong:"강점", mid:"보통", weak:"약점"};
+
+function insightText(sub, sto, total){
+  const d = sub - sto;
+  if (sub>=18 && sto>=18)
+    return "<b>실체와 스토리가 함께 갑니다.</b> 이제 승부처는 디테일입니다 — 아래 처방전의 한 가지만 마저 메우고, 실전 미팅에서 검증하세요.";
+  if (d>=4)
+    return "<b>'좋은 회사'인데, 아직 '투자받는 스토리'가 아닙니다.</b> 사업의 실체는 증명되고 있는데 Ask·타이밍·내러티브라는 투자 언어로 번역이 덜 됐습니다. 다행히, 이쪽이 증거를 새로 만드는 것보다 빨리 고쳐집니다.";
+  if (d<=-4)
+    return "<b>스토리가 실체를 앞서갑니다 — 가장 조심해야 할 조합입니다.</b> 피치가 매끄러워도 증거가 받치지 못하면 2차 미팅에서 무너집니다. 지금 필요한 것은 덱 수정이 아니라 증거 만들기입니다.";
+  if (total>=34)
+    return "<b>실체와 스토리의 균형이 잡혀 있습니다.</b> 이제 여섯 축을 같은 속도로 한 단계씩 끌어올리세요 — 아래 처방전 순서대로 진행하면 됩니다.";
+  return "<b>실체와 스토리, 양쪽 모두 기초 증거가 필요합니다.</b> 욕심내지 말고 아래 처방전의 1순위 하나부터 — 증거는 쌓이기 시작하면 속도가 붙습니다.";
+}
+
+/* ---------- 레이더 ---------- */
+function renderRadar(axScores, weakSet){
+  const W=360,H=322,cx=W/2,cy=H/2,R=104,MAX=8;
+  const svg=$("#radar"); let g="";
+  for(let r=1;r<=4;r++){
+    const pts=hexPoints(cx,cy,R*r/4).map(p=>p.join(",")).join(" ");
+    g+=`<polygon points="${pts}" fill="none" stroke="#D9E0EC" stroke-width="${r===4?1.6:1}"/>`;
+  }
+  hexPoints(cx,cy,R).forEach(p=>{ g+=`<line x1="${cx}" y1="${cy}" x2="${p[0]}" y2="${p[1]}" stroke="#D9E0EC" stroke-width="1"/>`; });
+  const dp = axScores.map((v,i)=>{
+    const a=-Math.PI/2 + i*Math.PI/3, r=R*v/MAX;
+    return [cx+r*Math.cos(a), cy+r*Math.sin(a)];
+  });
+  g+=`<polygon class="data" points="${dp.map(p=>p.join(",")).join(" ")}" fill="rgba(61,90,169,.22)" stroke="#3D5AA9" stroke-width="2.4" stroke-linejoin="round"/>`;
+  const lp = hexPoints(cx,cy,R+26);
+  AXES.forEach((ax,i)=>{
+    const weak = weakSet.has(i);
+    const p=dp[i];
+    g+=`<circle cx="${p[0]}" cy="${p[1]}" r="${weak?6:4.5}" fill="${weak?"#E8590C":"#3D5AA9"}" stroke="#fff" stroke-width="1.6"/>`;
+    const L=lp[i];
+    const anchor = Math.abs(L[0]-cx)<8 ? "middle" : (L[0]<cx ? "end":"start");
+    g+=`<text x="${L[0]}" y="${L[1]+4}" text-anchor="${anchor}" font-size="12.5" font-weight="700" fill="${weak?"#E8590C":"#1E2761"}" font-family="inherit">${ax.name}</text>`;
+    g+=`<text x="${L[0]}" y="${L[1]+19}" text-anchor="${anchor}" font-size="11" font-weight="800" fill="${weak?"#E8590C":"#7A828E"}" font-family="inherit">${axScores[i]}</text>`;
+  });
+  svg.innerHTML=g;
+}
+
+/* ---------- 결과 렌더 ---------- */
+function renderResult(){
+  const {total, band, axScores, weakIdx, sub, sto} = calc();
+  $("#score").textContent = total;
+  const pill=$("#band-pill"); pill.textContent=band.name; pill.style.background=band.hex;
+  $("#band-tip").textContent = band.tip;
+
+  // 실체 vs 스토리
+  $("#sub-score").textContent = sub+"/24";
+  $("#sto-score").textContent = sto+"/24";
+  $("#sub-bar").style.width = (sub/24*100)+"%";
+  $("#sto-bar").style.width = (sto/24*100)+"%";
+  $("#insight-read").innerHTML = insightText(sub, sto, total);
+
+  // 레이더 (약축 = 4점 이하)
+  const weakSet = new Set(axScores.map((v,i)=>v<=4?i:-1).filter(i=>i>=0));
+  renderRadar(axScores, weakSet);
+
+  // 축별 상세
+  const det=$("#axis-detail"); det.innerHTML="";
+  AXES.forEach((ax,i)=>{
+    const sc=axScores[i], tier=tierOf(sc), isHero=weakIdx.includes(i);
+    let read;
+    if(tier==="strong") read = ax.read.strong;
+    else if(tier==="mid") read = ax.read.mid;
+    else read = isHero
+      ? `${ax.diag.hd} <span class="pin">→ 아래 '가장 약한 고리'의 처방을 확인하세요.</span>`
+      : `${ax.diag.hd}<br><b>처방</b> · ${ax.diag.fix}`;
+    det.insertAdjacentHTML("beforeend",
+      `<div class="ax-block${tier==="weak"?" weak":""}">
+        <div class="ax-head"><span class="nm">${ax.name}</span><span class="tier ${tier}">${TIER_LABEL[tier]}</span><span class="sc">${sc}/8</span></div>
+        <div class="ax-bar"><i style="width:${sc/8*100}%"></i></div>
+        <div class="ax-read">${read}</div>
+      </div>`);
+  });
+
+  // 가장 약한 고리 카드
+  const wc=$("#weak-cards"); wc.innerHTML="";
+  weakIdx.forEach((i,k)=>{
+    const ax=AXES[i], d=ax.diag;
+    wc.insertAdjacentHTML("beforeend",
+      `<div class="weak-card"${k===0?' style="margin-top:0"':''}>
+        <div class="k">가장 약한 고리${weakIdx.length>1?" "+(k+1):""} · ${axScores[i]}/8점</div>
+        <div class="nm">${ax.name}</div>
+        <div class="hd">${d.hd}</div>
+        <div class="xo"><span class="x">${d.x}</span><span class="arr">→</span><span class="o">${d.o}</span></div>
+        <div class="fix"><b>처방</b> · ${d.fix}</div>
+      </div>`);
+  });
+
+  // 처방전: 6점 이하 축을 점수 오름차순(동점 시 축 순서)으로 최대 3개
+  const rx=$("#rx-items"); rx.innerHTML="";
+  const todo = AXES.map((ax,i)=>({ax,i,sc:axScores[i]})).filter(o=>o.sc<=6)
+                   .sort((a,b)=> a.sc-b.sc || a.i-b.i).slice(0,3);
+  if(todo.length===0){
+    rx.innerHTML = `<div class="empty">모든 축이 강점 구간입니다. 이번 주 과제는 하나 — <b style="color:var(--navy)">실전 미팅을 잡아 이 증거들을 검증받는 것</b>입니다.</div>`;
+  }else{
+    todo.forEach((o,k)=>{
+      rx.insertAdjacentHTML("beforeend",
+        `<div class="item"><span class="n">${k+1}</span>
+          <div class="bd"><span class="axn">${o.ax.name}</span> <span class="axsc">${o.sc}/8</span><br>${o.ax.diag.fix}</div>
+        </div>`);
+    });
+  }
+
+  if (CONFIG.leadEndpoint) $("#leadbox").style.display="block";
+  show("#s-result");
+}
+
+/* ---------- 내비게이션 ---------- */
+$("#btn-start").addEventListener("click", ()=>{
+  const first = answers.findIndex(v=>!v);
+  idx = first===-1 ? 0 : first;
+  renderQ(); show("#s-quiz");
+});
+$("#btn-prev").addEventListener("click", ()=>{ if(idx>0){ idx--; renderQ(); } });
+$("#btn-next").addEventListener("click", ()=>{
+  if(!answers[idx]) return;
+  if(idx < QUESTIONS.length-1){ idx++; renderQ(); }
+  else renderResult();
+});
+$("#btn-retry").addEventListener("click", ()=>{
+  answers = new Array(QUESTIONS.length).fill(0); save();
+  idx=0; renderQ(); show("#s-quiz");
+});
+
+/* ---------- 이미지 저장 (html2canvas, 지연 로드 + 폴백) ---------- */
+function waitFor(test, timeout){
+  return new Promise(res=>{
+    const t0=Date.now();
+    (function poll(){
+      if(test()) return res(true);
+      if(Date.now()-t0>timeout) return res(false);
+      setTimeout(poll,120);
+    })();
+  });
+}
+$("#btn-save").addEventListener("click", async ()=>{
+  const btn=$("#btn-save"); const orig=btn.textContent;
+  btn.textContent="저장 준비 중..."; btn.disabled=true;
+  const ok = await waitFor(()=>window.html2canvas, 4000);
+  if(!ok){
+    btn.textContent=orig; btn.disabled=false;
+    alert("이미지 변환 도구를 불러오지 못했습니다.\n화면을 캡처(스크린샷)해서 저장해 주세요.");
+    return;
+  }
+  try{
+    const canvas = await html2canvas($("#capture"), {scale:2, backgroundColor:"#FFFFFF", useCORS:true});
+    const a=document.createElement("a");
+    a.download="IR자가진단_결과.png";
+    a.href=canvas.toDataURL("image/png");
+    a.click();
+  }catch(e){
+    alert("저장 중 문제가 발생했습니다. 화면을 캡처해서 저장해 주세요.");
+  }
+  btn.textContent=orig; btn.disabled=false;
+});
+
+/* ---------- 리드 전송 (CONFIG.leadEndpoint 설정 시) ---------- */
+$("#lead-send").addEventListener("click", async ()=>{
+  const email=$("#lead-email").value.trim();
+  const msg=$("#lead-msg");
+  if(!email || !email.includes("@")){ msg.textContent="이메일 주소를 확인해 주세요."; msg.style.color="var(--red)"; return; }
+  if(!$("#lead-consent").checked){ msg.textContent="전송 동의에 체크해 주세요."; msg.style.color="var(--red)"; return; }
+  const {total, band, axScores, weakIdx}=calc();
+  const payload={
+    name:$("#lead-name").value.trim(), email,
+    score:total, band:band.name,
+    weakest:weakIdx.map(i=>AXES[i].name).join(", "),
+    axes:AXES.map((ax,i)=>`${ax.name}:${axScores[i]}/8`).join(" | "),
+    ts:new Date().toISOString()
+  };
+  msg.textContent="보내는 중..."; msg.style.color="var(--muted)";
+  try{
+    const r=await fetch(CONFIG.leadEndpoint,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(payload)});
+    if(r.ok){ msg.textContent="접수되었습니다. 감사합니다!"; msg.style.color="var(--green)"; $("#lead-send").disabled=true; }
+    else throw 0;
+  }catch(e){ msg.textContent="전송에 실패했습니다. 잠시 후 다시 시도해 주세요."; msg.style.color="var(--red)"; }
+});
+
+/* ---------- 발표 모드 (#present) ---------- */
+async function presentMode(onoff){
+  $("#s-present").classList.toggle("on", onoff);
+  document.body.style.overflow = onoff ? "hidden":"";
+  if(!onoff) return;
+  const url = location.origin + location.pathname;
+  $("#present-url").textContent = url.replace(/^https?:\/\//,"");
+  const box=$("#qr"); box.innerHTML="";
+  const ok = await waitFor(()=>window.QRCode, 5000);
+  if(ok){
+    new QRCode(box,{text:url,width:Math.min(340,innerWidth-140),height:Math.min(340,innerWidth-140),correctLevel:QRCode.CorrectLevel.M});
+  }else{
+    box.innerHTML='<div style="width:260px;height:260px;display:flex;align-items:center;justify-content:center;color:#1E2761;font-weight:700;text-align:center;padding:20px">QR 생성 실패<br><span style="font-size:13px;font-weight:500;color:#7A828E">아래 주소를 직접 안내해 주세요</span></div>';
+  }
+}
+function syncHash(){ presentMode(location.hash==="#present"); }
+window.addEventListener("hashchange", syncHash);
+window.addEventListener("keydown", e=>{ if(e.key==="Escape" && location.hash==="#present") location.hash=""; });
+
+/* ---------- 시작 ---------- */
+renderHexProg();
+syncHash();
+</script>
+
+<!-- 외부 라이브러리: 지연 로드 (없어도 핵심 진단은 동작) -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</body>
+</html>
