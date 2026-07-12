@@ -100,8 +100,10 @@ const personSchema = {
     <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
     <slot name="head" />
     <!-- Google tag (gtag.js) -->
-    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-MPY1QKT15E"></script>
-    <script is:inline>
+    <!-- data-cfasync="false" keeps Cloudflare Rocket Loader from reordering/deferring
+         these scripts, which would break gtag init and drop pageviews. -->
+    <script is:inline async data-cfasync="false" src="https://www.googletagmanager.com/gtag/js?id=G-MPY1QKT15E"></script>
+    <script is:inline data-cfasync="false">
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
@@ -110,7 +112,7 @@ const personSchema = {
         cookie_flags: 'SameSite=None;Secure',
       });
     </script>
-    <script is:inline defer src="/js/analytics.js"></script>
+    <script is:inline defer data-cfasync="false" src="/js/analytics.js"></script>
     <!-- Google AdSense -->
     {!excludeAdsense && (
       <script is:inline async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2021805347195633" crossorigin="anonymous"></script>
