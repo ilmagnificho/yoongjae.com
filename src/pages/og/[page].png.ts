@@ -56,6 +56,12 @@ const pages = [
     label: '도구 Tools',
   },
   {
+    page: 'time-mirror',
+    title: '추억거울 테스트',
+    description: '내 추억, 지금 스무 살에겐 몇 년도 느낌? 판정서로 확인하세요.',
+    label: '도구 Tools',
+  },
+  {
     page: 'lecture',
     title: '투심위의 블랙박스',
     description: 'Sequoia 프레임으로 내 사업 설계하기 · 사전 대기 신청',

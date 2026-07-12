@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>추억거울 테스트 — 내 추억, 걔들한텐 몇 년도 느낌?</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Jua&family=Gothic+A1:wght@400;500;700;800&family=Noto+Serif+KR:wght@600;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<style>
+  :root{
+    /* 현재(비비드) 세계 */
+    --ink:#241b3a; --ink-soft:#5b5175;
+    --bg1:#e9e4fb; --bg2:#ffe1ec;
+    --pop:#ff3e88; --pop2:#6d5cff; --gold:#ffcb2e;
+    /* 과거(세피아) 세계 */
+    --paper-old:#efe4cb; --paper-old2:#e4d5b4;
+    --oink:#3a3128; --oink-soft:#7a6f5d;
+    --ored:#b3392f;
+    --oline:#c9b795;
+
+    --font-display:'Black Han Sans','Jua','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+    --font-body:'Gothic A1','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+    --font-accent:'Jua','Gothic A1',sans-serif;
+    --font-old:'Noto Serif KR','Nanum Myeongjo',serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:var(--font-body);color:var(--ink);
+    background:
+      radial-gradient(120% 80% at 15% 0%, var(--bg2) 0%, transparent 55%),
+      radial-gradient(120% 90% at 100% 10%, #dff3ff 0%, transparent 50%),
+      linear-gradient(160deg, var(--bg1) 0%, #f3eefe 45%, #fdeaf1 100%);
+    min-height:100vh;padding:24px 16px 56px;
+    display:flex;flex-direction:column;align-items:center;
+  }
+  .wrap{width:100%;max-width:460px;}
+
+  .stage{display:none;}
+  .stage.on{display:block;animation:stageIn .35s ease both;}
+  @keyframes stageIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:7px;font-family:var(--font-accent);
+    background:var(--ink);color:#fff;padding:6px 13px;border-radius:999px;
+    font-size:13px;box-shadow:3px 3px 0 var(--pop);
+  }
+  .eyebrow b{color:var(--gold);}
+
+  /* ============ STAGE 1: 인트로 ============ */
+  #intro h1{font-family:var(--font-display);font-size:clamp(38px,10.5vw,56px);line-height:1.04;margin:18px 0 8px;}
+  #intro h1 .hl{color:var(--pop);}
+  #intro .sub{font-size:15px;color:var(--ink-soft);line-height:1.55;font-weight:500;margin:0 0 22px;}
+
+  .teaser{
+    background:rgba(255,255,255,.75);border:2px solid var(--ink);border-radius:16px;
+    padding:16px 14px 14px;text-align:center;box-shadow:5px 5px 0 rgba(36,27,58,.14);margin-bottom:20px;
+  }
+  .teaser-cap{font-family:var(--font-accent);font-size:13px;color:var(--ink-soft);margin-bottom:8px;}
+  .teaser-fact{font-family:var(--font-display);font-size:clamp(19px,5.6vw,24px);line-height:1.35;}
+  .teaser-fact b{color:var(--pop);}
+  .fadeSwap{animation:fadeSwap .5s ease both;}
+  @keyframes fadeSwap{from{opacity:0;transform:translateY(5px);}to{opacity:1;transform:none;}}
+
+  .cta{
+    width:100%;height:58px;border:none;border-radius:14px;background:var(--pop);color:#fff;cursor:pointer;
+    font-family:var(--font-display);font-size:22px;letter-spacing:.02em;
+    box-shadow:0 5px 0 #c72668;transition:transform .05s,box-shadow .05s;
+  }
+  .cta:hover{transform:translateY(-1px);}
+  .cta:active{transform:translateY(3px);box-shadow:0 1px 0 #c72668;}
+  .cta:focus-visible{outline:3px solid var(--pop2);outline-offset:3px;}
+  .warn{font-size:12px;color:var(--ink-soft);text-align:center;margin-top:10px;}
+
+  /* ============ STAGE 2: 추억 선택 ============ */
+  .stage h2{font-family:var(--font-display);font-size:clamp(26px,7.5vw,34px);margin:16px 0 4px;line-height:1.15;}
+  .stage .sub{font-size:14px;color:var(--ink-soft);margin:0 0 16px;font-weight:500;}
+  .era-label{
+    font-family:var(--font-accent);font-size:14px;color:var(--ink);
+    margin:20px 0 10px;display:flex;align-items:center;gap:9px;
+  }
+  .era-label::after{content:"";flex:1;border-top:2px dashed #cfc3ea;}
+  #grid > .era-label:first-child{margin-top:0;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+  .mcard{
+    position:relative;border:2px solid var(--ink);border-radius:16px;background:#fff;
+    padding:16px 12px 13px;cursor:pointer;text-align:center;
+    box-shadow:4px 4px 0 rgba(36,27,58,.12);transition:transform .07s,box-shadow .07s;
+    font-family:var(--font-body);
+  }
+  .mcard:hover{transform:translateY(-2px);box-shadow:5px 6px 0 rgba(36,27,58,.16);}
+  .mcard:active{transform:translateY(1px);box-shadow:2px 2px 0 rgba(36,27,58,.12);}
+  .mcard:focus-visible{outline:3px solid var(--pop2);outline-offset:2px;}
+  .mcard .me{font-size:34px;line-height:1;margin-bottom:7px;display:block;}
+  .mcard .mn{font-weight:800;font-size:14.5px;line-height:1.25;display:block;min-height:2.4em;}
+  .mcard .my{display:inline-block;margin-top:6px;font-family:var(--font-accent);font-size:12px;background:var(--bg1);border-radius:999px;padding:3px 9px;color:var(--pop2);}
+  .hot{
+    position:absolute;top:-9px;right:-6px;background:var(--pop);color:#fff;
+    font-family:var(--font-accent);font-size:11px;padding:3px 8px;border-radius:999px;
+    box-shadow:2px 2px 0 rgba(36,27,58,.25);transform:rotate(6deg);
+  }
+  .backlink{background:none;border:none;color:var(--ink-soft);font-family:var(--font-accent);font-size:14px;cursor:pointer;padding:6px 2px;}
+  .backlink:hover{color:var(--ink);}
+
+  /* ============ STAGE 3: 시계 맞추기 (생년) ============ */
+  #clock .picked{
+    display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.75);
+    border:2px solid var(--ink);border-radius:14px;padding:12px 14px;margin-bottom:18px;
+    box-shadow:4px 4px 0 rgba(36,27,58,.12);
+  }
+  #clock .picked .pe{font-size:26px;}
+  #clock .picked .pn{font-weight:800;font-size:15px;}
+  #clock .picked .py{font-family:var(--font-accent);font-size:12px;color:var(--pop2);}
+  .clock-field{position:relative;margin-bottom:14px;}
+  .clock-field select{
+    -webkit-appearance:none;appearance:none;width:100%;height:56px;
+    border:2px solid var(--ink);border-radius:13px;background:#fff;color:var(--ink);
+    font-family:var(--font-body);font-weight:800;font-size:18px;padding:0 40px 0 16px;cursor:pointer;
+  }
+  .clock-field::after{content:"▾";position:absolute;right:15px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--pop);font-size:16px;}
+  .clock-field select:focus-visible{outline:3px solid var(--pop2);outline-offset:2px;}
+  .clock-why{font-size:12.5px;color:var(--ink-soft);line-height:1.55;margin-bottom:16px;}
+
+  /* ============ STAGE 4: 결과 ============ */
+  #result .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+
+  .share-card{
+    background:#fffdf8;border:2.5px solid var(--ink);border-radius:18px;overflow:hidden;
+    box-shadow:7px 7px 0 rgba(36,27,58,.2);
+  }
+
+  /* --- (A) 나의 기억 --- */
+  .now-strip{padding:16px 18px 14px;background:linear-gradient(135deg,#fff 0%,#fdf3ff 100%);}
+  .now-cap{font-family:var(--font-accent);font-size:12px;color:var(--pop);letter-spacing:.05em;margin-bottom:6px;}
+  .now-line{display:flex;align-items:center;gap:11px;}
+  .now-emoji{font-size:34px;line-height:1;}
+  .now-name{font-family:var(--font-display);font-size:21px;line-height:1.15;}
+  .now-date{font-size:12.5px;color:var(--ink-soft);font-weight:700;margin-top:2px;}
+
+  /* --- (B) 팩트 체크 + 환산 --- */
+  .factbar{padding:14px 18px 13px;background:var(--ink);color:#fff;text-align:center;}
+  .factbar .cap{font-family:var(--font-accent);font-size:12.5px;color:var(--gold);margin-bottom:5px;}
+  .factbar .line{font-size:14.5px;font-weight:700;line-height:1.6;}
+  .factbar .line b{color:#ffd9e8;}
+  .factbar .lead{font-family:var(--font-accent);font-size:13.5px;color:#b9adf5;margin-top:8px;line-height:1.55;}
+  .factbar .lead b{color:var(--gold);}
+
+  /* --- (C) 과거 신문 --- */
+  .oldpaper{
+    position:relative;
+    background:
+      repeating-linear-gradient(0deg, rgba(58,49,40,.045) 0 1px, transparent 1px 3px),
+      radial-gradient(120% 100% at 50% 0%, var(--paper-old) 55%, var(--paper-old2) 100%);
+    color:var(--oink);
+    padding:18px 18px 16px;
+  }
+  .oldpaper::before{
+    content:"";position:absolute;top:-1px;left:0;right:0;height:9px;
+    background:
+      linear-gradient(135deg, var(--ink) 4.5px, transparent 0) 0 0/9px 9px repeat-x,
+      linear-gradient(45deg, var(--ink) 4.5px, transparent 0) 0 0/9px 9px repeat-x;
+  }
+  .masthead{
+    display:flex;justify-content:space-between;align-items:baseline;gap:8px;
+    border-bottom:2.5px solid var(--oink);padding:6px 0 7px;margin-bottom:3px;
+  }
+  .paper-name{font-family:var(--font-old);font-weight:900;font-size:19px;letter-spacing:.22em;}
+  .paper-date{font-family:var(--font-old);font-size:11.5px;color:var(--oink-soft);letter-spacing:.04em;}
+  .thinline{border-bottom:1px solid var(--oline);margin-bottom:13px;}
+
+  .old-stamp{
+    position:absolute;top:22px;right:14px;
+    font-family:var(--font-old);font-weight:900;color:var(--ored);
+    border:2.5px solid var(--ored);border-radius:6px;
+    padding:3px 8px 2px;font-size:15px;letter-spacing:.28em;
+    transform:rotate(8deg);opacity:.85;pointer-events:none;
+  }
+
+  .old-year{
+    font-family:var(--font-old);font-weight:900;
+    font-size:clamp(44px,13vw,58px);line-height:1;letter-spacing:.02em;
+    margin:2px 0 2px;
+  }
+  .old-year small{font-size:.42em;font-weight:600;color:var(--oink-soft);letter-spacing:.1em;margin-left:6px;}
+  .old-headline{
+    font-family:var(--font-old);font-weight:900;font-size:clamp(19px,5.6vw,24px);
+    line-height:1.3;margin:4px 0 14px;
+  }
+
+  .exhibit{display:flex;flex-direction:column;gap:9px;}
+  .ex{
+    display:flex;align-items:center;gap:12px;
+    background:rgba(255,255,255,.42);border:1.5px solid var(--oline);border-radius:10px;
+    padding:10px 12px;
+  }
+  .ex .xe{font-size:28px;line-height:1;filter:sepia(.55) saturate(.75);}
+  .ex .xt{min-width:0;}
+  .ex .xl{font-family:var(--font-old);font-weight:900;font-size:15.5px;line-height:1.25;}
+  .ex .xc{font-size:12.5px;color:var(--oink-soft);line-height:1.45;margin-top:2px;font-weight:600;display:block;}
+
+  .old-note{
+    margin-top:13px;border-top:1px solid var(--oline);padding-top:10px;
+    font-family:var(--font-old);font-size:13px;line-height:1.6;color:var(--oink);font-style:italic;
+  }
+
+  /* --- (D) 거울 판정 --- */
+  .reveal{padding:17px 18px 8px;text-align:center;background:#fffdf8;}
+  .reveal .cap{font-family:var(--font-accent);font-size:13px;color:var(--pop2);margin-bottom:7px;}
+  .reveal .line{font-family:var(--font-accent);font-size:15.5px;line-height:1.6;color:var(--ink);}
+  .reveal .line b{color:var(--pop);}
+  .verdict{
+    display:inline-flex;align-items:center;gap:8px;margin-top:12px;
+    border:2.5px solid var(--pop);border-radius:12px;padding:8px 16px;
+    font-family:var(--font-display);font-size:20px;color:var(--pop);
+    transform:rotate(-2deg);background:#fff;
+  }
+  .verdict small{font-family:var(--font-accent);font-size:12px;color:var(--ink-soft);}
+  .verdict-sub{font-size:12.5px;color:var(--ink-soft);margin-top:8px;font-weight:600;}
+
+  .card-foot{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:10px 16px 13px;background:#fffdf8;
+    font-size:10.5px;color:#b3aac4;
+  }
+  .brand{font-family:var(--font-accent);color:var(--pop);font-size:12px;}
+
+  /* --- 액션 --- */
+  .actions{display:flex;flex-direction:column;gap:9px;margin-top:12px;}
+  .act{
+    height:52px;border-radius:13px;cursor:pointer;font-family:var(--font-accent);font-size:16px;
+    display:flex;align-items:center;justify-content:center;gap:7px;transition:transform .05s;
+  }
+  .act:active{transform:translateY(2px);}
+  .act:focus-visible{outline:3px solid var(--pop2);outline-offset:2px;}
+  .act-save{background:var(--pop);color:#fff;border:none;box-shadow:0 4px 0 #c72668;font-family:var(--font-display);font-size:19px;}
+  .row2{display:flex;gap:9px;}
+  .row2 .act{flex:1;height:48px;font-size:14.5px;}
+  .act-copy{background:#fff;color:var(--ink);border:2px solid var(--ink);}
+  .act-again{background:var(--ink);color:#fff;border:2px solid var(--ink);}
+
+  .foot-note{margin-top:26px;font-size:11.5px;color:var(--ink-soft);text-align:center;line-height:1.6;}
+
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:11px;font-family:var(--font-accent);font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;box-shadow:0 6px 18px rgba(0,0,0,.2);z-index:50;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  @media (prefers-reduced-motion: reduce){
+    .stage.on,.fadeSwap{animation:none;}
+    .cta,.act,.mcard{transition:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ================= STAGE 1 : 인트로 ================= -->
+  <section class="stage on" id="intro">
+    <span class="eyebrow">🪞 추억거울 테스트</span>
+    <h1>당신의 추억,<br>이미 <span class="hl">화석</span>일지도</h1>
+    <p class="sub">당신에겐 어제 같은 그 순간 -<br>지금 스무 살의 인생에선 <b>어디쯤</b>인지 비춰드립니다.</p>
+
+    <div class="teaser" aria-hidden="true">
+      <div class="teaser-cap">이건 그냥 팩트입니다</div>
+      <div class="teaser-fact" id="tzFact">2002 월드컵 — 지금 스무 살이 <b>태어나기 4년 전</b></div>
+    </div>
+
+    <button class="cta" id="start">내 추억 비춰보기</button>
+    <div class="warn">⚠️ 판정 결과에 충격받을 수 있음 · 소요시간 15초</div>
+  </section>
+
+  <!-- ================= STAGE 2 : 추억 선택 ================= -->
+  <section class="stage" id="select">
+    <span class="eyebrow">🪞 1 / 2</span>
+    <h2>가장 생생한<br>추억 하나를 골라주세요</h2>
+    <p class="sub">“이건 진짜 어제 일 같은데” 싶은 걸로. 아래로 쭉 있습니다.</p>
+    <div id="grid"></div>
+    <div style="margin-top:14px;"><button class="backlink" id="back1">← 처음으로</button></div>
+  </section>
+
+  <!-- ================= STAGE 3 : 시계 맞추기 ================= -->
+  <section class="stage" id="clock">
+    <span class="eyebrow">🪞 2 / 2</span>
+    <h2>당신의 시계를<br>맞추겠습니다 🕰️</h2>
+    <p class="sub">태어난 해 하나면 충분합니다.</p>
+
+    <div class="picked">
+      <span class="pe" id="ckEmoji">⚽</span>
+      <div>
+        <div class="pn" id="ckName">2002 월드컵 4강</div>
+        <div class="py" id="ckYear">2002</div>
+      </div>
+    </div>
+
+    <div class="clock-field">
+      <select id="birth" aria-label="태어난 해"></select>
+    </div>
+    <p class="clock-why">왜 필요하냐면 - 그 순간이 <b>지금 스무 살의 인생 어디쯤</b>인지 계산한 뒤, 정확히 같은 위치를 <b>당신의 인생</b>에서 찾아 보여드리기 때문입니다. 수식 없음, 팩트만 있음.</p>
+
+    <button class="cta" id="mirrorGo">거울 보기 🪞</button>
+    <div style="margin-top:12px;"><button class="backlink" id="back2">← 추억 다시 고르기</button></div>
+  </section>
+
+  <!-- ================= STAGE 4 : 결과 ================= -->
+  <section class="stage" id="result">
+    <div class="topbar">
+      <span class="eyebrow">🪞 감정 결과</span>
+      <button class="backlink" id="back3">← 다른 추억</button>
+    </div>
+
+    <div class="share-card" id="shareCard">
+
+      <!-- (A) 나의 기억 -->
+      <div class="now-strip">
+        <div class="now-cap">📍 당신의 기억 — 아직도 생생한</div>
+        <div class="now-line">
+          <span class="now-emoji" id="rEmoji">⚽</span>
+          <div>
+            <div class="now-name" id="rName">2002 월드컵 4강 신화</div>
+            <div class="now-date" id="rDate">2002년 6월</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- (B) 팩트 체크: 검증 가능한 사실 두 개의 연결 -->
+      <div class="factbar">
+        <div class="cap">📸 팩트 체크</div>
+        <div class="line" id="factLine">이때 지금 스무 살(2006년생)은<br><b>태어나기 4년 전</b>입니다</div>
+        <div class="lead" id="factLead">같은 지점을 당신(1987년생) 인생에서 찾으면 — <b>1983년</b> 👇</div>
+      </div>
+
+      <!-- (C) 과거 신문 -->
+      <div class="oldpaper">
+        <div class="old-stamp">호외</div>
+        <div class="masthead">
+          <span class="paper-name">세대일보</span>
+          <span class="paper-date" id="pDate">서기 1983년</span>
+        </div>
+        <div class="thinline"></div>
+
+        <div class="old-year"><span id="pYear">1983</span><small>年의 대한민국</small></div>
+        <div class="old-headline" id="pHeadline">“컬러 TV가 처음 켜진 시절”</div>
+
+        <div class="exhibit" id="pExhibit"></div>
+
+        <div class="old-note" id="pNote" style="display:none;"></div>
+      </div>
+
+      <!-- (D) 거울 판정 -->
+      <div class="reveal">
+        <div class="cap">🪞 거울 판정</div>
+        <div class="line" id="revealLine">지금 스무 살에게 <b>2002 월드컵</b>은,<br>당신에게 <b>1983년의 기억</b>입니다</div>
+        <div><span class="verdict" id="verdict">판정 「화석」</span></div>
+        <div class="verdict-sub" id="verdictSub">걔들에겐 기억조차 없는 시절</div>
+      </div>
+
+      <div class="card-foot">
+        <span>추억거울 테스트</span>
+        <span class="brand">그때 몇 살?</span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="act act-save" id="save">🖼️ 판정서 저장하고 자랑하기</button>
+      <div class="row2">
+        <button class="act act-copy" id="copy">🔗 문구 복사</button>
+        <button class="act act-again" id="again">🪞 다른 추억</button>
+      </div>
+    </div>
+
+    <p class="foot-note">
+      * 연대별 질감·연도는 검증했으나 배포 전 최종 확인 권장.<br>
+      규칙: 그 순간 지금 스무 살(2006년생)이 X살이었다면, 당신이 X살이던 해가 거울입니다.
+    </p>
+  </section>
+
+</div>
+<div class="toast" id="toast">완료!</div>
+
+<script>
+/* =========================================================
+   [규칙] 거울 = 사용자가, '지금 스무 살'과 같은 나이였던 해
+     refAge = 사건연도 - REF_BIRTH   (음수면 태어나기 전)
+     mirror = 사용자 생년 + refAge
+   [데이터] EVENTS(추억 목록) / BUCKETS(연대별 질감) / YEAR_NOTES(유명 연도 한 줄)
+   ========================================================= */
+const NOW = 2026;
+const REF_BIRTH = 2006;              // '지금 스무 살' 기준
+const REF_LABEL = '지금 스무 살';
+
+const EVENTS = [
+  /* ---- 1990년대 ---- */
+  { id:'seotaiji',   emoji:'🎸', name:'서태지와 아이들 데뷔', y:1992, mLabel:'1992년 4월', hot:false },
+  { id:'hot',        emoji:'🎧', name:'H.O.T. 데뷔',          y:1996, mLabel:'1996년 9월', hot:false },
+  { id:'ses',        emoji:'💜', name:'S.E.S. 데뷔',          y:1997, mLabel:'1997년 11월', hot:false },
+  { id:'starcraft',  emoji:'🖥️', name:'스타크래프트 상륙',    y:1998, mLabel:'1998년', hot:false },
+  { id:'seri',       emoji:'⛳', name:'박세리 US오픈 우승',   y:1998, mLabel:'1998년 7월', hot:false },
+  { id:'pokemon',    emoji:'⚡', name:'포켓몬스터 국내 첫 방영', y:1999, mLabel:'1999년', hot:false },
+  /* ---- 2000년대 초반 ---- */
+  { id:'wc2002',     emoji:'⚽', name:'2002 월드컵 4강',      y:2002, mLabel:'2002년 6월', hot:false },
+  { id:'maple',      emoji:'🍄', name:'메이플스토리 출시',    y:2003, mLabel:'2003년 4월', hot:false },
+  { id:'hyori',      emoji:'💃', name:'이효리 〈10 Minutes〉', y:2003, mLabel:'2003년 8월', hot:false },
+  { id:'daejang',    emoji:'🍲', name:'〈대장금〉 첫 방송',    y:2003, mLabel:'2003년 9월', hot:false },
+  { id:'kart',       emoji:'🏎️', name:'카트라이더 출시',      y:2004, mLabel:'2004년 6월', hot:false },
+  { id:'cyworld',    emoji:'🌰', name:'싸이월드 전성기',      y:2004, mLabel:'2004년 무렵', hot:false },
+  { id:'muhan',      emoji:'📺', name:'〈무한도전〉 첫 방송',  y:2006, mLabel:'2006년 5월', hot:false },
+  { id:'bigbang',    emoji:'👑', name:'빅뱅 데뷔',            y:2006, mLabel:'2006년 8월', hot:false },
+  /* ---- 2000년대 후반 ---- */
+  { id:'snsd',       emoji:'✨', name:'소녀시대 데뷔',        y:2007, mLabel:'2007년 8월', hot:false },
+  { id:'tellme',     emoji:'🙌', name:'원더걸스 〈Tell Me〉',  y:2007, mLabel:'2007년 9월', hot:false },
+  { id:'parktaehwan',emoji:'🏊', name:'박태환 베이징 금메달', y:2008, mLabel:'2008년 8월', hot:false },
+  { id:'prettygirl', emoji:'🎤', name:'카라 〈프리티걸〉',     y:2008, mLabel:'2008년 12월', hot:true  },
+  { id:'iphone',     emoji:'📱', name:'아이폰 국내 상륙',      y:2009, mLabel:'2009년 11월', hot:false },
+  { id:'yuna',       emoji:'⛸️', name:'김연아 밴쿠버 금메달', y:2010, mLabel:'2010년 2월', hot:false },
+  { id:'kakao',      emoji:'💬', name:'카카오톡 출시',         y:2010, mLabel:'2010년 3월', hot:false },
+  { id:'iu',         emoji:'🎵', name:'아이유 〈좋은 날〉',    y:2010, mLabel:'2010년 12월', hot:false },
+  /* ---- 2010년대 이후 ---- */
+  { id:'gangnam',    emoji:'🕺', name:'싸이 〈강남스타일〉',   y:2012, mLabel:'2012년 7월', hot:false },
+  { id:'reply97',    emoji:'📼', name:'〈응답하라 1997〉 방영', y:2012, mLabel:'2012년 7월', hot:false },
+  { id:'honeybutter',emoji:'🍯', name:'허니버터칩 대란',       y:2014, mLabel:'2014년 겨울', hot:false },
+  { id:'produce',    emoji:'🙋', name:'프로듀스 101 (픽미)',   y:2016, mLabel:'2016년 1월', hot:false },
+  { id:'pokemongo',  emoji:'🧭', name:'포켓몬GO 속초 대란',    y:2016, mLabel:'2016년 7월', hot:false },
+  { id:'pyeongchang',emoji:'🥌', name:'평창 동계올림픽',       y:2018, mLabel:'2018년 2월', hot:false },
+  { id:'kazan',      emoji:'🥅', name:'독일전 2-0 카잔의 기적', y:2018, mLabel:'2018년 6월', hot:false },
+  { id:'bts',        emoji:'🏆', name:'BTS 빌보드 1위',        y:2020, mLabel:'2020년 9월', hot:false },
+  { id:'squid',      emoji:'🦑', name:'〈오징어 게임〉 공개',   y:2021, mLabel:'2021년 9월', hot:false },
+];
+
+/* 선택 화면의 연대 섹션 구분 */
+const ERAS = [
+  { label:'🕰️ 1990년대',        from:1990, to:1999 },
+  { label:'💿 2000년대 초반',    from:2000, to:2006 },
+  { label:'📀 2000년대 후반',    from:2007, to:2011 },
+  { label:'🚀 2010년대 이후',    from:2012, to:2029 },
+];
+
+/* 연대별 시대 질감 (버킷 전 기간에 참인 사실만) */
+const BUCKETS = [
+  { from:1950, to:1959, headline:'“라디오 연속극에 온 동네가 모인다”',
+    relics:[['📻','라디오가 안방 극장','TV요? 아직 방송국 자체가 없거나 걸음마.'],
+            ['🚋','전차가 다니는 서울','시내 이동은 전차와 두 다리.'],
+            ['🕯️','전기가 귀한 시절','밤이 되면 호롱불 켜는 동네도 흔함.']]},
+  { from:1960, to:1964, headline:'“TV라는 게 세상에 처음 나왔다”',
+    relics:[['📺','TV 방송의 원년기','KBS TV 개국(1961). 동네에 한 대 있을까 말까.'],
+            ['🍜','라면이 신문물','삼양라면 등장(1963). 처음 보는 별미 취급.'],
+            ['🚋','전차의 도시 서울','출퇴근은 전차. 자가용은 딴 세상 얘기.']]},
+  { from:1965, to:1969, headline:'“서울 시내, 전차의 마지막 날들”',
+    relics:[['🚋','전차 운행 종료 임박','1968년까지 시내를 달림. 곧 역사 속으로.'],
+            ['📺','TV는 동네 사랑방에','저녁이면 TV 있는 집 마당에 온 동네가 모임.'],
+            ['🎬','극장의 전성기','오락의 왕은 영화관. 신성일의 시대.']]},
+  { from:1970, to:1974, headline:'“서울-부산, 처음 하루 생활권”',
+    relics:[['🛣️','경부고속도로 개통','1970년 7월. 전국이 처음 도로로 이어짐.'],
+            ['🌾','새마을운동 시작','“새벽종이 울렸네” 그 노래의 시작.'],
+            ['📻','안방 필수품은 라디오','TV 보급은 아직 갈 길이 멂.']]},
+  { from:1975, to:1979, headline:'“밤 12시, 서울이 멈춘다”',
+    relics:[['🚨','야간 통행금지','자정 사이렌이 울리면 귀가. 폐지는 1982년에야.'],
+            ['📺','TV는 아직 흑백','컬러 방송 시작은 1980년 12월.'],
+            ['🚗','포니가 최신 유행','국산 첫 고유모델 자동차가 거리의 신문물.']]},
+  { from:1980, to:1984, headline:'“컬러 TV가 처음 켜졌다”',
+    relics:[['📺','컬러 방송 개막','1980년 12월, 세상이 흑백에서 컬러로.'],
+            ['⚾','프로야구 원년','1982년 출범. 어린이 회원 모집에 전국이 들썩.'],
+            ['🎒','교복 자율화','1983년, 까만 교복의 시대가 저묾.']]},
+  { from:1985, to:1989, headline:'“온 나라가 올림픽을 준비한다”',
+    relics:[['🏟️','86 아시안게임·88 올림픽','굴렁쇠 소년의 시대. 온 국민의 축제 준비.'],
+            ['📼','카세트테이프 전성기','워크맨에 테이프 넣고 늘어질 때까지 반복.'],
+            ['☎️','연락은 집전화','휴대폰? 존재 자체를 모르던 시절.']]},
+  { from:1990, to:1993, headline:'“노래는 테이프, 연락은 집전화”',
+    relics:[['📼','카세트테이프의 시대','CD는 아직 부잣집 물건.'],
+            ['🎤','노래방의 탄생기','국내 1호 노래방 등장(1991, 부산).'],
+            ['📺','채널은 손에 꼽음','지상파 몇 개가 TV의 전부.']]},
+  { from:1994, to:1997, headline:'“8282 찍고 공중전화로 뛴다”',
+    relics:[['📟','삐삐 전성시대','허리춤 삐삐가 울리면 공중전화부터 찾음.'],
+            ['🖥️','PC통신의 시대','“삐- 치익-” 모뎀 소리로 하이텔·천리안 접속.'],
+            ['🎧','1세대 아이돌 개막','H.O.T.(1996)로 아이돌이라는 말이 시작됨.']]},
+  { from:1998, to:2001, headline:'“금 모으기, 그리고 스타크래프트”',
+    relics:[['💱','IMF 외환위기','장롱 속 금반지를 나라에 내놓던 시절.'],
+            ['🖥️','PC방 폭발기','스타크래프트(1998)와 함께 골목마다 PC방.'],
+            ['📱','휴대폰 대중화 초입','드디어 학생들 손에도 폰이 들어오기 시작.']]},
+  { from:2002, to:2005, headline:'“도토리 사서 미니홈피 꾸미던 시절”',
+    relics:[['💾','싸이월드 전성기','일촌·파도타기·도토리가 국민 놀이.'],
+            ['📱','폴더폰과 컬러링','16화음 벨소리 다운로드에 용돈을 씀.'],
+            ['⚽','월드컵 4강의 여운','온 나라가 붉은 물결의 기억 속.']]},
+  { from:2006, to:2009, headline:'“MP3에 노래 담아 다니던 시절”',
+    relics:[['🎧','MP3 플레이어의 시대','아이리버·아이팟. 스마트폰은 아직 없음.'],
+            ['📺','국민 예능의 시대','무한도전·1박2일에 온 가족이 TV 앞으로.'],
+            ['💬','문자 시대의 절정','엄지로 꾹꾹, 한 달 문자 1000건.']]},
+  { from:2010, to:2015, headline:'“카톡이 문자를 밀어내기 시작했다”',
+    relics:[['💬','카카오톡의 등장','2010년 출시. 무료 메시지의 혁명.'],
+            ['📱','스마트폰 대전환','2G 폴더폰과 스마트폰이 공존하던 과도기.'],
+            ['📷','싸이월드의 황혼','미니홈피에서 페북·인스타로 대이동.']]},
+  { from:2016, to:2022, headline:'“TV보다 유튜브를 먼저 켜던 시절”',
+    relics:[['📱','유튜브·숏폼의 시대','본방사수라는 말이 낯설어지기 시작.'],
+            ['🎧','무선 이어폰 일상화','줄 이어폰이 서서히 골동품이 되어감.'],
+            ['🛵','배달앱 전성기','치킨도 떡볶이도 터치 몇 번이면 문 앞에.']]},
+];
+
+/* 유명 연도 한 줄 (있으면 신문 하단에 이탤릭으로) */
+const YEAR_NOTES = {
+  1970:'바로 이 해, 경부고속도로가 뚫렸습니다.',
+  1978:'대학가요제가 갓 시작된 무렵의 캠퍼스.',
+  1980:'이 해 12월, 첫 컬러 방송이 전파를 탔습니다.',
+  1982:'프로야구가 출범하고, 야간 통금이 사라진 해.',
+  1983:'교복 자율화 원년. 까만 교복이 사라지기 시작한 해.',
+  1986:'서울 아시안게임의 해.',
+  1988:'바로 그 서울올림픽의 해.',
+  1991:'국내 1호 노래방이 문을 연 해.',
+  1992:'서태지와 아이들 〈난 알아요〉의 해.',
+  1994:'김건모 〈핑계〉가 전국을 덮은 해.',
+  1996:'H.O.T.가 데뷔한 바로 그 해.',
+  1998:'박세리 맨발 투혼과 금 모으기의 해.',
+  2002:'바로 그 월드컵 4강의 해.',
+  2004:'카트라이더가 나오고 싸이월드가 절정이던 해.',
+  2006:'〈무한도전〉이 시작된 해.',
+  2009:'아이폰이 한국에 상륙한 해.',
+  2010:'김연아 금메달, 그리고 카카오톡이 태어난 해.',
+  2012:'〈강남스타일〉이 지구를 덮은 해.',
+};
+
+let current = EVENTS[0];
+const $ = id => document.getElementById(id);
+const reduce = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- 스테이지 전환 ---------- */
+function show(stage){
+  document.querySelectorAll('.stage').forEach(s=>s.classList.remove('on'));
+  $(stage).classList.add('on');
+  window.scrollTo({top:0, behavior: reduce()?'auto':'smooth'});
+}
+
+/* ---------- 인트로 티저: 검증 가능한 팩트 순환 ---------- */
+const TEASERS = [
+  '2002 월드컵 — 지금 스무 살이 <b>태어나기 4년 전</b>',
+  '카라 〈프리티걸〉 — 지금 스무 살은 <b>2살</b>',
+  '〈무한도전〉 첫 방송 — 지금 스무 살이 <b>태어난 해</b>',
+  'H.O.T. 데뷔 — 지금 스무 살이 <b>태어나기 10년 전</b>',
+  '카카오톡 출시 — 지금 스무 살은 <b>4살</b>',
+];
+let tzi = 0;
+setInterval(()=>{
+  if(reduce() || !$('intro').classList.contains('on')) return;
+  tzi = (tzi+1) % TEASERS.length;
+  const f = $('tzFact');
+  f.innerHTML = TEASERS[tzi];
+  f.classList.remove('fadeSwap'); void f.offsetWidth; f.classList.add('fadeSwap');
+}, 3000);
+
+/* ---------- 선택 그리드 (연대별 섹션) ---------- */
+(function buildGrid(){
+  const root = $('grid');
+  ERAS.forEach(era=>{
+    const evs = EVENTS.filter(e=>e.y>=era.from && e.y<=era.to);
+    if(!evs.length) return;
+    const label = document.createElement('div');
+    label.className = 'era-label';
+    label.textContent = era.label;
+    root.appendChild(label);
+    const g = document.createElement('div');
+    g.className = 'grid';
+    evs.forEach(ev=>{
+      const c = document.createElement('button');
+      c.className = 'mcard';
+      c.innerHTML = `${ev.hot?'<span class="hot">🔥 지금 화제</span>':''}
+        <span class="me">${ev.emoji}</span>
+        <span class="mn">${ev.name}</span>
+        <span class="my">${ev.y}</span>`;
+      c.addEventListener('click', ()=>{
+        current = ev;
+        $('ckEmoji').textContent = ev.emoji;
+        $('ckName').textContent = ev.name;
+        $('ckYear').textContent = ev.y;
+        show('clock');
+      });
+      g.appendChild(c);
+    });
+    root.appendChild(g);
+  });
+})();
+
+/* ---------- 생년 셀렉트 ---------- */
+(function fillBirth(){
+  const b = $('birth');
+  const ph = new Option('태어난 해를 골라주세요','',true,true); ph.disabled = true; b.add(ph);
+  for(let y=2005; y>=1964; y--) b.add(new Option(y+'년생', y));
+})();
+
+/* ---------- 핵심 계산 ---------- */
+function refAgeAt(ev){ return ev.y - REF_BIRTH; }          // 그때 스무 살의 나이 (음수 = 태어나기 전)
+function mirrorOf(ev, birth){ return birth + refAgeAt(ev); } // 사용자가 같은 나이였던 해
+
+function ageText(a){
+  if(a < 0)  return `태어나기 ${-a}년 전`;
+  if(a === 0) return '태어난 바로 그 해';
+  return `${a}살`;
+}
+function bucketFor(y){
+  const b = BUCKETS.find(b=>y>=b.from && y<=b.to);
+  return b || (y < 1950 ? BUCKETS[0] : BUCKETS[BUCKETS.length-1]);
+}
+function verdictFor(a){ // a = 그때 스무 살의 나이
+  if(a < 0)  return ['완전 화석','걔들이 세상에 없던 시절을 “최근”이라 부르는 중'];
+  if(a <= 4) return ['화석','걔들에겐 기억조차 없는 시절'];
+  if(a <= 9) return ['반(半)화석','걔들의 코흘리개 시절 = 당신의 청춘'];
+  return ['신인류','축하합니다, 이 추억은 아직 화석이 아닙니다'];
+}
+
+/* ---------- 결과 렌더 ---------- */
+function renderResult(){
+  const ev = current;
+  const birth = parseInt($('birth').value,10);
+  const a = refAgeAt(ev);
+  const my = mirrorOf(ev, birth);
+  const bk = bucketFor(my);
+  const [vName, vSub] = verdictFor(a);
+
+  $('rEmoji').textContent = ev.emoji;
+  $('rName').textContent = ev.name;
+  $('rDate').textContent = ev.mLabel;
+
+  $('factLine').innerHTML =
+    `이때 ${REF_LABEL}(${REF_BIRTH}년생)은<br><b>${ageText(a)}</b>입니다`;
+  $('factLead').innerHTML =
+    `같은 지점을 당신(${birth}년생) 인생에서 찾으면 — <b>${my}년</b> 👇`;
+
+  $('pDate').textContent = `서기 ${my}년`;
+  $('pYear').textContent = my;
+  $('pHeadline').textContent = bk.headline;
+  $('pExhibit').innerHTML = bk.relics.map(([e,l,c])=>`
+    <div class="ex">
+      <span class="xe">${e}</span>
+      <span class="xt"><span class="xl">${l}</span><span class="xc">${c}</span></span>
+    </div>`).join('');
+
+  const note = YEAR_NOTES[my];
+  const noteEl = $('pNote');
+  if(note){ noteEl.textContent = `— ${my}년: ${note}`; noteEl.style.display='block'; }
+  else { noteEl.style.display='none'; }
+
+  $('revealLine').innerHTML =
+    `${REF_LABEL}에게 <b>${ev.name}</b>은,<br>당신에게 <b>${my}년의 기억</b>입니다`;
+  $('verdict').textContent = `판정 「${vName}」`;
+  $('verdictSub').textContent = vSub;
+}
+
+/* ---------- 공유 ---------- */
+$('save').addEventListener('click', async ()=>{
+  if(typeof html2canvas === 'undefined'){ toast('저장 기능을 불러오지 못했어요'); return; }
+  try{
+    const canvas = await html2canvas($('shareCard'), {scale:2, backgroundColor:'#fffdf8', useCORS:true});
+    const a = document.createElement('a');
+    a.download = `추억거울_${current.id}.png`;
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+    toast('판정서를 저장했어요 🖼️ 단톡방에 투척!');
+  }catch(e){ toast('저장 중 문제가 생겼어요'); }
+});
+$('copy').addEventListener('click', ()=>{
+  const birth = parseInt($('birth').value,10);
+  const my = mirrorOf(current, birth);
+  const [vName] = verdictFor(refAgeAt(current));
+  const text = `나 [${current.name}] 세대인데, 지금 스무 살한텐 이게 내 기준 '${my}년' 이야기래... 판정 「${vName}」 😵\n너도 판정받아봐 → 추억거울 테스트`;
+  navigator.clipboard.writeText(text).then(()=>toast('문구를 복사했어요 🔗')).catch(()=>toast('복사에 실패했어요'));
+});
+
+/* ---------- 내비게이션 ---------- */
+$('start').addEventListener('click', ()=>show('select'));
+$('back1').addEventListener('click', ()=>show('intro'));
+$('back2').addEventListener('click', ()=>show('select'));
+$('back3').addEventListener('click', ()=>show('select'));
+$('again').addEventListener('click', ()=>show('select'));
+$('mirrorGo').addEventListener('click', ()=>{
+  if(!$('birth').value){ toast('태어난 해를 골라주세요 🕰️'); $('birth').focus(); return; }
+  renderResult();
+  show('result');
+});
+
+/* ---------- 토스트 ---------- */
+let toastTimer;
+function toast(msg){
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(()=>t.classList.remove('show'), 2000);
+}
+</script>
+</body>
+</html>
