@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const title = '추억거울 테스트 — 내 추억, 걔들한텐 몇 년도 느낌?';
+const description = '내 소중한 추억, 지금 스무 살에겐 몇 년도 느낌일까? 세대 차이를 팩트로 확인하고 판정서를 공유하세요.';
+
+const appSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: '추억거울 테스트',
+  url: 'https://yoongjae.com/tools/time-mirror/',
+  applicationCategory: 'EntertainmentApplication',
+  operatingSystem: 'Web',
+  inLanguage: 'ko',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+  author: { '@type': 'Person', name: '조융재', url: 'https://yoongjae.com' },
+};
+---
+
+<BaseLayout title={title} description={description} canonicalUrl="/tools/time-mirror/" ogImage="/og/time-mirror.png">
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(appSchema)} />
+    <style>
+      .time-mirror-wrap { margin: 0 -1rem; }
+      @media (min-width: 640px) { .time-mirror-wrap { margin: 0 -2rem; } }
+      .time-mirror-frame {
+        width: 100%;
+        height: 100dvh;
+        max-height: calc(100dvh - 60px);
+        min-height: 600px;
+        border: none;
+        border-radius: 8px;
+        background: #f3eefe;
+      }
+    </style>
+  </Fragment>
+
+  <section class="py-4">
+    <div class="flex items-center gap-2 text-xs text-ink/40 mb-4">
+      <a href="/tools/" class="hover:text-ink transition-colors">Tools</a>
+      <span>/</span>
+      <span>추억거울 테스트</span>
+    </div>
+
+    <div class="time-mirror-wrap">
+      <iframe
+        src="/tools/time-mirror/app.html"
+        class="time-mirror-frame"
+        title="추억거울 테스트"
+        loading="lazy"
+      ></iframe>
+    </div>
+  </section>
+</BaseLayout>
